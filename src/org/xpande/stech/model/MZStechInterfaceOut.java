@@ -1,7 +1,9 @@
 package org.xpande.stech.model;
 
 import org.adempiere.exceptions.AdempiereException;
+import org.compiere.model.I_M_Product;
 import org.compiere.model.Query;
+import org.xpande.core.model.I_Z_ProductoUPC;
 
 import java.sql.ResultSet;
 import java.util.List;
@@ -27,6 +29,27 @@ public class MZStechInterfaceOut extends X_Z_StechInterfaceOut {
      * Obtiene y retorna modelo según parametros recibidos
      * Xpande. Created by Gabriel Vila on 7/6/17.
      * @param ctx
+     * @param adTableID
+     * @param recordID
+     * @param trxName
+     * @return
+     */
+    public static MZStechInterfaceOut getRecord(Properties ctx, int adTableID, int recordID, String trxName){
+
+        String whereClause = X_Z_StechInterfaceOut.COLUMNNAME_AD_Table_ID + " =" + adTableID +
+                " AND " + X_Z_StechInterfaceOut.COLUMNNAME_Record_ID + " =" + recordID +
+                " AND " + X_Z_StechInterfaceOut.COLUMNNAME_IsExecuted + " ='N'";
+
+        MZStechInterfaceOut model = new Query(ctx, I_Z_StechInterfaceOut.Table_Name, whereClause, trxName).first();
+
+        return model;
+
+    }
+
+    /***
+     * Obtiene y retorna modelo según parametros recibidos
+     * Xpande. Created by Gabriel Vila on 7/6/17.
+     * @param ctx
      * @param CRUDType
      * @param adTableID
      * @param recordID
@@ -39,7 +62,9 @@ public class MZStechInterfaceOut extends X_Z_StechInterfaceOut {
         String whereClause = X_Z_StechInterfaceOut.COLUMNNAME_AD_Table_ID + " =" + adTableID +
                 " AND " + X_Z_StechInterfaceOut.COLUMNNAME_Record_ID + " =" + recordID +
                 " AND " + X_Z_StechInterfaceOut.COLUMNNAME_CRUDType + " ='" + CRUDType + "'" +
-                " AND " + X_Z_StechInterfaceOut.COLUMNNAME_IsPriceChanged + " ='" + ((isPriceChanged) ? 'Y' : 'N') + "'";
+                " AND " + X_Z_StechInterfaceOut.COLUMNNAME_IsPriceChanged + " ='" + ((isPriceChanged) ? 'Y' : 'N') + "'" +
+                " AND " + X_Z_StechInterfaceOut.COLUMNNAME_IsExecuted + " ='N'";
+
         MZStechInterfaceOut model = new Query(ctx, I_Z_StechInterfaceOut.Table_Name, whereClause, trxName).first();
 
         return model;
@@ -63,14 +88,14 @@ public class MZStechInterfaceOut extends X_Z_StechInterfaceOut {
                 " AND " + X_Z_StechInterfaceOut.COLUMNNAME_Record_ID + " =" + recordID +
                 " AND " + X_Z_StechInterfaceOut.COLUMNNAME_AD_OrgTrx_ID + " =" + adOrgTrxID +
                 " AND " + X_Z_StechInterfaceOut.COLUMNNAME_CRUDType + " ='" + CRUDType + "'" +
-                " AND " + X_Z_StechInterfaceOut.COLUMNNAME_IsPriceChanged + " ='" + ((isPriceChanged) ? 'Y' : 'N') + "'";
+                " AND " + X_Z_StechInterfaceOut.COLUMNNAME_IsPriceChanged + " ='" + ((isPriceChanged) ? 'Y' : 'N') + "'" +
+                " AND " + X_Z_StechInterfaceOut.COLUMNNAME_IsExecuted + " ='N'";
 
         MZStechInterfaceOut model = new Query(ctx, I_Z_StechInterfaceOut.Table_Name, whereClause, trxName).first();
 
         return model;
 
     }
-
 
     /***
      * Obtiene y retorna lista de modelos no ejecutados, ordenados por secuencia.
@@ -94,7 +119,29 @@ public class MZStechInterfaceOut extends X_Z_StechInterfaceOut {
         String message = null;
 
         try{
+            // Procedo según entidad y acción
 
+            // Si es entidad = Producto
+            if (this.getAD_Table_ID() == I_M_Product.Table_ID){
+
+                // Nuevo producto
+                if (this.getCRUDType().equalsIgnoreCase(X_Z_StechInterfaceOut.CRUDTYPE_CREATE)){
+
+                }
+                // Eliminación de producto
+                else if (this.getCRUDType().equalsIgnoreCase(X_Z_StechInterfaceOut.CRUDTYPE_DELETE)){
+
+                }
+                // Actualización de producto
+                else if (this.getCRUDType().equalsIgnoreCase(X_Z_StechInterfaceOut.CRUDTYPE_UPDATE)){
+
+                }
+
+            }
+            // Si es entidad = Código de barras
+            else if (this.getAD_Table_ID() == I_Z_ProductoUPC.Table_ID){
+
+            }
 
         }
         catch (Exception e){
