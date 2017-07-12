@@ -21,24 +21,24 @@ import java.sql.Timestamp;
 import org.compiere.model.*;
 import org.compiere.util.KeyNamePair;
 
-/** Generated Interface for Z_StechInterfaceOut
+/** Generated Interface for Z_ScanntechConfigServ
  *  @author Adempiere (generated) 
  *  @version Release 3.9.0
  */
-public interface I_Z_StechInterfaceOut 
+public interface I_Z_ScanntechConfigServ 
 {
 
-    /** TableName=Z_StechInterfaceOut */
-    public static final String Table_Name = "Z_StechInterfaceOut";
+    /** TableName=Z_ScanntechConfigServ */
+    public static final String Table_Name = "Z_ScanntechConfigServ";
 
-    /** AD_Table_ID=1000060 */
+    /** AD_Table_ID=1000068 */
     public static final int Table_ID = MTable.getTable_ID(Table_Name);
 
     KeyNamePair Model = new KeyNamePair(Table_ID, Table_Name);
 
-    /** AccessLevel = 3 - Client - Org 
+    /** AccessLevel = 6 - System - Client 
      */
-    BigDecimal accessLevel = BigDecimal.valueOf(3);
+    BigDecimal accessLevel = BigDecimal.valueOf(6);
 
     /** Load Meta Data */
 
@@ -62,19 +62,6 @@ public interface I_Z_StechInterfaceOut
 	  * Organizational entity within client
 	  */
 	public int getAD_Org_ID();
-
-    /** Column name AD_OrgTrx_ID */
-    public static final String COLUMNNAME_AD_OrgTrx_ID = "AD_OrgTrx_ID";
-
-	/** Set Trx Organization.
-	  * Performing or initiating organization
-	  */
-	public void setAD_OrgTrx_ID(int AD_OrgTrx_ID);
-
-	/** Get Trx Organization.
-	  * Performing or initiating organization
-	  */
-	public int getAD_OrgTrx_ID();
 
     /** Column name AD_Table_ID */
     public static final String COLUMNNAME_AD_Table_ID = "AD_Table_ID";
@@ -120,27 +107,18 @@ public interface I_Z_StechInterfaceOut
 	  */
 	public String getCRUDType();
 
-    /** Column name Description */
-    public static final String COLUMNNAME_Description = "Description";
+    /** Column name HttpRequestPos */
+    public static final String COLUMNNAME_HttpRequestPos = "HttpRequestPos";
 
-	/** Set Description.
-	  * Optional short description of the record
+	/** Set HttpRequestPos.
+	  * Http Request de Servicio para API de interface con POS
 	  */
-	public void setDescription(String Description);
+	public void setHttpRequestPos(String HttpRequestPos);
 
-	/** Get Description.
-	  * Optional short description of the record
+	/** Get HttpRequestPos.
+	  * Http Request de Servicio para API de interface con POS
 	  */
-	public String getDescription();
-
-    /** Column name ErrorMsg */
-    public static final String COLUMNNAME_ErrorMsg = "ErrorMsg";
-
-	/** Set Error Msg	  */
-	public void setErrorMsg(String ErrorMsg);
-
-	/** Get Error Msg	  */
-	public String getErrorMsg();
+	public String getHttpRequestPos();
 
     /** Column name IsActive */
     public static final String COLUMNNAME_IsActive = "IsActive";
@@ -155,28 +133,6 @@ public interface I_Z_StechInterfaceOut
 	  */
 	public boolean isActive();
 
-    /** Column name IsError */
-    public static final String COLUMNNAME_IsError = "IsError";
-
-	/** Set Error.
-	  * An Error occurred in the execution
-	  */
-	public void setIsError(boolean IsError);
-
-	/** Get Error.
-	  * An Error occurred in the execution
-	  */
-	public boolean isError();
-
-    /** Column name IsExecuted */
-    public static final String COLUMNNAME_IsExecuted = "IsExecuted";
-
-	/** Set IsExecuted	  */
-	public void setIsExecuted(boolean IsExecuted);
-
-	/** Get IsExecuted	  */
-	public boolean isExecuted();
-
     /** Column name IsPriceChanged */
     public static final String COLUMNNAME_IsPriceChanged = "IsPriceChanged";
 
@@ -189,34 +145,6 @@ public interface I_Z_StechInterfaceOut
 	  * El precio fue modificado
 	  */
 	public boolean isPriceChanged();
-
-    /** Column name Record_ID */
-    public static final String COLUMNNAME_Record_ID = "Record_ID";
-
-	/** Set Record ID.
-	  * Direct internal record ID
-	  */
-	public void setRecord_ID(int Record_ID);
-
-	/** Get Record ID.
-	  * Direct internal record ID
-	  */
-	public int getRecord_ID();
-
-    /** Column name SeqNo */
-    public static final String COLUMNNAME_SeqNo = "SeqNo";
-
-	/** Set Sequence.
-	  * Method of ordering records;
- lowest number comes first
-	  */
-	public void setSeqNo(int SeqNo);
-
-	/** Get Sequence.
-	  * Method of ordering records;
- lowest number comes first
-	  */
-	public int getSeqNo();
 
     /** Column name ServicioApiPos */
     public static final String COLUMNNAME_ServicioApiPos = "ServicioApiPos";
@@ -247,25 +175,23 @@ public interface I_Z_StechInterfaceOut
 	  */
 	public int getUpdatedBy();
 
-    /** Column name URL */
-    public static final String COLUMNNAME_URL = "URL";
+    /** Column name Z_ScanntechConfig_ID */
+    public static final String COLUMNNAME_Z_ScanntechConfig_ID = "Z_ScanntechConfig_ID";
 
-	/** Set URL.
-	  * Full URL address - e.g. http://www.adempiere.org
-	  */
-	public void setURL(String URL);
+	/** Set Z_ScanntechConfig ID	  */
+	public void setZ_ScanntechConfig_ID(int Z_ScanntechConfig_ID);
 
-	/** Get URL.
-	  * Full URL address - e.g. http://www.adempiere.org
-	  */
-	public String getURL();
+	/** Get Z_ScanntechConfig ID	  */
+	public int getZ_ScanntechConfig_ID();
 
-    /** Column name Z_StechInterfaceOut_ID */
-    public static final String COLUMNNAME_Z_StechInterfaceOut_ID = "Z_StechInterfaceOut_ID";
+	public org.xpande.stech.model.I_Z_ScanntechConfig getZ_ScanntechConfig() throws RuntimeException;
 
-	/** Set Z_StechInterfaceOut ID	  */
-	public void setZ_StechInterfaceOut_ID(int Z_StechInterfaceOut_ID);
+    /** Column name Z_ScanntechConfigServ_ID */
+    public static final String COLUMNNAME_Z_ScanntechConfigServ_ID = "Z_ScanntechConfigServ_ID";
 
-	/** Get Z_StechInterfaceOut ID	  */
-	public int getZ_StechInterfaceOut_ID();
+	/** Set Z_ScanntechConfigServ ID	  */
+	public void setZ_ScanntechConfigServ_ID(int Z_ScanntechConfigServ_ID);
+
+	/** Get Z_ScanntechConfigServ ID	  */
+	public int getZ_ScanntechConfigServ_ID();
 }

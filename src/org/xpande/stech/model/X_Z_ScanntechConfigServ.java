@@ -21,44 +21,42 @@ import java.sql.ResultSet;
 import java.util.Properties;
 import org.compiere.model.*;
 
-/** Generated Model for Z_StechInterfaceOut
+/** Generated Model for Z_ScanntechConfigServ
  *  @author Adempiere (generated) 
  *  @version Release 3.9.0 - $Id$ */
-public class X_Z_StechInterfaceOut extends PO implements I_Z_StechInterfaceOut, I_Persistent 
+public class X_Z_ScanntechConfigServ extends PO implements I_Z_ScanntechConfigServ, I_Persistent 
 {
 
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20170711L;
+	private static final long serialVersionUID = 20170710L;
 
     /** Standard Constructor */
-    public X_Z_StechInterfaceOut (Properties ctx, int Z_StechInterfaceOut_ID, String trxName)
+    public X_Z_ScanntechConfigServ (Properties ctx, int Z_ScanntechConfigServ_ID, String trxName)
     {
-      super (ctx, Z_StechInterfaceOut_ID, trxName);
-      /** if (Z_StechInterfaceOut_ID == 0)
+      super (ctx, Z_ScanntechConfigServ_ID, trxName);
+      /** if (Z_ScanntechConfigServ_ID == 0)
         {
+			setAD_Table_ID (0);
 			setCRUDType (null);
-			setIsError (false);
-// N
-			setIsExecuted (false);
-// N
+			setHttpRequestPos (null);
 			setIsPriceChanged (false);
 // N
-			setRecord_ID (0);
-			setSeqNo (0);
-			setZ_StechInterfaceOut_ID (0);
+			setServicioApiPos (null);
+			setZ_ScanntechConfig_ID (0);
+			setZ_ScanntechConfigServ_ID (0);
         } */
     }
 
     /** Load Constructor */
-    public X_Z_StechInterfaceOut (Properties ctx, ResultSet rs, String trxName)
+    public X_Z_ScanntechConfigServ (Properties ctx, ResultSet rs, String trxName)
     {
       super (ctx, rs, trxName);
     }
 
     /** AccessLevel
-      * @return 3 - Client - Org 
+      * @return 6 - System - Client 
       */
     protected int get_AccessLevel()
     {
@@ -74,33 +72,10 @@ public class X_Z_StechInterfaceOut extends PO implements I_Z_StechInterfaceOut, 
 
     public String toString()
     {
-      StringBuffer sb = new StringBuffer ("X_Z_StechInterfaceOut[")
+      StringBuffer sb = new StringBuffer ("X_Z_ScanntechConfigServ[")
         .append(get_ID()).append("]");
       return sb.toString();
     }
-
-	/** Set Trx Organization.
-		@param AD_OrgTrx_ID 
-		Performing or initiating organization
-	  */
-	public void setAD_OrgTrx_ID (int AD_OrgTrx_ID)
-	{
-		if (AD_OrgTrx_ID < 1) 
-			set_Value (COLUMNNAME_AD_OrgTrx_ID, null);
-		else 
-			set_Value (COLUMNNAME_AD_OrgTrx_ID, Integer.valueOf(AD_OrgTrx_ID));
-	}
-
-	/** Get Trx Organization.
-		@return Performing or initiating organization
-	  */
-	public int getAD_OrgTrx_ID () 
-	{
-		Integer ii = (Integer)get_Value(COLUMNNAME_AD_OrgTrx_ID);
-		if (ii == null)
-			 return 0;
-		return ii.intValue();
-	}
 
 	public I_AD_Table getAD_Table() throws RuntimeException
     {
@@ -158,80 +133,32 @@ public class X_Z_StechInterfaceOut extends PO implements I_Z_StechInterfaceOut, 
 		return (String)get_Value(COLUMNNAME_CRUDType);
 	}
 
-	/** Set Description.
-		@param Description 
-		Optional short description of the record
+	/** HttpRequestPos AD_Reference_ID=1000010 */
+	public static final int HTTPREQUESTPOS_AD_Reference_ID=1000010;
+	/** GET = GET */
+	public static final String HTTPREQUESTPOS_GET = "GET";
+	/** PUT = PUT */
+	public static final String HTTPREQUESTPOS_PUT = "PUT";
+	/** POST = POST */
+	public static final String HTTPREQUESTPOS_POST = "POST";
+	/** DELETE = DELETE */
+	public static final String HTTPREQUESTPOS_DELETE = "DELETE";
+	/** Set HttpRequestPos.
+		@param HttpRequestPos 
+		Http Request de Servicio para API de interface con POS
 	  */
-	public void setDescription (String Description)
+	public void setHttpRequestPos (String HttpRequestPos)
 	{
-		set_Value (COLUMNNAME_Description, Description);
+
+		set_Value (COLUMNNAME_HttpRequestPos, HttpRequestPos);
 	}
 
-	/** Get Description.
-		@return Optional short description of the record
+	/** Get HttpRequestPos.
+		@return Http Request de Servicio para API de interface con POS
 	  */
-	public String getDescription () 
+	public String getHttpRequestPos () 
 	{
-		return (String)get_Value(COLUMNNAME_Description);
-	}
-
-	/** Set Error Msg.
-		@param ErrorMsg Error Msg	  */
-	public void setErrorMsg (String ErrorMsg)
-	{
-		set_Value (COLUMNNAME_ErrorMsg, ErrorMsg);
-	}
-
-	/** Get Error Msg.
-		@return Error Msg	  */
-	public String getErrorMsg () 
-	{
-		return (String)get_Value(COLUMNNAME_ErrorMsg);
-	}
-
-	/** Set Error.
-		@param IsError 
-		An Error occurred in the execution
-	  */
-	public void setIsError (boolean IsError)
-	{
-		set_Value (COLUMNNAME_IsError, Boolean.valueOf(IsError));
-	}
-
-	/** Get Error.
-		@return An Error occurred in the execution
-	  */
-	public boolean isError () 
-	{
-		Object oo = get_Value(COLUMNNAME_IsError);
-		if (oo != null) 
-		{
-			 if (oo instanceof Boolean) 
-				 return ((Boolean)oo).booleanValue(); 
-			return "Y".equals(oo);
-		}
-		return false;
-	}
-
-	/** Set IsExecuted.
-		@param IsExecuted IsExecuted	  */
-	public void setIsExecuted (boolean IsExecuted)
-	{
-		set_Value (COLUMNNAME_IsExecuted, Boolean.valueOf(IsExecuted));
-	}
-
-	/** Get IsExecuted.
-		@return IsExecuted	  */
-	public boolean isExecuted () 
-	{
-		Object oo = get_Value(COLUMNNAME_IsExecuted);
-		if (oo != null) 
-		{
-			 if (oo instanceof Boolean) 
-				 return ((Boolean)oo).booleanValue(); 
-			return "Y".equals(oo);
-		}
-		return false;
+		return (String)get_Value(COLUMNNAME_HttpRequestPos);
 	}
 
 	/** Set IsPriceChanged.
@@ -258,49 +185,6 @@ public class X_Z_StechInterfaceOut extends PO implements I_Z_StechInterfaceOut, 
 		return false;
 	}
 
-	/** Set Record ID.
-		@param Record_ID 
-		Direct internal record ID
-	  */
-	public void setRecord_ID (int Record_ID)
-	{
-		if (Record_ID < 0) 
-			set_Value (COLUMNNAME_Record_ID, null);
-		else 
-			set_Value (COLUMNNAME_Record_ID, Integer.valueOf(Record_ID));
-	}
-
-	/** Get Record ID.
-		@return Direct internal record ID
-	  */
-	public int getRecord_ID () 
-	{
-		Integer ii = (Integer)get_Value(COLUMNNAME_Record_ID);
-		if (ii == null)
-			 return 0;
-		return ii.intValue();
-	}
-
-	/** Set Sequence.
-		@param SeqNo 
-		Method of ordering records; lowest number comes first
-	  */
-	public void setSeqNo (int SeqNo)
-	{
-		set_Value (COLUMNNAME_SeqNo, Integer.valueOf(SeqNo));
-	}
-
-	/** Get Sequence.
-		@return Method of ordering records; lowest number comes first
-	  */
-	public int getSeqNo () 
-	{
-		Integer ii = (Integer)get_Value(COLUMNNAME_SeqNo);
-		if (ii == null)
-			 return 0;
-		return ii.intValue();
-	}
-
 	/** Set ServicioApiPos.
 		@param ServicioApiPos 
 		Servicio API para Interface con POS
@@ -318,38 +202,46 @@ public class X_Z_StechInterfaceOut extends PO implements I_Z_StechInterfaceOut, 
 		return (String)get_Value(COLUMNNAME_ServicioApiPos);
 	}
 
-	/** Set URL.
-		@param URL 
-		Full URL address - e.g. http://www.adempiere.org
-	  */
-	public void setURL (String URL)
-	{
-		set_Value (COLUMNNAME_URL, URL);
-	}
+	public org.xpande.stech.model.I_Z_ScanntechConfig getZ_ScanntechConfig() throws RuntimeException
+    {
+		return (org.xpande.stech.model.I_Z_ScanntechConfig)MTable.get(getCtx(), org.xpande.stech.model.I_Z_ScanntechConfig.Table_Name)
+			.getPO(getZ_ScanntechConfig_ID(), get_TrxName());	}
 
-	/** Get URL.
-		@return Full URL address - e.g. http://www.adempiere.org
-	  */
-	public String getURL () 
+	/** Set Z_ScanntechConfig ID.
+		@param Z_ScanntechConfig_ID Z_ScanntechConfig ID	  */
+	public void setZ_ScanntechConfig_ID (int Z_ScanntechConfig_ID)
 	{
-		return (String)get_Value(COLUMNNAME_URL);
-	}
-
-	/** Set Z_StechInterfaceOut ID.
-		@param Z_StechInterfaceOut_ID Z_StechInterfaceOut ID	  */
-	public void setZ_StechInterfaceOut_ID (int Z_StechInterfaceOut_ID)
-	{
-		if (Z_StechInterfaceOut_ID < 1) 
-			set_ValueNoCheck (COLUMNNAME_Z_StechInterfaceOut_ID, null);
+		if (Z_ScanntechConfig_ID < 1) 
+			set_Value (COLUMNNAME_Z_ScanntechConfig_ID, null);
 		else 
-			set_ValueNoCheck (COLUMNNAME_Z_StechInterfaceOut_ID, Integer.valueOf(Z_StechInterfaceOut_ID));
+			set_Value (COLUMNNAME_Z_ScanntechConfig_ID, Integer.valueOf(Z_ScanntechConfig_ID));
 	}
 
-	/** Get Z_StechInterfaceOut ID.
-		@return Z_StechInterfaceOut ID	  */
-	public int getZ_StechInterfaceOut_ID () 
+	/** Get Z_ScanntechConfig ID.
+		@return Z_ScanntechConfig ID	  */
+	public int getZ_ScanntechConfig_ID () 
 	{
-		Integer ii = (Integer)get_Value(COLUMNNAME_Z_StechInterfaceOut_ID);
+		Integer ii = (Integer)get_Value(COLUMNNAME_Z_ScanntechConfig_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
+	/** Set Z_ScanntechConfigServ ID.
+		@param Z_ScanntechConfigServ_ID Z_ScanntechConfigServ ID	  */
+	public void setZ_ScanntechConfigServ_ID (int Z_ScanntechConfigServ_ID)
+	{
+		if (Z_ScanntechConfigServ_ID < 1) 
+			set_ValueNoCheck (COLUMNNAME_Z_ScanntechConfigServ_ID, null);
+		else 
+			set_ValueNoCheck (COLUMNNAME_Z_ScanntechConfigServ_ID, Integer.valueOf(Z_ScanntechConfigServ_ID));
+	}
+
+	/** Get Z_ScanntechConfigServ ID.
+		@return Z_ScanntechConfigServ ID	  */
+	public int getZ_ScanntechConfigServ_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_Z_ScanntechConfigServ_ID);
 		if (ii == null)
 			 return 0;
 		return ii.intValue();
