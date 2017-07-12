@@ -159,7 +159,7 @@ public class MZStechInterfaceOut extends X_Z_StechInterfaceOut {
                 // Eliminación de producto
                 else if (this.getCRUDType().equalsIgnoreCase(X_Z_StechInterfaceOut.CRUDTYPE_DELETE)){
 
-                    
+
                 }
                 // Actualización de producto
                 else if (this.getCRUDType().equalsIgnoreCase(X_Z_StechInterfaceOut.CRUDTYPE_UPDATE)){
