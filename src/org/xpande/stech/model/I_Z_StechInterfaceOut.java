@@ -190,6 +190,19 @@ public interface I_Z_StechInterfaceOut
 	  */
 	public boolean isPriceChanged();
 
+    /** Column name IsTandemChanged */
+    public static final String COLUMNNAME_IsTandemChanged = "IsTandemChanged";
+
+	/** Set IsTandemChanged.
+	  * Si se modifico asociación de Tandem en un Producto para Reatil
+	  */
+	public void setIsTandemChanged(boolean IsTandemChanged);
+
+	/** Get IsTandemChanged.
+	  * Si se modifico asociación de Tandem en un Producto para Reatil
+	  */
+	public boolean isTandemChanged();
+
     /** Column name Record_ID */
     public static final String COLUMNNAME_Record_ID = "Record_ID";
 

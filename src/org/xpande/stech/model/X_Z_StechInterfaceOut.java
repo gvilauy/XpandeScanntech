@@ -30,7 +30,7 @@ public class X_Z_StechInterfaceOut extends PO implements I_Z_StechInterfaceOut, 
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20170711L;
+	private static final long serialVersionUID = 20170727L;
 
     /** Standard Constructor */
     public X_Z_StechInterfaceOut (Properties ctx, int Z_StechInterfaceOut_ID, String trxName)
@@ -44,6 +44,8 @@ public class X_Z_StechInterfaceOut extends PO implements I_Z_StechInterfaceOut, 
 			setIsExecuted (false);
 // N
 			setIsPriceChanged (false);
+// N
+			setIsTandemChanged (false);
 // N
 			setRecord_ID (0);
 			setSeqNo (0);
@@ -249,6 +251,30 @@ public class X_Z_StechInterfaceOut extends PO implements I_Z_StechInterfaceOut, 
 	public boolean isPriceChanged () 
 	{
 		Object oo = get_Value(COLUMNNAME_IsPriceChanged);
+		if (oo != null) 
+		{
+			 if (oo instanceof Boolean) 
+				 return ((Boolean)oo).booleanValue(); 
+			return "Y".equals(oo);
+		}
+		return false;
+	}
+
+	/** Set IsTandemChanged.
+		@param IsTandemChanged 
+		Si se modifico asociación de Tandem en un Producto para Reatil
+	  */
+	public void setIsTandemChanged (boolean IsTandemChanged)
+	{
+		set_Value (COLUMNNAME_IsTandemChanged, Boolean.valueOf(IsTandemChanged));
+	}
+
+	/** Get IsTandemChanged.
+		@return Si se modifico asociación de Tandem en un Producto para Reatil
+	  */
+	public boolean isTandemChanged () 
+	{
+		Object oo = get_Value(COLUMNNAME_IsTandemChanged);
 		if (oo != null) 
 		{
 			 if (oo instanceof Boolean) 
