@@ -120,6 +120,19 @@ public interface I_Z_StechInterfaceOut
 	  */
 	public String getCRUDType();
 
+    /** Column name DateExecuted */
+    public static final String COLUMNNAME_DateExecuted = "DateExecuted";
+
+	/** Set DateExecuted.
+	  * Fecha ejecutado
+	  */
+	public void setDateExecuted(Timestamp DateExecuted);
+
+	/** Get DateExecuted.
+	  * Fecha ejecutado
+	  */
+	public Timestamp getDateExecuted();
+
     /** Column name Description */
     public static final String COLUMNNAME_Description = "Description";
 
@@ -203,6 +216,49 @@ public interface I_Z_StechInterfaceOut
 	  */
 	public boolean isTandemChanged();
 
+    /** Column name M_PriceList_ID */
+    public static final String COLUMNNAME_M_PriceList_ID = "M_PriceList_ID";
+
+	/** Set Price List.
+	  * Unique identifier of a Price List
+	  */
+	public void setM_PriceList_ID(int M_PriceList_ID);
+
+	/** Get Price List.
+	  * Unique identifier of a Price List
+	  */
+	public int getM_PriceList_ID();
+
+	public I_M_PriceList getM_PriceList() throws RuntimeException;
+
+    /** Column name M_Product_Tandem_ID */
+    public static final String COLUMNNAME_M_Product_Tandem_ID = "M_Product_Tandem_ID";
+
+	/** Set M_Product_Tandem_ID.
+	  * Producto Tandem que se asocia a otro producto en Retail
+	  */
+	public void setM_Product_Tandem_ID(int M_Product_Tandem_ID);
+
+	/** Get M_Product_Tandem_ID.
+	  * Producto Tandem que se asocia a otro producto en Retail
+	  */
+	public int getM_Product_Tandem_ID();
+
+	public I_M_Product getM_Product_Tandem() throws RuntimeException;
+
+    /** Column name PriceSO */
+    public static final String COLUMNNAME_PriceSO = "PriceSO";
+
+	/** Set PriceSO.
+	  * PriceSO
+	  */
+	public void setPriceSO(BigDecimal PriceSO);
+
+	/** Get PriceSO.
+	  * PriceSO
+	  */
+	public BigDecimal getPriceSO();
+
     /** Column name Record_ID */
     public static final String COLUMNNAME_Record_ID = "Record_ID";
 
@@ -272,6 +328,15 @@ public interface I_Z_StechInterfaceOut
 	  * Full URL address - e.g. http://www.adempiere.org
 	  */
 	public String getURL();
+
+    /** Column name Z_ComunicacionPOS_ID */
+    public static final String COLUMNNAME_Z_ComunicacionPOS_ID = "Z_ComunicacionPOS_ID";
+
+	/** Set Z_ComunicacionPOS ID	  */
+	public void setZ_ComunicacionPOS_ID(int Z_ComunicacionPOS_ID);
+
+	/** Get Z_ComunicacionPOS ID	  */
+	public int getZ_ComunicacionPOS_ID();
 
     /** Column name Z_StechInterfaceOut_ID */
     public static final String COLUMNNAME_Z_StechInterfaceOut_ID = "Z_StechInterfaceOut_ID";

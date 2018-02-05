@@ -17,9 +17,12 @@
 /** Generated Model - DO NOT CHANGE */
 package org.xpande.stech.model;
 
+import java.math.BigDecimal;
 import java.sql.ResultSet;
+import java.sql.Timestamp;
 import java.util.Properties;
 import org.compiere.model.*;
+import org.compiere.util.Env;
 
 /** Generated Model for Z_StechInterfaceOut
  *  @author Adempiere (generated) 
@@ -30,7 +33,7 @@ public class X_Z_StechInterfaceOut extends PO implements I_Z_StechInterfaceOut, 
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20170727L;
+	private static final long serialVersionUID = 20180205L;
 
     /** Standard Constructor */
     public X_Z_StechInterfaceOut (Properties ctx, int Z_StechInterfaceOut_ID, String trxName)
@@ -160,6 +163,23 @@ public class X_Z_StechInterfaceOut extends PO implements I_Z_StechInterfaceOut, 
 		return (String)get_Value(COLUMNNAME_CRUDType);
 	}
 
+	/** Set DateExecuted.
+		@param DateExecuted 
+		Fecha ejecutado
+	  */
+	public void setDateExecuted (Timestamp DateExecuted)
+	{
+		set_Value (COLUMNNAME_DateExecuted, DateExecuted);
+	}
+
+	/** Get DateExecuted.
+		@return Fecha ejecutado
+	  */
+	public Timestamp getDateExecuted () 
+	{
+		return (Timestamp)get_Value(COLUMNNAME_DateExecuted);
+	}
+
 	/** Set Description.
 		@param Description 
 		Optional short description of the record
@@ -284,6 +304,82 @@ public class X_Z_StechInterfaceOut extends PO implements I_Z_StechInterfaceOut, 
 		return false;
 	}
 
+	public I_M_PriceList getM_PriceList() throws RuntimeException
+    {
+		return (I_M_PriceList)MTable.get(getCtx(), I_M_PriceList.Table_Name)
+			.getPO(getM_PriceList_ID(), get_TrxName());	}
+
+	/** Set Price List.
+		@param M_PriceList_ID 
+		Unique identifier of a Price List
+	  */
+	public void setM_PriceList_ID (int M_PriceList_ID)
+	{
+		if (M_PriceList_ID < 1) 
+			set_Value (COLUMNNAME_M_PriceList_ID, null);
+		else 
+			set_Value (COLUMNNAME_M_PriceList_ID, Integer.valueOf(M_PriceList_ID));
+	}
+
+	/** Get Price List.
+		@return Unique identifier of a Price List
+	  */
+	public int getM_PriceList_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_M_PriceList_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
+	public I_M_Product getM_Product_Tandem() throws RuntimeException
+    {
+		return (I_M_Product)MTable.get(getCtx(), I_M_Product.Table_Name)
+			.getPO(getM_Product_Tandem_ID(), get_TrxName());	}
+
+	/** Set M_Product_Tandem_ID.
+		@param M_Product_Tandem_ID 
+		Producto Tandem que se asocia a otro producto en Retail
+	  */
+	public void setM_Product_Tandem_ID (int M_Product_Tandem_ID)
+	{
+		if (M_Product_Tandem_ID < 1) 
+			set_Value (COLUMNNAME_M_Product_Tandem_ID, null);
+		else 
+			set_Value (COLUMNNAME_M_Product_Tandem_ID, Integer.valueOf(M_Product_Tandem_ID));
+	}
+
+	/** Get M_Product_Tandem_ID.
+		@return Producto Tandem que se asocia a otro producto en Retail
+	  */
+	public int getM_Product_Tandem_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_M_Product_Tandem_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
+	/** Set PriceSO.
+		@param PriceSO 
+		PriceSO
+	  */
+	public void setPriceSO (BigDecimal PriceSO)
+	{
+		set_Value (COLUMNNAME_PriceSO, PriceSO);
+	}
+
+	/** Get PriceSO.
+		@return PriceSO
+	  */
+	public BigDecimal getPriceSO () 
+	{
+		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_PriceSO);
+		if (bd == null)
+			 return Env.ZERO;
+		return bd;
+	}
+
 	/** Set Record ID.
 		@param Record_ID 
 		Direct internal record ID
@@ -359,6 +455,26 @@ public class X_Z_StechInterfaceOut extends PO implements I_Z_StechInterfaceOut, 
 	public String getURL () 
 	{
 		return (String)get_Value(COLUMNNAME_URL);
+	}
+
+	/** Set Z_ComunicacionPOS ID.
+		@param Z_ComunicacionPOS_ID Z_ComunicacionPOS ID	  */
+	public void setZ_ComunicacionPOS_ID (int Z_ComunicacionPOS_ID)
+	{
+		if (Z_ComunicacionPOS_ID < 1) 
+			set_Value (COLUMNNAME_Z_ComunicacionPOS_ID, null);
+		else 
+			set_Value (COLUMNNAME_Z_ComunicacionPOS_ID, Integer.valueOf(Z_ComunicacionPOS_ID));
+	}
+
+	/** Get Z_ComunicacionPOS ID.
+		@return Z_ComunicacionPOS ID	  */
+	public int getZ_ComunicacionPOS_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_Z_ComunicacionPOS_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
 	}
 
 	/** Set Z_StechInterfaceOut ID.
