@@ -1,4 +1,4 @@
-package org.xpande.stech.process;
+package org.xpande.stech.utils;
 
 import org.adempiere.exceptions.AdempiereException;
 import org.compiere.model.I_C_BPartner;
