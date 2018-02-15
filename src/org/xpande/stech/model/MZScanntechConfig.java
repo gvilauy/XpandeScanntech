@@ -88,4 +88,37 @@ public class MZScanntechConfig extends X_Z_ScanntechConfig {
 
         return model;
     }
+
+    /***
+     * Obtiene y retorna modelo de parametrización de organización recibida.
+     * Xpande. Created by Gabriel Vila on 2/12/18.
+     * @param adOrgID
+     * @return
+     */
+    public MZScanntechConfigOrg getOrgConfig(int adOrgID) {
+
+        String whereClause = X_Z_ScanntechConfigOrg.COLUMNNAME_Z_ScanntechConfig_ID + " =" + this.get_ID() +
+                " AND " + X_Z_ScanntechConfigOrg.COLUMNNAME_AD_OrgTrx_ID + " =" + adOrgID;
+
+        MZScanntechConfigOrg model = new Query(this.getCtx(), I_Z_ScanntechConfigOrg.Table_Name, whereClause, this.get_TrxName()).first();
+
+        return model;
+    }
+
+
+    /***
+     * Obtiene y retorna lista de organizaciones asociadas a la configuracion del proveedor de POS Scanntech
+     * Xpande. Created by Gabriel Vila on 2/13/18.
+     * @return
+     */
+    public List<MZScanntechConfigOrg> getOrganization(){
+
+        String whereClause = X_Z_ScanntechConfigOrg.COLUMNNAME_Z_ScanntechConfig_ID + " =" + this.get_ID();
+
+        List<MZScanntechConfigOrg> lines = new Query(getCtx(), I_Z_ScanntechConfigOrg.Table_Name, whereClause, get_TrxName()).setOnlyActiveRecords(true).list();
+
+        return lines;
+    }
+
+
 }

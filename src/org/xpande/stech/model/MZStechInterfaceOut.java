@@ -48,13 +48,15 @@ public class MZStechInterfaceOut extends X_Z_StechInterfaceOut {
      * @param ctx
      * @param adTableID
      * @param recordID
+     * @param adOrgID
      * @param trxName
      * @return
      */
-    public static MZStechInterfaceOut getRecord(Properties ctx, int adTableID, int recordID, String trxName){
+    public static MZStechInterfaceOut getRecord(Properties ctx, int adTableID, int recordID, int adOrgID, String trxName){
 
         String whereClause = X_Z_StechInterfaceOut.COLUMNNAME_AD_Table_ID + " =" + adTableID +
                 " AND " + X_Z_StechInterfaceOut.COLUMNNAME_Record_ID + " =" + recordID +
+                " AND " + X_Z_StechInterfaceOut.COLUMNNAME_AD_OrgTrx_ID + " =" + adOrgID +
                 " AND " + X_Z_StechInterfaceOut.COLUMNNAME_IsExecuted + " ='N'";
 
         MZStechInterfaceOut model = new Query(ctx, I_Z_StechInterfaceOut.Table_Name, whereClause, trxName).first();

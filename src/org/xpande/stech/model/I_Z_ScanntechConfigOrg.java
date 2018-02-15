@@ -76,6 +76,19 @@ public interface I_Z_ScanntechConfigOrg
 	  */
 	public int getAD_OrgTrx_ID();
 
+    /** Column name CodigoEmpPos */
+    public static final String COLUMNNAME_CodigoEmpPos = "CodigoEmpPos";
+
+	/** Set CodigoEmpPos.
+	  * Codigo de empresa para el proveedor de POS
+	  */
+	public void setCodigoEmpPos(String CodigoEmpPos);
+
+	/** Get CodigoEmpPos.
+	  * Codigo de empresa para el proveedor de POS
+	  */
+	public String getCodigoEmpPos();
+
     /** Column name CodigoLocalPos */
     public static final String COLUMNNAME_CodigoLocalPos = "CodigoLocalPos";
 
@@ -143,7 +156,7 @@ public interface I_Z_ScanntechConfigOrg
 	/** Get Z_ScanntechConfig ID	  */
 	public int getZ_ScanntechConfig_ID();
 
-	public org.xpande.stech.model.I_Z_ScanntechConfig getZ_ScanntechConfig() throws RuntimeException;
+	public I_Z_ScanntechConfig getZ_ScanntechConfig() throws RuntimeException;
 
     /** Column name Z_ScanntechConfigOrg_ID */
     public static final String COLUMNNAME_Z_ScanntechConfigOrg_ID = "Z_ScanntechConfigOrg_ID";

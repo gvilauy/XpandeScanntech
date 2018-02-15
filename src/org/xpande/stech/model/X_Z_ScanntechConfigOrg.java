@@ -30,7 +30,7 @@ public class X_Z_ScanntechConfigOrg extends PO implements I_Z_ScanntechConfigOrg
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20170710L;
+	private static final long serialVersionUID = 20180211L;
 
     /** Standard Constructor */
     public X_Z_ScanntechConfigOrg (Properties ctx, int Z_ScanntechConfigOrg_ID, String trxName)
@@ -96,6 +96,23 @@ public class X_Z_ScanntechConfigOrg extends PO implements I_Z_ScanntechConfigOrg
 		return ii.intValue();
 	}
 
+	/** Set CodigoEmpPos.
+		@param CodigoEmpPos 
+		Codigo de empresa para el proveedor de POS
+	  */
+	public void setCodigoEmpPos (String CodigoEmpPos)
+	{
+		set_Value (COLUMNNAME_CodigoEmpPos, CodigoEmpPos);
+	}
+
+	/** Get CodigoEmpPos.
+		@return Codigo de empresa para el proveedor de POS
+	  */
+	public String getCodigoEmpPos () 
+	{
+		return (String)get_Value(COLUMNNAME_CodigoEmpPos);
+	}
+
 	/** Set CodigoLocalPos.
 		@param CodigoLocalPos 
 		Codigo de local para interface POS
@@ -113,9 +130,9 @@ public class X_Z_ScanntechConfigOrg extends PO implements I_Z_ScanntechConfigOrg
 		return (String)get_Value(COLUMNNAME_CodigoLocalPos);
 	}
 
-	public org.xpande.stech.model.I_Z_ScanntechConfig getZ_ScanntechConfig() throws RuntimeException
+	public I_Z_ScanntechConfig getZ_ScanntechConfig() throws RuntimeException
     {
-		return (org.xpande.stech.model.I_Z_ScanntechConfig)MTable.get(getCtx(), org.xpande.stech.model.I_Z_ScanntechConfig.Table_Name)
+		return (I_Z_ScanntechConfig)MTable.get(getCtx(), I_Z_ScanntechConfig.Table_Name)
 			.getPO(getZ_ScanntechConfig_ID(), get_TrxName());	}
 
 	/** Set Z_ScanntechConfig ID.
