@@ -5,6 +5,7 @@ import org.apache.commons.codec.binary.Base64;
 import org.compiere.model.I_M_Product;
 import org.compiere.model.MOrg;
 import org.compiere.model.MProduct;
+import org.compiere.process.ProcessInfoParameter;
 import org.compiere.process.SvrProcess;
 import org.xpande.core.model.I_Z_ProductoUPC;
 import org.xpande.core.model.MZProductoUPC;
@@ -33,6 +34,7 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONTokener;
+import org.xpande.stech.utils.ProcesadorInterfaceOut;
 
 
 /**
@@ -40,6 +42,9 @@ import org.json.JSONTokener;
  * Xpande. Created by Gabriel Vila on 7/6/17.
  */
 public class InterfaceOut extends SvrProcess {
+
+    private ProcesadorInterfaceOut procesadorInterfaceOut = null;
+    private int adOrgID = 1000001;
 
     //private String url = "http://200.40.123.20:19317";
     //private String metodo = "/api-iposs-be-ext-uy/api/minoristas";
@@ -62,11 +67,37 @@ public class InterfaceOut extends SvrProcess {
     @Override
     protected void prepare() {
 
+        ProcessInfoParameter[] para = getParameter();
+
+        for (int i = 0; i < para.length; i++){
+
+            String name = para[i].getParameterName();
+
+            if (name != null){
+                if (para[i].getParameter() != null){
+                    if (name.trim().equalsIgnoreCase("AD_Org_ID")){
+                        this.adOrgID = ((BigDecimal)para[i].getParameter()).intValueExact();
+                    }
+                }
+            }
+        }
+
+        this.procesadorInterfaceOut = new ProcesadorInterfaceOut(getCtx(), get_TrxName());
+
     }
 
     @Override
     protected String doIt() throws Exception {
 
+        String message = this.procesadorInterfaceOut.executeInterfaceOut(this.adOrgID, 0,true, true, true);
+
+        if (message != null){
+            return "@Error@ " + message;
+        }
+
+        return "OK";
+
+        /*
         try {
 
             List<MZStechInterfaceOut> lines = MZStechInterfaceOut.getLinesNotExecuted(getCtx(), get_TrxName());
@@ -92,6 +123,7 @@ public class InterfaceOut extends SvrProcess {
         }
 
         return "OK";
+        */
     }
 
     private String newProduct(MZStechInterfaceOut line) {

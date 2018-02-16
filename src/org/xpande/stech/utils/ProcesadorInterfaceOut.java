@@ -3,6 +3,7 @@ package org.xpande.stech.utils;
 import org.adempiere.exceptions.AdempiereException;
 import org.compiere.model.*;
 import org.compiere.util.DB;
+import org.compiere.util.Env;
 import org.compiere.util.TimeUtil;
 import org.xpande.core.model.I_Z_ProductoUPC;
 import org.xpande.core.model.MZProductoUPC;
@@ -146,12 +147,22 @@ public class ProcesadorInterfaceOut {
         HashMap<Integer, Integer> hashProds = new HashMap<Integer, Integer>();
 
         try{
+
+            Timestamp fechaHoy = TimeUtil.trunc(new Timestamp(System.currentTimeMillis()), TimeUtil.TRUNC_DAY);
+
             // Obtengo parametrizacion de Scanntech para la organización de este proceso
             MZScanntechConfigOrg configOrg = scanntechConfig.getOrgConfig(adOrgID);
 
             // Obtengo y recorro lineas de interface aun no ejecutadas para productos
-            List<MZStechInterfaceOut> interfaceOuts = this.getLinesProdsNotExecuted(zComunicacionPosID, processPrices);
+            List<MZStechInterfaceOut> interfaceOuts = this.getLinesProdsNotExecuted(adOrgID, zComunicacionPosID, processPrices);
             for (MZStechInterfaceOut interfaceOut: interfaceOuts){
+
+                // Si es marca de oferta y su vigencia no es acorde a la fecha actual, no proceso esta marca
+                if (interfaceOut.isWithOfferSO()){
+                    if ((interfaceOut.getStartDate().after(fechaHoy)) || (interfaceOut.getEndDate().before(fechaHoy))){
+                        continue;
+                    }
+                }
 
                 boolean success = false;
                 String errorMessage = null;
@@ -175,13 +186,23 @@ public class ProcesadorInterfaceOut {
                 }
                 BigDecimal priceSO = productPrice.getPriceList();
 
+                // Si es marca de producto en oferta, tomo directo el precio de oferta seteado aqui
+                if (interfaceOut.isWithOfferSO()){
+                    if ((interfaceOut.getPriceSO() == null) || (interfaceOut.getPriceSO().compareTo(Env.ZERO) <= 0)){
+                        throw new AdempiereException("No se obtuvo precio de venta de OFERTA para el producto con ID : " + product.get_ID());
+                    }
+                }
+                else{
+                    interfaceOut.setPriceSO(priceSO); // Guardo precio de venta obtenido y que será el comunicado al POS
+                }
+
                 // Si la marca para este producto es de CREAR,
                 if (interfaceOut.getCRUDType().equalsIgnoreCase(X_Z_StechInterfaceOut.CRUDTYPE_CREATE)){
 
                     try{
-                        JSONObject jsonProduct = this.getJsonProduct(configOrg, product, priceSO);
+                        JSONObject jsonProduct = this.getJsonProduct(configOrg, product, interfaceOut.getPriceSO());
 
-                        String messagePOS = this.sendJsonToPos("articulos", jsonProduct, configOrg);
+                        String messagePOS = this.executeJsonPOST("articulos", jsonProduct, configOrg);
 
                         if (messagePOS == null){
                             success = true;
@@ -249,13 +270,15 @@ public class ProcesadorInterfaceOut {
      * En caso de recibir un id de proceso de comunicacion de datos al pos, debo filtrar segun proceso o no precios.
      * Xpande. Created by Gabriel Vila on 7/24/17.
      * @return
+     * @param adOrgID
      * @param zComunicacionPosID
      * @param processPrices
      */
-    private List<MZStechInterfaceOut> getLinesProdsNotExecuted(int zComunicacionPosID, boolean processPrices){
+    private List<MZStechInterfaceOut> getLinesProdsNotExecuted(int adOrgID, int zComunicacionPosID, boolean processPrices){
 
         String whereClause = X_Z_StechInterfaceOut.COLUMNNAME_IsExecuted + " ='N' " +
-                " AND " + X_Z_StechInterfaceOut.COLUMNNAME_AD_Table_ID + " =" + I_M_Product.Table_ID;
+                " AND " + X_Z_StechInterfaceOut.COLUMNNAME_AD_Table_ID + " =" + I_M_Product.Table_ID +
+                " AND " + X_Z_StechInterfaceOut.COLUMNNAME_AD_OrgTrx_ID + " =" + adOrgID;
 
         Timestamp fechaHoy = TimeUtil.trunc(new Timestamp(System.currentTimeMillis()), TimeUtil.TRUNC_DAY);
 
@@ -453,7 +476,7 @@ public class ProcesadorInterfaceOut {
      * @param configOrg
      * @return
      */
-    private String sendJsonToPos(String serviceName, JSONObject jsonObject, MZScanntechConfigOrg configOrg){
+    private String executeJsonPOST(String serviceName, JSONObject jsonObject, MZScanntechConfigOrg configOrg){
 
         String message = null;
         int timeout = 120;
