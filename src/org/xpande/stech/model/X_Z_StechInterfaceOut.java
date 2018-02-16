@@ -33,7 +33,7 @@ public class X_Z_StechInterfaceOut extends PO implements I_Z_StechInterfaceOut, 
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20180205L;
+	private static final long serialVersionUID = 20180215L;
 
     /** Standard Constructor */
     public X_Z_StechInterfaceOut (Properties ctx, int Z_StechInterfaceOut_ID, String trxName)
@@ -52,6 +52,8 @@ public class X_Z_StechInterfaceOut extends PO implements I_Z_StechInterfaceOut, 
 // N
 			setRecord_ID (0);
 			setSeqNo (0);
+			setWithOfferSO (false);
+// N
 			setZ_StechInterfaceOut_ID (0);
         } */
     }
@@ -195,6 +197,23 @@ public class X_Z_StechInterfaceOut extends PO implements I_Z_StechInterfaceOut, 
 	public String getDescription () 
 	{
 		return (String)get_Value(COLUMNNAME_Description);
+	}
+
+	/** Set End Date.
+		@param EndDate 
+		Last effective date (inclusive)
+	  */
+	public void setEndDate (Timestamp EndDate)
+	{
+		set_Value (COLUMNNAME_EndDate, EndDate);
+	}
+
+	/** Get End Date.
+		@return Last effective date (inclusive)
+	  */
+	public Timestamp getEndDate () 
+	{
+		return (Timestamp)get_Value(COLUMNNAME_EndDate);
 	}
 
 	/** Set Error Msg.
@@ -440,6 +459,23 @@ public class X_Z_StechInterfaceOut extends PO implements I_Z_StechInterfaceOut, 
 		return (String)get_Value(COLUMNNAME_ServicioApiPos);
 	}
 
+	/** Set Start Date.
+		@param StartDate 
+		First effective day (inclusive)
+	  */
+	public void setStartDate (Timestamp StartDate)
+	{
+		set_Value (COLUMNNAME_StartDate, StartDate);
+	}
+
+	/** Get Start Date.
+		@return First effective day (inclusive)
+	  */
+	public Timestamp getStartDate () 
+	{
+		return (Timestamp)get_Value(COLUMNNAME_StartDate);
+	}
+
 	/** Set URL.
 		@param URL 
 		Full URL address - e.g. http://www.adempiere.org
@@ -455,6 +491,30 @@ public class X_Z_StechInterfaceOut extends PO implements I_Z_StechInterfaceOut, 
 	public String getURL () 
 	{
 		return (String)get_Value(COLUMNNAME_URL);
+	}
+
+	/** Set WithOfferSO.
+		@param WithOfferSO 
+		Si tiene o no oferta en precio de venta en Retail
+	  */
+	public void setWithOfferSO (boolean WithOfferSO)
+	{
+		set_Value (COLUMNNAME_WithOfferSO, Boolean.valueOf(WithOfferSO));
+	}
+
+	/** Get WithOfferSO.
+		@return Si tiene o no oferta en precio de venta en Retail
+	  */
+	public boolean isWithOfferSO () 
+	{
+		Object oo = get_Value(COLUMNNAME_WithOfferSO);
+		if (oo != null) 
+		{
+			 if (oo instanceof Boolean) 
+				 return ((Boolean)oo).booleanValue(); 
+			return "Y".equals(oo);
+		}
+		return false;
 	}
 
 	/** Set Z_ComunicacionPOS ID.
