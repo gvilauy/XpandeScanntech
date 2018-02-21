@@ -288,8 +288,15 @@ public class ValidatorScanntech implements ModelValidator {
                     MZStechInterfaceOut scanntechInterfaceOut = new MZStechInterfaceOut(model.getCtx(), 0, model.get_TrxName());
                     scanntechInterfaceOut.setCRUDType(X_Z_StechInterfaceOut.CRUDTYPE_DELETE);
                     scanntechInterfaceOut.setAD_Table_ID(I_Z_ProductoUPC.Table_ID);
-                    scanntechInterfaceOut.setRecord_ID(model.get_ID());
+
+                    // A diferencia de sisteco, cuando hago interface de barras eliminadas a scanntech, necesito el codigo interno del producto.
+                    // Por esta razon si guardo el id de la tabla z_productoupc, cuando voy a interfacear este registro ya fue deleteado, y necesito
+                    // el producto. Por eso guardo ID de producto.
+                    scanntechInterfaceOut.setRecord_ID(product.get_ID());
+
+                    // Aca guardo el codigo de barras eliminado
                     scanntechInterfaceOut.setDescription(model.getUPC().trim());
+
                     scanntechInterfaceOut.setSeqNo(13);
                     scanntechInterfaceOut.setAD_OrgTrx_ID(configOrg.getAD_OrgTrx_ID());
                     scanntechInterfaceOut.saveEx();
