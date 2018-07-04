@@ -637,6 +637,7 @@ public class ProcesadorInterfaceOut {
     private JSONObject getJsonProduct(MZScanntechConfigOrg configOrg, MProduct product, BigDecimal priceSO, boolean isDelete, boolean updatePrecioVta) {
 
         JSONObject jsonProduct = new JSONObject();
+        String sql = "";
 
         try {
 
@@ -717,9 +718,33 @@ public class ProcesadorInterfaceOut {
             jsonProduct.put("usaBalanza", productoBalanza);
             jsonProduct.put("plu", codigoPesable);
 
-            // Jerarquia del producto
-            jsonProduct.put("codigoCategoria", 1); // Sección
-            jsonProduct.put("codigoFamilia", 1); // Rubro
+            // Jerarquias del producto
+            // Rubro
+            /*
+            if (product.get_ValueAsInt("Z_ProductoRubro_ID") > 0){
+                sql = " select cast(codigorubropos as numeric(10,0)) from z_productorubro where z_productorubro_id =" + product.get_ValueAsInt("Z_ProductoRubro_ID");
+                int codigoRubroPos = DB.getSQLValueEx(null, sql);
+                if (codigoRubroPos > 0){
+                    jsonProduct.put("codigoCategoria", codigoRubroPos); // Rubro
+                }
+            }
+            */
+            // Familia
+            if (product.get_ValueAsInt("Z_ProductoFamilia_ID") > 0){
+                sql = " select cast(codigofamiliapos as numeric(10,0)) from z_productofamilia where z_productofamilia_id =" + product.get_ValueAsInt("Z_ProductoFamilia_ID");
+                int codigoFamiliaPos = DB.getSQLValueEx(null, sql);
+                if (codigoFamiliaPos > 0){
+                    jsonProduct.put("codigoFamilia", codigoFamiliaPos); // Familia
+                }
+            }
+            // SubFamilia
+            if (product.get_ValueAsInt("Z_ProductoSubfamilia_ID") > 0){
+                sql = " select cast(codigopos as numeric(10,0)) from z_productosubfamilia where z_productosubfamilia_id =" + product.get_ValueAsInt("Z_ProductoSubfamilia_ID");
+                int codigoSubFamiliaPos = DB.getSQLValueEx(null, sql);
+                if (codigoSubFamiliaPos > 0){
+                    jsonProduct.put("codigoSubFamilia", codigoSubFamiliaPos); // Familia
+                }
+            }
 
             // Precio, descuentos, impuestos
             if (product.getC_TaxCategory_ID() <= 0){
@@ -788,8 +813,9 @@ public class ProcesadorInterfaceOut {
 
         try{
 
-            String url = this.scanntechConfig.getURL() + "/" + this.scanntechConfig.getMetodoPos() + "/" +
-                    configOrg.getCodigoEmpPos().trim() + "/" + serviceName;
+            //String url = this.scanntechConfig.getURL() + "/" + this.scanntechConfig.getMetodoPos() + "/" + configOrg.getCodigoEmpPos().trim() + "/" + serviceName;
+
+            String url = this.scanntechConfig.getURL() + this.scanntechConfig.getMetodoPos() + "/" + configOrg.getCodigoEmpPos().trim() + "/" + serviceName;
 
             String credentials = this.scanntechConfig.getUsuarioPos().trim() + ":" + this.scanntechConfig.getClavePos().trim();
 
