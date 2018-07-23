@@ -341,32 +341,36 @@ public class ProcesadorInterfaceOut {
                 String errorMessage = null;
                 MProduct product = new MProduct(this.ctx, interfaceOut.getRecord_ID(), null);
 
-                MPriceList priceList = null;
-                if (interfaceOut.getM_PriceList_ID() > 0){
-                    priceList = (MPriceList) interfaceOut.getM_PriceList();
-                }
-                else{
-                    priceList = PriceListUtils.getPriceListByOrg(this.ctx, interfaceOut.getAD_Client_ID(), adOrgID, 142, true, null);
-                    if ((priceList == null) || (priceList.get_ID() <= 0)){
-                        priceList = PriceListUtils.getPriceListByOrg(this.ctx, interfaceOut.getAD_Client_ID(), adOrgID, 100, true, null);
-                    }
-                }
-                // Precio de venta
-                MPriceListVersion priceListVersion = priceList.getPriceListVersion(null);
-                MProductPrice productPrice = MProductPrice.get(this.ctx, priceListVersion.get_ID(), product.get_ID(), null);
-                if (productPrice == null){
-                    throw new AdempiereException("No se obtuvo precio de venta para el producto con ID : " + product.get_ID());
-                }
-                BigDecimal priceSO = productPrice.getPriceList();
+                // Si no es una operación de Delete, obtengo el precio de venta del producto.
+                if (!interfaceOut.getCRUDType().equalsIgnoreCase(X_Z_StechInterfaceOut.CRUDTYPE_DELETE)){
 
-                // Si es marca de producto en oferta, tomo directo el precio de oferta seteado aqui
-                if (interfaceOut.isWithOfferSO()){
-                    if ((interfaceOut.getPriceSO() == null) || (interfaceOut.getPriceSO().compareTo(Env.ZERO) <= 0)){
-                        throw new AdempiereException("No se obtuvo precio de venta de OFERTA para el producto con ID : " + product.get_ID());
+                    MPriceList priceList = null;
+                    if (interfaceOut.getM_PriceList_ID() > 0){
+                        priceList = (MPriceList) interfaceOut.getM_PriceList();
                     }
-                }
-                else{
-                    interfaceOut.setPriceSO(priceSO); // Guardo precio de venta obtenido y que será el comunicado al POS
+                    else{
+                        priceList = PriceListUtils.getPriceListByOrg(this.ctx, interfaceOut.getAD_Client_ID(), adOrgID, 142, true, null);
+                        if ((priceList == null) || (priceList.get_ID() <= 0)){
+                            priceList = PriceListUtils.getPriceListByOrg(this.ctx, interfaceOut.getAD_Client_ID(), adOrgID, 100, true, null);
+                        }
+                    }
+                    // Precio de venta
+                    MPriceListVersion priceListVersion = priceList.getPriceListVersion(null);
+                    MProductPrice productPrice = MProductPrice.get(this.ctx, priceListVersion.get_ID(), product.get_ID(), null);
+                    if (productPrice == null){
+                        throw new AdempiereException("No se obtuvo precio de venta para el producto con ID : " + product.get_ID());
+                    }
+                    BigDecimal priceSO = productPrice.getPriceList();
+
+                    // Si es marca de producto en oferta, tomo directo el precio de oferta seteado aqui
+                    if (interfaceOut.isWithOfferSO()){
+                        if ((interfaceOut.getPriceSO() == null) || (interfaceOut.getPriceSO().compareTo(Env.ZERO) <= 0)){
+                            throw new AdempiereException("No se obtuvo precio de venta de OFERTA para el producto con ID : " + product.get_ID());
+                        }
+                    }
+                    else{
+                        interfaceOut.setPriceSO(priceSO); // Guardo precio de venta obtenido y que será el comunicado al POS
+                    }
                 }
 
                 try{
@@ -716,25 +720,25 @@ public class ProcesadorInterfaceOut {
                 }
             }
             jsonProduct.put("usaBalanza", productoBalanza);
+            jsonProduct.put("exportable", productoBalanza);
             jsonProduct.put("plu", codigoPesable);
 
             // Jerarquias del producto
             // Rubro
-            /*
             if (product.get_ValueAsInt("Z_ProductoRubro_ID") > 0){
-                sql = " select cast(codigorubropos as numeric(10,0)) from z_productorubro where z_productorubro_id =" + product.get_ValueAsInt("Z_ProductoRubro_ID");
-                int codigoRubroPos = DB.getSQLValueEx(null, sql);
-                if (codigoRubroPos > 0){
-                    jsonProduct.put("codigoCategoria", codigoRubroPos); // Rubro
+                sql = " select cast(codigopos as numeric(10,0)) from z_productorubro where z_productorubro_id =" + product.get_ValueAsInt("Z_ProductoRubro_ID");
+                int codigoPos = DB.getSQLValueEx(null, sql);
+                if (codigoPos > 0){
+                    jsonProduct.put("codigoCategoria", codigoPos); // Rubro
                 }
             }
-            */
+
             // Familia
             if (product.get_ValueAsInt("Z_ProductoFamilia_ID") > 0){
-                sql = " select cast(codigofamiliapos as numeric(10,0)) from z_productofamilia where z_productofamilia_id =" + product.get_ValueAsInt("Z_ProductoFamilia_ID");
-                int codigoFamiliaPos = DB.getSQLValueEx(null, sql);
-                if (codigoFamiliaPos > 0){
-                    jsonProduct.put("codigoFamilia", codigoFamiliaPos); // Familia
+                sql = " select cast(codigopos as numeric(10,0)) from z_productofamilia where z_productofamilia_id =" + product.get_ValueAsInt("Z_ProductoFamilia_ID");
+                int codigoPos = DB.getSQLValueEx(null, sql);
+                if (codigoPos > 0){
+                    jsonProduct.put("codigoFamilia", codigoPos); // Familia
                 }
             }
             // SubFamilia
@@ -882,7 +886,7 @@ public class ProcesadorInterfaceOut {
 
         try{
 
-            String url = this.scanntechConfig.getURL() + "/" + this.scanntechConfig.getMetodoPos() + "/" +
+            String url = this.scanntechConfig.getURL() + this.scanntechConfig.getMetodoPos() + "/" +
                     configOrg.getCodigoEmpPos().trim() + "/" + serviceName;
 
             String credentials = this.scanntechConfig.getUsuarioPos().trim() + ":" + this.scanntechConfig.getClavePos().trim();
@@ -949,7 +953,7 @@ public class ProcesadorInterfaceOut {
 
         try{
 
-            String url = this.scanntechConfig.getURL() + "/" + this.scanntechConfig.getMetodoPos() + "/" +
+            String url = this.scanntechConfig.getURL() + this.scanntechConfig.getMetodoPos() + "/" +
                     configOrg.getCodigoEmpPos().trim() + "/" + serviceName;
 
             String credentials = this.scanntechConfig.getUsuarioPos().trim() + ":" + this.scanntechConfig.getClavePos().trim();
@@ -1015,7 +1019,7 @@ public class ProcesadorInterfaceOut {
 
         try{
 
-            String url = this.scanntechConfig.getURL() + "/" + this.scanntechConfig.getMetodoPos() + "/" +
+            String url = this.scanntechConfig.getURL() + this.scanntechConfig.getMetodoPos() + "/" +
                     configOrg.getCodigoEmpPos().trim() + "/" + serviceName;
 
             String credentials = this.scanntechConfig.getUsuarioPos().trim() + ":" + this.scanntechConfig.getClavePos().trim();
