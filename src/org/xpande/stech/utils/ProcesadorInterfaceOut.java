@@ -761,7 +761,9 @@ public class ProcesadorInterfaceOut {
             jsonProduct.put("ivaVenta", tax.getRate());
 
             jsonProduct.put("precioVenta", priceSO);
-            jsonProduct.put("descuento", false);
+
+            boolean esBonificable = product.get_ValueAsBoolean("IsBonificable");
+            jsonProduct.put("descuento", esBonificable);
 
         }
         catch (Exception e) {
