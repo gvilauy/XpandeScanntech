@@ -358,14 +358,14 @@ public class ProcesadorInterfaceOut {
                     MPriceListVersion priceListVersion = priceList.getPriceListVersion(null);
                     MProductPrice productPrice = MProductPrice.get(this.ctx, priceListVersion.get_ID(), product.get_ID(), null);
                     if (productPrice == null){
-                        throw new AdempiereException("No se obtuvo precio de venta para el producto con ID : " + product.get_ID());
+                        throw new AdempiereException("No se obtuvo precio de venta para el producto con código interno : " + product.getValue());
                     }
                     BigDecimal priceSO = productPrice.getPriceList();
 
                     // Si es marca de producto en oferta, tomo directo el precio de oferta seteado aqui
                     if (interfaceOut.isWithOfferSO()){
                         if ((interfaceOut.getPriceSO() == null) || (interfaceOut.getPriceSO().compareTo(Env.ZERO) <= 0)){
-                            throw new AdempiereException("No se obtuvo precio de venta de OFERTA para el producto con ID : " + product.get_ID());
+                            throw new AdempiereException("No se obtuvo precio de venta de OFERTA para el producto con código interno : " + product.getValue());
                         }
                     }
                     else{
