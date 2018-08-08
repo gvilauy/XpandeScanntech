@@ -4,6 +4,7 @@ import org.compiere.model.*;
 import org.compiere.util.DB;
 import org.xpande.core.model.I_Z_ProductoUPC;
 import org.xpande.core.model.MZProductoUPC;
+import org.xpande.stech.utils.ProcesadorInterfaceOut;
 
 import java.util.List;
 
@@ -232,6 +233,10 @@ public class ValidatorScanntech implements ModelValidator {
                             scanntechInterfaceOut.saveEx();
                         }
 
+                        // Ejecuto marca en el momento y la envío inmediatamente al POS
+                        ProcesadorInterfaceOut procesadorInterfaceOut = new ProcesadorInterfaceOut(model.getCtx(), model.get_TrxName());
+                        procesadorInterfaceOut.executeInterfaceOutProduct(scanntechInterfaceOut, 0, false, configOrg);
+
                         //mensaje = scanntechInterfaceOut.execute(); // Info a cajas del pos en este momento.
                     }
 
@@ -271,9 +276,11 @@ public class ValidatorScanntech implements ModelValidator {
 
         for (MZScanntechConfigOrg configOrg: orgs){
 
+            MZStechInterfaceOut scanntechInterfaceOut = null;
+
             if (type == ModelValidator.TYPE_AFTER_NEW){
                 // Marca Create
-                MZStechInterfaceOut scanntechInterfaceOut = new MZStechInterfaceOut(model.getCtx(), 0, model.get_TrxName());
+                scanntechInterfaceOut = new MZStechInterfaceOut(model.getCtx(), 0, model.get_TrxName());
                 scanntechInterfaceOut.setCRUDType(X_Z_StechInterfaceOut.CRUDTYPE_CREATE);
                 scanntechInterfaceOut.setAD_Table_ID(I_Z_ProductoUPC.Table_ID);
                 scanntechInterfaceOut.setRecord_ID(model.get_ID());
@@ -286,7 +293,7 @@ public class ValidatorScanntech implements ModelValidator {
 
                 // Marca Update si tengo UPC
                 if (model.getUPC() != null){
-                    MZStechInterfaceOut scanntechInterfaceOut = new MZStechInterfaceOut(model.getCtx(), 0, model.get_TrxName());
+                    scanntechInterfaceOut = new MZStechInterfaceOut(model.getCtx(), 0, model.get_TrxName());
                     scanntechInterfaceOut.setCRUDType(X_Z_StechInterfaceOut.CRUDTYPE_DELETE);
                     scanntechInterfaceOut.setAD_Table_ID(I_Z_ProductoUPC.Table_ID);
 
@@ -302,6 +309,12 @@ public class ValidatorScanntech implements ModelValidator {
                     scanntechInterfaceOut.setAD_OrgTrx_ID(configOrg.getAD_OrgTrx_ID());
                     scanntechInterfaceOut.saveEx();
                 }
+            }
+
+            // Si tengo marca seteada, la ejecuto en el momento y la envío inmediatamente al POS
+            if ((scanntechInterfaceOut != null) && (scanntechInterfaceOut.get_ID() > 0)){
+                ProcesadorInterfaceOut procesadorInterfaceOut = new ProcesadorInterfaceOut(model.getCtx(), model.get_TrxName());
+                procesadorInterfaceOut.executeInterfaceOutUpc(scanntechInterfaceOut, 0, false, configOrg, null);
             }
         }
 

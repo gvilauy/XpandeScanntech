@@ -316,12 +316,11 @@ public class ProcesadorInterfaceOut {
     private String executeInterfaceOutProducts(int adOrgID, int zComunicacionPosID, boolean processPrices) {
 
         String message = null;
+        String action = "";
 
         HashMap<Integer, Integer> hashProds = new HashMap<Integer, Integer>();
 
         try{
-
-            Timestamp fechaHoy = TimeUtil.trunc(new Timestamp(System.currentTimeMillis()), TimeUtil.TRUNC_DAY);
 
             // Obtengo parametrizacion de Scanntech para la organización de este proceso
             MZScanntechConfigOrg configOrg = scanntechConfig.getOrgConfig(adOrgID);
@@ -330,63 +329,115 @@ public class ProcesadorInterfaceOut {
             List<MZStechInterfaceOut> interfaceOuts = this.getLinesProdsNotExecuted(adOrgID, zComunicacionPosID, processPrices);
             for (MZStechInterfaceOut interfaceOut: interfaceOuts){
 
-                // Si es marca de oferta y su vigencia no es acorde a la fecha actual, no proceso esta marca
+                this.executeInterfaceOutProduct(interfaceOut, zComunicacionPosID, processPrices, configOrg);
+
+                if (interfaceOut.isExecuted()){
+                    // Guardo id de producto en hash para luego ver consideración o no de códigos de barras.
+                    if (!hashProds.containsKey(interfaceOut.getRecord_ID())){
+                        hashProds.put(interfaceOut.getRecord_ID(), interfaceOut.getRecord_ID());
+                    }
+                }
+            }
+
+            // Obtengo y recorro lineas de interface aun no ejecutadas para códigos de barra de productos
+            interfaceOuts = this.getLinesUPCNotExecuted();
+            for (MZStechInterfaceOut interfaceOut: interfaceOuts){
+
+                this.executeInterfaceOutUpc(interfaceOut, zComunicacionPosID, processPrices, configOrg, hashProds);
+
+            }
+
+        }
+        catch (Exception e){
+            throw new AdempiereException(e);
+        }
+        return message;
+
+    }
+
+    /***
+     * Ejecuta interface de una marca de producto recibida.
+     * Xpande. Created by Gabriel Vila on 8/8/18.
+     * @param interfaceOut
+     * @param zComunicacionPosID
+     * @param processPrices
+     * @param configOrg
+     */
+    public void executeInterfaceOutProduct(MZStechInterfaceOut interfaceOut, int zComunicacionPosID, boolean processPrices,
+                                           MZScanntechConfigOrg configOrg) {
+        String action = "";
+
+        try{
+
+            Timestamp fechaHoy = TimeUtil.trunc(new Timestamp(System.currentTimeMillis()), TimeUtil.TRUNC_DAY);
+
+            // Si es marca de oferta y su vigencia no es acorde a la fecha actual, no proceso esta marca
+            if (interfaceOut.isWithOfferSO()){
+                if ((interfaceOut.getStartDate().after(fechaHoy)) || (interfaceOut.getEndDate().before(fechaHoy))){
+                    return;
+                }
+            }
+
+            boolean success = false;
+            String errorMessage = null;
+            MProduct product = new MProduct(this.ctx, interfaceOut.getRecord_ID(), null);
+
+            // Si no es una operación de Delete
+            if (!interfaceOut.getCRUDType().equalsIgnoreCase(X_Z_StechInterfaceOut.CRUDTYPE_DELETE)){
+
+                // Obtengo el precio de venta del producto.
+                MPriceList priceList = null;
+                if (interfaceOut.getM_PriceList_ID() > 0){
+                    priceList = (MPriceList) interfaceOut.getM_PriceList();
+                }
+                else{
+                    priceList = PriceListUtils.getPriceListByOrg(this.ctx, interfaceOut.getAD_Client_ID(), configOrg.getAD_OrgTrx_ID(), 142, true, null);
+                    if ((priceList == null) || (priceList.get_ID() <= 0)){
+                        priceList = PriceListUtils.getPriceListByOrg(this.ctx, interfaceOut.getAD_Client_ID(), configOrg.getAD_OrgTrx_ID(), 100, true, null);
+                    }
+                }
+                // Precio de venta
+                MPriceListVersion priceListVersion = priceList.getPriceListVersion(null);
+                MProductPrice productPrice = MProductPrice.get(this.ctx, priceListVersion.get_ID(), product.get_ID(), null);
+                if (productPrice == null){
+                    interfaceOut.setIsExecuted(true);
+                    interfaceOut.setDescription("No se obtuvo precio de venta para el producto con código interno : " + product.getValue());
+                    interfaceOut.saveEx();
+                    return;
+                    //throw new AdempiereException("No se obtuvo precio de venta para el producto con código interno : " + product.getValue());
+                }
+                BigDecimal priceSO = productPrice.getPriceList();
+
+                // Si es marca de producto en oferta, tomo directo el precio de oferta seteado aqui
                 if (interfaceOut.isWithOfferSO()){
-                    if ((interfaceOut.getStartDate().after(fechaHoy)) || (interfaceOut.getEndDate().before(fechaHoy))){
-                        continue;
+                    if ((interfaceOut.getPriceSO() == null) || (interfaceOut.getPriceSO().compareTo(Env.ZERO) <= 0)){
+                        interfaceOut.setIsExecuted(true);
+                        interfaceOut.setDescription("No se obtuvo precio de venta de OFERTA para el producto con código interno : " + product.getValue());
+                        interfaceOut.saveEx();
+                        return;
+
+                        //throw new AdempiereException("No se obtuvo precio de venta de OFERTA para el producto con código interno : " + product.getValue());
                     }
                 }
-
-                boolean success = false;
-                String errorMessage = null;
-                MProduct product = new MProduct(this.ctx, interfaceOut.getRecord_ID(), null);
-
-                // Si no es una operación de Delete, obtengo el precio de venta del producto.
-                if (!interfaceOut.getCRUDType().equalsIgnoreCase(X_Z_StechInterfaceOut.CRUDTYPE_DELETE)){
-
-                    MPriceList priceList = null;
-                    if (interfaceOut.getM_PriceList_ID() > 0){
-                        priceList = (MPriceList) interfaceOut.getM_PriceList();
-                    }
-                    else{
-                        priceList = PriceListUtils.getPriceListByOrg(this.ctx, interfaceOut.getAD_Client_ID(), adOrgID, 142, true, null);
-                        if ((priceList == null) || (priceList.get_ID() <= 0)){
-                            priceList = PriceListUtils.getPriceListByOrg(this.ctx, interfaceOut.getAD_Client_ID(), adOrgID, 100, true, null);
-                        }
-                    }
-                    // Precio de venta
-                    MPriceListVersion priceListVersion = priceList.getPriceListVersion(null);
-                    MProductPrice productPrice = MProductPrice.get(this.ctx, priceListVersion.get_ID(), product.get_ID(), null);
-                    if (productPrice == null){
-                        throw new AdempiereException("No se obtuvo precio de venta para el producto con código interno : " + product.getValue());
-                    }
-                    BigDecimal priceSO = productPrice.getPriceList();
-
-                    // Si es marca de producto en oferta, tomo directo el precio de oferta seteado aqui
-                    if (interfaceOut.isWithOfferSO()){
-                        if ((interfaceOut.getPriceSO() == null) || (interfaceOut.getPriceSO().compareTo(Env.ZERO) <= 0)){
-                            throw new AdempiereException("No se obtuvo precio de venta de OFERTA para el producto con código interno : " + product.getValue());
-                        }
-                    }
-                    else{
-                        interfaceOut.setPriceSO(priceSO); // Guardo precio de venta obtenido y que será el comunicado al POS
-                    }
+                else{
+                    interfaceOut.setPriceSO(priceSO); // Guardo precio de venta obtenido y que será el comunicado al POS
                 }
+            }
 
-                try{
-                    String messagePOS = null;
+            try{
+                String messagePOS = null;
 
-                    if (interfaceOut.getCRUDType().equalsIgnoreCase(X_Z_StechInterfaceOut.CRUDTYPE_CREATE)){
-                        JSONObject jsonProduct = this.getJsonProduct(configOrg, product, interfaceOut.getPriceSO(), false, false);
-                        messagePOS = this.executeJsonPOST("articulos", jsonProduct, configOrg);
-                    }
-                    else if (interfaceOut.getCRUDType().equalsIgnoreCase(X_Z_StechInterfaceOut.CRUDTYPE_UPDATE)){
+                if (interfaceOut.getCRUDType().equalsIgnoreCase(X_Z_StechInterfaceOut.CRUDTYPE_CREATE)){
+                    JSONObject jsonProduct = this.getJsonProduct(configOrg, product, interfaceOut.getPriceSO(), false, false);
+                    messagePOS = this.executeJsonPOST("articulos", jsonProduct, configOrg);
+                }
+                else if (interfaceOut.getCRUDType().equalsIgnoreCase(X_Z_StechInterfaceOut.CRUDTYPE_UPDATE)){
 
-                        boolean updatePrecioVta = interfaceOut.isPriceChanged();
+                    boolean updatePrecioVta = interfaceOut.isPriceChanged();
 
-                        // Mando false como modificacion sola de precio, por las dudas que ademas del precio se hayan modificado otros atributos
-                        // del producto.
-                        JSONObject jsonProduct = this.getJsonProduct(configOrg, product, interfaceOut.getPriceSO(), false, false);
+                    // Mando false como modificacion sola de precio, por las dudas que ademas del precio se hayan modificado otros atributos
+                    // del producto.
+                    JSONObject jsonProduct = this.getJsonProduct(configOrg, product, interfaceOut.getPriceSO(), false, false);
 
                         /*
                         // Por ahora mando modificacion total del producto por las dudas. Este codigo servira luego para afinar cuando solo es modificacion de precio
@@ -397,137 +448,152 @@ public class ProcesadorInterfaceOut {
                             messagePOS = this.executeJsonPUT("articulos/" + product.getValue(), jsonProduct, configOrg);
                         }
                         */
-                        messagePOS = this.executeJsonPUT("articulos/" + product.getValue(), jsonProduct, configOrg);
+                    messagePOS = this.executeJsonPUT("articulos/" + product.getValue(), jsonProduct, configOrg);
 
-                    }
-                    else if (interfaceOut.getCRUDType().equalsIgnoreCase(X_Z_StechInterfaceOut.CRUDTYPE_DELETE)){
-
-                        JSONObject jsonProduct = this.getJsonProduct(configOrg, product, interfaceOut.getPriceSO(), true, false);
-                        messagePOS = this.executeJsonDELETE("articulos/" + product.getValue(), jsonProduct, configOrg);
-
-                    }
-                    else{
-                        messagePOS = "Operación CRUD inválida en Marca con ID : " + interfaceOut.get_ID();
-                    }
-
-                    if (messagePOS == null){
-                        success = true;
-
-                        // Guardo id de producto en hash para luego ver consideración o no de códigos de barras.
-                        if (!hashProds.containsKey(interfaceOut.getRecord_ID())){
-                            hashProds.put(interfaceOut.getRecord_ID(), interfaceOut.getRecord_ID());
-                        }
-                    }
-                    else{
-                        success = false;
-                        errorMessage = messagePOS;
-                    }
                 }
-                catch (Exception e){
-                    // Hubo error en el proceso de envio de info al POS para este producto
-                    // Marco linea con error y no ejecutada
-                    errorMessage = e.getMessage();
+                else if (interfaceOut.getCRUDType().equalsIgnoreCase(X_Z_StechInterfaceOut.CRUDTYPE_DELETE)){
+
+                    JSONObject jsonProduct = this.getJsonProduct(configOrg, product, interfaceOut.getPriceSO(), true, false);
+                    messagePOS = this.executeJsonDELETE("articulos/" + product.getValue(), jsonProduct, configOrg);
+
+                }
+                else{
+                    messagePOS = "Operación CRUD inválida en Marca con ID : " + interfaceOut.get_ID();
+                }
+
+                if (messagePOS == null){
+                    success = true;
+
+
+                    // Marco el producto como comunicado al POS
+                    if (!interfaceOut.getCRUDType().equalsIgnoreCase(X_Z_StechInterfaceOut.CRUDTYPE_DELETE)){
+                        action = " update m_product set ComunicadoPos ='Y' where m_product_id =" + product.get_ID();
+                        DB.executeUpdateEx(action, null);
+                    }
+
+                }
+                else{
                     success = false;
+                    errorMessage = messagePOS;
                 }
-
-                // Marco linea con resultado del envío
-                interfaceOut.setIsExecuted(success);
-                if (errorMessage != null){
-                    interfaceOut.setErrorMsg(errorMessage);
-                }
-                interfaceOut.setDateExecuted(new Timestamp(System.currentTimeMillis()));
-                if (zComunicacionPosID > 0){
-                    interfaceOut.setZ_ComunicacionPOS_ID(zComunicacionPosID);
-                }
-                interfaceOut.saveEx();
+            }
+            catch (Exception e){
+                // Hubo error en el proceso de envio de info al POS para este producto
+                // Marco linea con error y no ejecutada
+                errorMessage = e.getMessage();
+                success = false;
             }
 
-            // Obtengo y recorro lineas de interface aun no ejecutadas para códigos de barra de productos
-            interfaceOuts = this.getLinesUPCNotExecuted();
-            for (MZStechInterfaceOut interfaceOut: interfaceOuts){
-
-                boolean success = false;
-                String errorMessage = null;
-
-                try{
-                    String messagePOS = null;
-
-                    // Si es marca de create
-                    if (interfaceOut.getCRUDType().equalsIgnoreCase(X_Z_StechInterfaceOut.CRUDTYPE_CREATE)){
-
-                        // Cuando creo un UPC, el Record_ID de la marca = ID de la tabla de codigos de barra
-                        MZProductoUPC productoUPC = new MZProductoUPC(this.ctx, interfaceOut.getRecord_ID(), this.trxName);
-                        MProduct product = (MProduct) productoUPC.getM_Product();
-
-                        // Si estoy en la opcion de no procesar cambios de precios
-                        if (!processPrices){
-
-                            // Debo verificar que el producto asociado a este codigo de barras, haya sido comunicado alguna vez al pos.
-                            if (!product.get_ValueAsBoolean("ComunicadoPOS")){
-                                continue;
-                            }
-                        }
-                        else{
-                            // Estoy comunicando precios
-                            // Si el producto no fue comunicado nunca al pos
-                            if (!product.get_ValueAsBoolean("ComunicadoPOS")){
-                                // Si el producto no esta siendo comunicado en este proceso
-                                if (!hashProds.containsKey(product.get_ID())){
-                                    // No comunico esta barra
-                                    continue;
-                                }
-                            }
-                        }
-
-                        JSONObject jsonUpc = this.getJsonUpc(product, productoUPC.getUPC().trim(), configOrg.getCodigoEmpPos());
-                        messagePOS = this.executeJsonPOST("articulos/" + product.getValue().trim() + "/barras", jsonUpc, configOrg);
-
-                    }
-                    else if (interfaceOut.getCRUDType().equalsIgnoreCase(X_Z_StechInterfaceOut.CRUDTYPE_DELETE)){
-
-                        // Cuando elimino un UPC, el Record_ID de la marca = ID del producto de este upc
-                        MProduct product = new MProduct(this.ctx, interfaceOut.getRecord_ID(), this.trxName);
-
-                        messagePOS = this.executeJsonDELETE("articulos/" + product.getValue().trim() + "/barras/" + interfaceOut.getDescription().trim(), configOrg);
-
-                    }
-                    else{
-                        messagePOS = "Operación CRUD inválida en Marca con ID : " + interfaceOut.get_ID();
-                    }
-
-                    if (messagePOS == null){
-                        success = true;
-                    }
-                    else{
-                        success = false;
-                        errorMessage = messagePOS;
-                    }
-                }
-                catch (Exception e){
-                    // Hubo error en el proceso de envio de info al POS para este producto
-                    // Marco linea con error y no ejecutada
-                    errorMessage = e.getMessage();
-                    success = false;
-                }
-
-                // Marco linea con resultado del envío
-                interfaceOut.setIsExecuted(success);
-                if (errorMessage != null){
-                    interfaceOut.setErrorMsg(errorMessage);
-                }
-                interfaceOut.setDateExecuted(new Timestamp(System.currentTimeMillis()));
-                if (zComunicacionPosID > 0){
-                    interfaceOut.setZ_ComunicacionPOS_ID(zComunicacionPosID);
-                }
-                interfaceOut.saveEx();
+            // Marco linea con resultado del envío
+            interfaceOut.setIsExecuted(success);
+            if (errorMessage != null){
+                interfaceOut.setErrorMsg(errorMessage);
             }
+            interfaceOut.setDateExecuted(new Timestamp(System.currentTimeMillis()));
+            if (zComunicacionPosID > 0){
+                interfaceOut.setZ_ComunicacionPOS_ID(zComunicacionPosID);
+            }
+            interfaceOut.saveEx();
 
         }
         catch (Exception e){
             throw new AdempiereException(e);
         }
-        return message;
+    }
 
+
+    /***
+     * Ejecuta interface de una marca de codigo de barra recibida.
+     * Xpande. Created by Gabriel Vila on 8/8/18.
+     * @param interfaceOut
+     * @param zComunicacionPosID
+     * @param processPrices
+     * @param configOrg
+     * @param hashProds
+     */
+    public void executeInterfaceOutUpc(MZStechInterfaceOut interfaceOut, int zComunicacionPosID, boolean processPrices,
+                                       MZScanntechConfigOrg configOrg, HashMap<Integer, Integer> hashProds) {
+
+        try{
+            boolean success = false;
+            String errorMessage = null;
+
+            try{
+                String messagePOS = null;
+
+                // Si es marca de create
+                if (interfaceOut.getCRUDType().equalsIgnoreCase(X_Z_StechInterfaceOut.CRUDTYPE_CREATE)){
+
+                    // Cuando creo un UPC, el Record_ID de la marca = ID de la tabla de codigos de barra
+                    MZProductoUPC productoUPC = new MZProductoUPC(this.ctx, interfaceOut.getRecord_ID(), this.trxName);
+                    MProduct product = (MProduct) productoUPC.getM_Product();
+
+                    // Si estoy en la opcion de no procesar cambios de precios
+                    if (!processPrices){
+
+                        // Debo verificar que el producto asociado a este codigo de barras, haya sido comunicado alguna vez al pos.
+                        if (!product.get_ValueAsBoolean("ComunicadoPOS")){
+                            return;
+                        }
+                    }
+                    else{
+                        // Estoy comunicando precios
+                        // Si el producto no fue comunicado nunca al pos
+                        if (!product.get_ValueAsBoolean("ComunicadoPOS")){
+                            // Si el producto no esta siendo comunicado en este proceso
+                            if (!hashProds.containsKey(product.get_ID())){
+                                // No comunico esta barra
+                                return;
+                            }
+                        }
+                    }
+
+                    JSONObject jsonUpc = this.getJsonUpc(product, productoUPC.getUPC().trim(), configOrg.getCodigoEmpPos());
+                    messagePOS = this.executeJsonPOST("articulos/" + product.getValue().trim() + "/barras", jsonUpc, configOrg);
+
+                }
+                else if (interfaceOut.getCRUDType().equalsIgnoreCase(X_Z_StechInterfaceOut.CRUDTYPE_DELETE)){
+
+                    // Cuando elimino un UPC, el Record_ID de la marca = ID del producto de este upc
+                    MProduct product = new MProduct(this.ctx, interfaceOut.getRecord_ID(), this.trxName);
+
+                    messagePOS = this.executeJsonDELETE("articulos/" + product.getValue().trim() + "/barras/" + interfaceOut.getDescription().trim(), configOrg);
+
+                }
+                else{
+                    messagePOS = "Operación CRUD inválida en Marca con ID : " + interfaceOut.get_ID();
+                }
+
+                if (messagePOS == null){
+                    success = true;
+                }
+                else{
+                    success = false;
+                    errorMessage = messagePOS;
+                }
+            }
+            catch (Exception e){
+                // Hubo error en el proceso de envio de info al POS para este producto
+                // Marco linea con error y no ejecutada
+                errorMessage = e.getMessage();
+                success = false;
+            }
+
+            // Marco linea con resultado del envío
+            interfaceOut.setIsExecuted(success);
+            if (errorMessage != null){
+                interfaceOut.setErrorMsg(errorMessage);
+            }
+            interfaceOut.setDateExecuted(new Timestamp(System.currentTimeMillis()));
+            if (zComunicacionPosID > 0){
+                interfaceOut.setZ_ComunicacionPOS_ID(zComunicacionPosID);
+            }
+            interfaceOut.saveEx();
+
+        }
+        catch (Exception e){
+            throw new AdempiereException(e);
+        }
     }
 
 
