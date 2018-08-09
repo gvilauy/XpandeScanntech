@@ -684,8 +684,7 @@ public class ProcesadorInterfaceOut {
      */
     public List<MZStechInterfaceOut> getMarcasProcesadas(int zComunicacionPosID) {
 
-        //String whereClause = X_Z_StechInterfaceOut.COLUMNNAME_Z_ComunicacionPOS_ID + " =" + zComunicacionPosID;
-        String whereClause = "";
+        String whereClause = X_Z_StechInterfaceOut.COLUMNNAME_Z_ComunicacionPOS_ID + " =" + zComunicacionPosID;
 
         List<MZStechInterfaceOut> lines = new Query(this.ctx, I_Z_StechInterfaceOut.Table_Name, whereClause, this.trxName).list();
 
