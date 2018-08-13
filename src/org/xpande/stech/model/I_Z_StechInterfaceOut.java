@@ -159,6 +159,19 @@ public interface I_Z_StechInterfaceOut
 	  */
 	public Timestamp getEndDate();
 
+    /** Column name EntidadInterPOS */
+    public static final String COLUMNNAME_EntidadInterPOS = "EntidadInterPOS";
+
+	/** Set EntidadInterPOS.
+	  * Entidad asociada a marca de interface de salida a POS
+	  */
+	public void setEntidadInterPOS(String EntidadInterPOS);
+
+	/** Get EntidadInterPOS.
+	  * Entidad asociada a marca de interface de salida a POS
+	  */
+	public String getEntidadInterPOS();
+
     /** Column name ErrorMsg */
     public static final String COLUMNNAME_ErrorMsg = "ErrorMsg";
 
@@ -271,6 +284,15 @@ public interface I_Z_StechInterfaceOut
 	  * PriceSO
 	  */
 	public BigDecimal getPriceSO();
+
+    /** Column name ProcessButton */
+    public static final String COLUMNNAME_ProcessButton = "ProcessButton";
+
+	/** Set ProcessButton	  */
+	public void setProcessButton(String ProcessButton);
+
+	/** Get ProcessButton	  */
+	public String getProcessButton();
 
     /** Column name Record_ID */
     public static final String COLUMNNAME_Record_ID = "Record_ID";

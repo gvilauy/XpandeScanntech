@@ -369,6 +369,11 @@ public class ProcesadorInterfaceOut {
 
         try{
 
+            if (this.scanntechConfig == null){
+                // Obtengo configurador de scanntech
+                this.scanntechConfig = MZScanntechConfig.getDefault(ctx, null);
+            }
+
             Timestamp fechaHoy = TimeUtil.trunc(new Timestamp(System.currentTimeMillis()), TimeUtil.TRUNC_DAY);
 
             // Si es marca de oferta y su vigencia no es acorde a la fecha actual, no proceso esta marca
@@ -517,6 +522,11 @@ public class ProcesadorInterfaceOut {
         try{
             boolean success = false;
             String errorMessage = null;
+
+            if (this.scanntechConfig == null){
+                // Obtengo configurador de scanntech
+                this.scanntechConfig = MZScanntechConfig.getDefault(ctx, null);
+            }
 
             try{
                 String messagePOS = null;

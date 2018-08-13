@@ -101,6 +101,8 @@ public class ValidatorScanntech implements ModelValidator {
                     scanntechInterfaceOut.setAD_Table_ID(I_M_Product.Table_ID);
                     scanntechInterfaceOut.setRecord_ID(model.get_ID());
                     scanntechInterfaceOut.setAD_OrgTrx_ID(configOrg.getAD_OrgTrx_ID());
+                    scanntechInterfaceOut.setEntidadInterPOS(X_Z_StechInterfaceOut.ENTIDADINTERPOS_PRODUCTO);
+                    scanntechInterfaceOut.setDescription("PRODUCTO : " + model.getValue() + "- " + model.getName());
                     scanntechInterfaceOut.saveEx();
 
                 }
@@ -147,6 +149,8 @@ public class ValidatorScanntech implements ModelValidator {
                                     scanntechInterfaceOut.setSeqNo(10);
                                     scanntechInterfaceOut.setRecord_ID(model.get_ID());
                                     scanntechInterfaceOut.setAD_OrgTrx_ID(configOrg.getAD_OrgTrx_ID());
+                                    scanntechInterfaceOut.setEntidadInterPOS(X_Z_StechInterfaceOut.ENTIDADINTERPOS_PRODUCTO);
+                                    scanntechInterfaceOut.setDescription("PRODUCTO : " + model.getValue() + "- " + model.getName());
                                     scanntechInterfaceOut.saveEx();
                                 }
                             }
@@ -179,6 +183,8 @@ public class ValidatorScanntech implements ModelValidator {
                                         scanntechInterfaceOut.setAD_Table_ID(I_M_Product.Table_ID);
                                         scanntechInterfaceOut.setRecord_ID(model.get_ID());
                                         scanntechInterfaceOut.setAD_OrgTrx_ID(configOrg.getAD_OrgTrx_ID());
+                                        scanntechInterfaceOut.setEntidadInterPOS(X_Z_StechInterfaceOut.ENTIDADINTERPOS_PRODUCTO);
+                                        scanntechInterfaceOut.setDescription("PRODUCTO : " + model.getValue() + "- " + model.getName());
                                         scanntechInterfaceOut.saveEx();
                                     }
                                 }
@@ -218,6 +224,8 @@ public class ValidatorScanntech implements ModelValidator {
                             scanntechInterfaceOut.setRecord_ID(model.get_ID());
                             scanntechInterfaceOut.setIsPriceChanged(false);
                             scanntechInterfaceOut.setAD_OrgTrx_ID(configOrg.getAD_OrgTrx_ID());
+                            scanntechInterfaceOut.setEntidadInterPOS(X_Z_StechInterfaceOut.ENTIDADINTERPOS_PRODUCTO);
+                            scanntechInterfaceOut.setDescription("PRODUCTO : " + model.getValue() + "- " + model.getName());
                             scanntechInterfaceOut.saveEx();
                         }
 
@@ -286,6 +294,8 @@ public class ValidatorScanntech implements ModelValidator {
                 scanntechInterfaceOut.setRecord_ID(model.get_ID());
                 scanntechInterfaceOut.setSeqNo(15);
                 scanntechInterfaceOut.setAD_OrgTrx_ID(configOrg.getAD_OrgTrx_ID());
+                scanntechInterfaceOut.setEntidadInterPOS(X_Z_StechInterfaceOut.ENTIDADINTERPOS_CODIGODEBARRAS);
+                scanntechInterfaceOut.setDescription("BARRA : " + model.getUPC().trim());
                 scanntechInterfaceOut.saveEx();
 
             }
@@ -307,6 +317,7 @@ public class ValidatorScanntech implements ModelValidator {
 
                     scanntechInterfaceOut.setSeqNo(13);
                     scanntechInterfaceOut.setAD_OrgTrx_ID(configOrg.getAD_OrgTrx_ID());
+                    scanntechInterfaceOut.setEntidadInterPOS(X_Z_StechInterfaceOut.ENTIDADINTERPOS_CODIGODEBARRAS);
                     scanntechInterfaceOut.saveEx();
                 }
             }
@@ -385,6 +396,8 @@ public class ValidatorScanntech implements ModelValidator {
                 scanntechInterfaceOut.setAD_Table_ID(I_M_Product.Table_ID);
                 scanntechInterfaceOut.setRecord_ID(product.get_ID());
                 scanntechInterfaceOut.setAD_OrgTrx_ID(priceList.getAD_Org_ID());
+                scanntechInterfaceOut.setEntidadInterPOS(X_Z_StechInterfaceOut.ENTIDADINTERPOS_PRODUCTO);
+                scanntechInterfaceOut.setDescription("PRODUCTO : " + product.getValue() + "- " + product.getName());
                 scanntechInterfaceOut.setSeqNo(30);
             }
 
@@ -433,6 +446,8 @@ public class ValidatorScanntech implements ModelValidator {
                     scanntechInterfaceOut.setAD_Table_ID(I_C_BPartner.Table_ID);
                     scanntechInterfaceOut.setRecord_ID(model.get_ID());
                     scanntechInterfaceOut.setAD_OrgTrx_ID(configOrg.getAD_OrgTrx_ID());
+                    scanntechInterfaceOut.setEntidadInterPOS(X_Z_StechInterfaceOut.ENTIDADINTERPOS_CLIENTE);
+                    scanntechInterfaceOut.setDescription("CLIENTE : " + model.getValue() + "- " + model.getName());
                     scanntechInterfaceOut.saveEx();
 
                 }
@@ -476,6 +491,8 @@ public class ValidatorScanntech implements ModelValidator {
                                     scanntechInterfaceOut.setSeqNo(30);
                                     scanntechInterfaceOut.setRecord_ID(model.get_ID());
                                     scanntechInterfaceOut.setAD_OrgTrx_ID(configOrg.getAD_OrgTrx_ID());
+                                    scanntechInterfaceOut.setEntidadInterPOS(X_Z_StechInterfaceOut.ENTIDADINTERPOS_CLIENTE);
+                                    scanntechInterfaceOut.setDescription("CLIENTE : " + model.getValue() + "- " + model.getName());
                                     scanntechInterfaceOut.saveEx();
                                 }
                             }
@@ -508,6 +525,8 @@ public class ValidatorScanntech implements ModelValidator {
                                         scanntechInterfaceOut.setAD_Table_ID(I_C_BPartner.Table_ID);
                                         scanntechInterfaceOut.setRecord_ID(model.get_ID());
                                         scanntechInterfaceOut.setAD_OrgTrx_ID(configOrg.getAD_OrgTrx_ID());
+                                        scanntechInterfaceOut.setEntidadInterPOS(X_Z_StechInterfaceOut.ENTIDADINTERPOS_CLIENTE);
+                                        scanntechInterfaceOut.setDescription("CLIENTE : " + model.getValue() + "- " + model.getName());
                                         scanntechInterfaceOut.saveEx();
                                     }
                                 }
@@ -550,13 +569,14 @@ public class ValidatorScanntech implements ModelValidator {
                                 scanntechInterfaceOut.setSeqNo(20);
                                 scanntechInterfaceOut.setRecord_ID(model.get_ID());
                                 scanntechInterfaceOut.setAD_OrgTrx_ID(configOrg.getAD_OrgTrx_ID());
+                                scanntechInterfaceOut.setEntidadInterPOS(X_Z_StechInterfaceOut.ENTIDADINTERPOS_CLIENTE);
+                                scanntechInterfaceOut.setDescription("CLIENTE : " + model.getValue() + "- " + model.getName());
                                 scanntechInterfaceOut.saveEx();
                             }
 
                         }
                     }
                 }
-
             }
         }
 

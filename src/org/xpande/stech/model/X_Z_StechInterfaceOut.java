@@ -33,7 +33,7 @@ public class X_Z_StechInterfaceOut extends PO implements I_Z_StechInterfaceOut, 
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20180215L;
+	private static final long serialVersionUID = 20180813L;
 
     /** Standard Constructor */
     public X_Z_StechInterfaceOut (Properties ctx, int Z_StechInterfaceOut_ID, String trxName)
@@ -214,6 +214,32 @@ public class X_Z_StechInterfaceOut extends PO implements I_Z_StechInterfaceOut, 
 	public Timestamp getEndDate () 
 	{
 		return (Timestamp)get_Value(COLUMNNAME_EndDate);
+	}
+
+	/** EntidadInterPOS AD_Reference_ID=1000036 */
+	public static final int ENTIDADINTERPOS_AD_Reference_ID=1000036;
+	/** PRODUCTO = PRODUCTO */
+	public static final String ENTIDADINTERPOS_PRODUCTO = "PRODUCTO";
+	/** CODIGO DE BARRAS = BARRA */
+	public static final String ENTIDADINTERPOS_CODIGODEBARRAS = "BARRA";
+	/** CLIENTE = CLIENTE */
+	public static final String ENTIDADINTERPOS_CLIENTE = "CLIENTE";
+	/** Set EntidadInterPOS.
+		@param EntidadInterPOS 
+		Entidad asociada a marca de interface de salida a POS
+	  */
+	public void setEntidadInterPOS (String EntidadInterPOS)
+	{
+
+		set_Value (COLUMNNAME_EntidadInterPOS, EntidadInterPOS);
+	}
+
+	/** Get EntidadInterPOS.
+		@return Entidad asociada a marca de interface de salida a POS
+	  */
+	public String getEntidadInterPOS () 
+	{
+		return (String)get_Value(COLUMNNAME_EntidadInterPOS);
 	}
 
 	/** Set Error Msg.
@@ -397,6 +423,20 @@ public class X_Z_StechInterfaceOut extends PO implements I_Z_StechInterfaceOut, 
 		if (bd == null)
 			 return Env.ZERO;
 		return bd;
+	}
+
+	/** Set ProcessButton.
+		@param ProcessButton ProcessButton	  */
+	public void setProcessButton (String ProcessButton)
+	{
+		set_Value (COLUMNNAME_ProcessButton, ProcessButton);
+	}
+
+	/** Get ProcessButton.
+		@return ProcessButton	  */
+	public String getProcessButton () 
+	{
+		return (String)get_Value(COLUMNNAME_ProcessButton);
 	}
 
 	/** Set Record ID.
