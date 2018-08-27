@@ -242,8 +242,8 @@ public class ValidatorScanntech implements ModelValidator {
                         }
 
                         // Ejecuto marca en el momento y la envío inmediatamente al POS
-                        ProcesadorInterfaceOut procesadorInterfaceOut = new ProcesadorInterfaceOut(model.getCtx(), model.get_TrxName());
-                        procesadorInterfaceOut.executeInterfaceOutProduct(scanntechInterfaceOut, 0, false, configOrg);
+                        //ProcesadorInterfaceOut procesadorInterfaceOut = new ProcesadorInterfaceOut(model.getCtx(), model.get_TrxName());
+                        //procesadorInterfaceOut.executeInterfaceOutProduct(scanntechInterfaceOut, 0, false, configOrg);
 
                         //mensaje = scanntechInterfaceOut.execute(); // Info a cajas del pos en este momento.
                     }
@@ -324,8 +324,8 @@ public class ValidatorScanntech implements ModelValidator {
 
             // Si tengo marca seteada, la ejecuto en el momento y la envío inmediatamente al POS
             if ((scanntechInterfaceOut != null) && (scanntechInterfaceOut.get_ID() > 0)){
-                ProcesadorInterfaceOut procesadorInterfaceOut = new ProcesadorInterfaceOut(model.getCtx(), model.get_TrxName());
-                procesadorInterfaceOut.executeInterfaceOutUpc(scanntechInterfaceOut, 0, false, configOrg, null);
+                //ProcesadorInterfaceOut procesadorInterfaceOut = new ProcesadorInterfaceOut(model.getCtx(), model.get_TrxName());
+                //procesadorInterfaceOut.executeInterfaceOutUpc(scanntechInterfaceOut, 0, false, configOrg, null);
             }
         }
 
