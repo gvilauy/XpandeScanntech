@@ -825,6 +825,14 @@ public class ProcesadorInterfaceOut {
                 }
             }
 
+            // Producto tandem asociada en caso de tenerlo
+            if (product.get_ValueAsInt("M_Product_Tandem_ID") > 0){
+                MProduct prodTandem = new MProduct(ctx, product.get_ValueAsInt("M_Product_Tandem_ID"), null);
+                if ((prodTandem != null) && (prodTandem.get_ID() > 0)){
+                    jsonProduct.put("codigoEnvase", prodTandem.getValue());
+                }
+            }
+
             // Precio, descuentos, impuestos
             if (product.getC_TaxCategory_ID() <= 0){
                 throw new AdempiereException("Producto no tiene Impuesto Asociado");
