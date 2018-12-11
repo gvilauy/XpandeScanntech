@@ -846,7 +846,24 @@ public class ProcesadorInterfaceOut {
             if (product.getC_TaxCategory_ID() <= 0){
                 throw new AdempiereException("Producto no tiene Impuesto Asociado");
             }
-            MTax tax = TaxUtils.getLastTaxByCategory(this.ctx, product.getC_TaxCategory_ID(), null);
+
+
+            // Codigo IVA.
+            // Por defacto el IVA normal de venta
+            int cTaxCategoryID = product.getC_TaxCategory_ID();
+
+            // Verifico si este producto-organización no tiene impuesto diferencial de venta y/o venta a contribuyentes
+            sql = " select c_taxcategory_id " +
+                    " from z_productotaxorg " +
+                    " where m_product_id =" + product.get_ID() +
+                    " and ad_orgtrx_id =" + configOrg.getAD_OrgTrx_ID() +
+                    " and isactive ='Y' ";
+            int taxCategoryID_Aux = DB.getSQLValueEx(null, sql);
+            if (taxCategoryID_Aux > 0){
+                cTaxCategoryID = taxCategoryID_Aux;
+            }
+
+            MTax tax = TaxUtils.getLastTaxByCategory(this.ctx, cTaxCategoryID, null);
             if ((tax == null) || (tax.get_ID() <= 0)){
                 throw new AdempiereException("No hay Impuesto asociado a la Categoría de Impuesto del Producto");
             }
