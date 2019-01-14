@@ -6,13 +6,18 @@ import org.compiere.util.DB;
 import org.compiere.util.Env;
 import org.compiere.util.TimeUtil;
 import org.eevolution.model.X_C_TaxGroup;
+import org.json.JSONArray;
+import org.json.JSONTokener;
 import org.xpande.core.model.I_Z_ProductoUPC;
 import org.xpande.core.model.MZProductoUPC;
+import org.xpande.core.utils.DateUtils;
 import org.xpande.core.utils.PriceListUtils;
 import org.xpande.core.utils.TaxUtils;
 import org.xpande.stech.model.*;
 
+import java.io.BufferedReader;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.math.BigDecimal;
 import java.nio.charset.Charset;
 import java.sql.Timestamp;
@@ -29,9 +34,7 @@ import org.apache.http.client.methods.HttpPut;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
-import org.json.JSONArray;
 import org.json.JSONObject;
-import org.json.JSONTokener;
 
 
 /**
@@ -926,6 +929,8 @@ public class ProcesadorInterfaceOut {
         String message = null;
         int timeout = 120;
 
+        CloseableHttpClient httpClient = null;
+
         try{
 
             //String url = this.scanntechConfig.getURL() + "/" + this.scanntechConfig.getMetodoPos() + "/" + configOrg.getCodigoEmpPos().trim() + "/" + serviceName;
@@ -939,7 +944,7 @@ public class ProcesadorInterfaceOut {
                     .setConnectionRequestTimeout(timeout * 1000)
                     .setSocketTimeout(timeout * 1000).build();
 
-            CloseableHttpClient httpClient = HttpClientBuilder.create().setDefaultRequestConfig(config).build();
+            httpClient = HttpClientBuilder.create().setDefaultRequestConfig(config).build();
 
 
             HttpPost request = new HttpPost(url);
@@ -975,6 +980,15 @@ public class ProcesadorInterfaceOut {
         }
         catch (Exception e){
             throw new AdempiereException(e);
+        }
+        finally {
+            if (httpClient != null){
+                try{
+                    httpClient.close();
+                }
+                catch (Exception e){
+                }
+            }
         }
 
         return message;
@@ -1177,5 +1191,207 @@ public class ProcesadorInterfaceOut {
 
         return message;
     }
+
+
+    public String executeInterfaceMov(MZScanntechConfigOrg configOrg, Timestamp fechaConsulta) {
+
+        String message = null;
+
+        try{
+
+            // Obtengo configurador de scanntech
+            this.scanntechConfig = MZScanntechConfig.getDefault(ctx, null);
+
+            // Formatos requeridos por Scanntech de fecha desde y hasta para obtener movimientos.
+            Timestamp fechaConsultaAuxDesde = new Timestamp(fechaConsulta.getTime());
+            Timestamp fechaConsultaAuxHasta = new Timestamp(fechaConsulta.getTime());
+            Timestamp fechaDesde = DateUtils.getTSManualHour(fechaConsultaAuxDesde, 0, 0, 0, 0);
+            Timestamp fechaHasta = DateUtils.getTSManualHour(fechaConsultaAuxHasta, 23, 59, 59, 0);
+
+            String fechaAux = fechaConsulta.toString();
+            String fechaConsultaSTR = fechaAux.substring(0, 10);
+
+            fechaAux = fechaDesde.toString();
+            String fechaDesdeSTR = fechaAux.substring(0, 10) + "T" + fechaAux.substring(11) + "00-0300";
+
+            fechaAux = fechaHasta.toString();
+            String fechaHastaSTR = fechaAux.substring(0, 10) + "T" + fechaAux.substring(11) + "00-0300";
+
+            // Recorro cajas de esta organización para obtener movimientos de cada una de ellas.
+            List<MZScanntechConfigCaja> configCajaList = configOrg.getCajas();
+
+            for(MZScanntechConfigCaja configCaja: configCajaList){
+
+                int pageSize = 0;
+
+                String serviceName ="locales/" + configOrg.getCodigoLocalPos() + "/cajas/" + configCaja.getCodigoPOS() +
+                        "/movimientos?fechaConsulta=" + fechaConsultaSTR +
+                        "&fechaEnvioDesde=" + fechaDesdeSTR +
+                        "&fechaEnvioHasta=" + fechaHastaSTR +
+                        "&pageOffset=0" +
+                        "&pageSize=100";
+
+
+                JSONArray jsonArray = this.executeJsonGET(serviceName, configOrg);
+
+                if (jsonArray == null){
+                    continue;
+                }
+
+                pageSize = jsonArray.length();
+
+                if (pageSize == 0){
+                    continue;
+                }
+
+                // Recorro y guardo movimientos obtenidos
+                for (int i = 0; i < pageSize; i++){
+
+                    JSONObject jsonMovimiento = jsonArray.getJSONObject(i);
+
+                    MZStechTKMov tkMov = this.setJsonMovimiento(jsonMovimiento);
+
+                    // Recorro y guardo detalles de este movimiento
+                    JSONArray jsonArrayDetalles = jsonMovimiento.getJSONArray("detalles");
+                    for (int j = 0; j < jsonArrayDetalles.length(); j++){
+
+                        JSONObject jsonDetalle = jsonArrayDetalles.getJSONObject(j);
+
+                        MZStechTKMovDet tkMovDet = this.setJsonDetalleMov(tkMov, jsonDetalle);
+
+                        // Recorro y guardo descuentos de este detalle de movimiento
+
+                    }
+
+                    // Recorro y guardo medios de pago de este movimiento
+
+                }
+
+                /*
+                pageSize = resp.length();
+                cantTotalMov = pageSize;
+                if(0==pageSize) {
+                    MRTLogFile log = new MRTLogFile(getCtx(), 0, get_TrxName());
+                    log.setDescription("No hay movimientos en la caja "+inIdCaja+" del local "+inIdLocal+" a partir de las "+inFch.toString());
+                    log.set_ValueOfColumn("UY_RT_LoadTicket_ID", idMRTLoadTicketID);
+                    log.setName("No hay movimientos");
+                    log.saveEx();
+                    //log.log(Level.SEVERE,pageSize+ " movimientos para el d�a: "+fechaDelDia+", local:  "+inIdLocal+" y caja:  "+inIdCaja);
+                    return "OK - 0";//"No hay datos para el d�a: "+fch+",local:"+inIdLocal+" y caja:"+inIdCaja ;
+                }
+
+                count += procesarMovimientos(resp,inIdLocal, inIdCaja, idOrg, idMRTLoadTicketID);
+                //Realizo la misma consulta salteando p�ginads mientras la cantidad de registros obtenidos sea 100
+                while(pageSize>=100){
+                    pageOffSet +=pageSize;
+                    resp = MRTRetailInterface.enviarMovimientoTimestamp(getCtx(), this.getAD_Client_ID(),//Env.getAD_Client_ID(getCtx()),
+                            get_TrxName(), inIdLocal, inIdCaja, inFch,inDesde,inHasta,idEmpresa,pageOffSet);
+                    pageSize = resp.length();
+                    cantTotalMov += pageSize;
+                    if(pageSize>0){
+                        count += procesarMovimientos(resp,inIdLocal, inIdCaja, idOrg, idMRTLoadTicketID);
+                    }
+                }
+                if(pageOffSet==0) pageOffSet=pageSize;
+                System.out.println("Se leen "+count+", de "+cantTotalMov);
+                */
+
+            }
+
+        }
+        catch (Exception e){
+            throw new AdempiereException(e);
+        }
+
+        return message;
+    }
+
+    private MZStechTKMov setJsonMovimiento(JSONObject jsonMovimiento) {
+
+        MZStechTKMov tkMov = null;
+
+        try{
+
+        }
+        catch (Exception e){
+            throw new AdempiereException(e);
+        }
+
+        return tkMov;
+    }
+
+    private MZStechTKMovDet setJsonDetalleMov(MZStechTKMov tkMov, JSONObject jsonDetalle) {
+
+        MZStechTKMovDet tkMovDet = null;
+
+        try{
+
+        }
+        catch (Exception e){
+            throw new AdempiereException(e);
+        }
+
+        return tkMovDet;
+    }
+
+    private JSONArray executeJsonGET(String serviceName, MZScanntechConfigOrg configOrg){
+
+        JSONArray jsonArray = null;
+        String message = null;
+        int timeout = 120;
+
+        try{
+
+            String url = this.scanntechConfig.getURL() + this.scanntechConfig.getMetodoPos() + "/" +
+                    configOrg.getCodigoEmpPos().trim() + "/" + serviceName;
+
+            String credentials = this.scanntechConfig.getUsuarioPos().trim() + ":" + this.scanntechConfig.getClavePos().trim();
+
+            RequestConfig config = RequestConfig.custom()
+                    .setConnectTimeout(timeout * 1000)
+                    .setConnectionRequestTimeout(timeout * 1000)
+                    .setSocketTimeout(timeout * 1000).build();
+
+            CloseableHttpClient httpClient = HttpClientBuilder.create().setDefaultRequestConfig(config).build();
+
+            HttpGet request = new HttpGet(url);
+
+            byte[] encodedAuth = Base64.encodeBase64(credentials.getBytes(Charset.forName("ISO-8859-1")));
+            String authHeader = "Basic " + new String(encodedAuth);
+            request.addHeader(HttpHeaders.AUTHORIZATION, authHeader);
+
+            CloseableHttpResponse response = httpClient.execute(request);
+
+            if (response.getStatusLine().getStatusCode() != 200) {
+                InputStream inStream = response.getEntity().getContent();
+                if (inStream != null){
+                    message = new Scanner(inStream).useDelimiter("\\A").next();
+                }
+            }
+            else{
+
+                if(response.getEntity().getContent() != null){
+
+                    BufferedReader br = new BufferedReader(new InputStreamReader((response.getEntity().getContent())));
+                    int i = br.read();
+                    if(-1<i){
+                        String line;
+                        StringBuilder sb = new StringBuilder();
+                        while ((line = br.readLine()) != null) {
+                            sb.append(line);
+                        }
+                        JSONTokener tokener = new JSONTokener("["+ sb.toString() +"]");
+                        jsonArray = new JSONArray(tokener);
+                    }
+                }
+            }
+        }
+        catch (Exception e){
+            throw new AdempiereException(e);
+        }
+
+        return jsonArray;
+    }
+
 
 }

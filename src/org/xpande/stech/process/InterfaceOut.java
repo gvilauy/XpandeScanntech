@@ -44,7 +44,7 @@ import org.xpande.stech.utils.ProcesadorInterfaceOut;
 public class InterfaceOut extends SvrProcess {
 
     private ProcesadorInterfaceOut procesadorInterfaceOut = null;
-    private int adOrgID = 1000001;
+    private int adOrgID = 1000000;
 
     @Override
     protected void prepare() {
