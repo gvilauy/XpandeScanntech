@@ -1193,6 +1193,13 @@ public class ProcesadorInterfaceOut {
     }
 
 
+    /***
+     * Ejecuta el proceso de interface de ventas desde el POS Scanntech hacia ADempiere.
+     * Xpande. Created by Gabriel Vila on 1/16/19.
+     * @param configOrg
+     * @param fechaConsulta
+     * @return
+     */
     public String executeInterfaceMov(MZScanntechConfigOrg configOrg, Timestamp fechaConsulta) {
 
         String message = null;
