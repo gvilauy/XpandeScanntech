@@ -92,6 +92,32 @@ public interface I_Z_ScanntechConfig
 	  */
 	public int getCreatedBy();
 
+    /** Column name DefaultDocPosARC_ID */
+    public static final String COLUMNNAME_DefaultDocPosARC_ID = "DefaultDocPosARC_ID";
+
+	/** Set DefaultDocPosARC_ID.
+	  * ID de documento para migración de notas de crédito de venta crédito desde POS
+	  */
+	public void setDefaultDocPosARC_ID(int DefaultDocPosARC_ID);
+
+	/** Get DefaultDocPosARC_ID.
+	  * ID de documento para migración de notas de crédito de venta crédito desde POS
+	  */
+	public int getDefaultDocPosARC_ID();
+
+    /** Column name DefaultDocPosARI_ID */
+    public static final String COLUMNNAME_DefaultDocPosARI_ID = "DefaultDocPosARI_ID";
+
+	/** Set DefaultDocPosARI_ID.
+	  * ID de documento para migración de facturas de venta crédito desde POS
+	  */
+	public void setDefaultDocPosARI_ID(int DefaultDocPosARI_ID);
+
+	/** Get DefaultDocPosARI_ID.
+	  * ID de documento para migración de facturas de venta crédito desde POS
+	  */
+	public int getDefaultDocPosARI_ID();
+
     /** Column name EmpresaPos */
     public static final String COLUMNNAME_EmpresaPos = "EmpresaPos";
 
@@ -130,6 +156,19 @@ public interface I_Z_ScanntechConfig
 	  * Método de proveedor POS para interface de datos
 	  */
 	public String getMetodoPos();
+
+    /** Column name ProdVtasCredPOS_ID */
+    public static final String COLUMNNAME_ProdVtasCredPOS_ID = "ProdVtasCredPOS_ID";
+
+	/** Set ProdVtasCredPOS_ID.
+	  * Producto para Migración de Ventas Crédito desde POS
+	  */
+	public void setProdVtasCredPOS_ID(int ProdVtasCredPOS_ID);
+
+	/** Get ProdVtasCredPOS_ID.
+	  * Producto para Migración de Ventas Crédito desde POS
+	  */
+	public int getProdVtasCredPOS_ID();
 
     /** Column name Timeout */
     public static final String COLUMNNAME_Timeout = "Timeout";
@@ -185,6 +224,15 @@ public interface I_Z_ScanntechConfig
 	  * Usuario de proveedor POS para interface de datos
 	  */
 	public String getUsuarioPos();
+
+    /** Column name Z_PosVendor_ID */
+    public static final String COLUMNNAME_Z_PosVendor_ID = "Z_PosVendor_ID";
+
+	/** Set Z_PosVendor ID	  */
+	public void setZ_PosVendor_ID(int Z_PosVendor_ID);
+
+	/** Get Z_PosVendor ID	  */
+	public int getZ_PosVendor_ID();
 
     /** Column name Z_ScanntechConfig_ID */
     public static final String COLUMNNAME_Z_ScanntechConfig_ID = "Z_ScanntechConfig_ID";
