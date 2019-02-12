@@ -578,8 +578,8 @@ public class MZStechInterfaceVta extends X_Z_StechInterfaceVta {
 
             tkMovDet = new MZStechTKMovDet(getCtx(), 0, get_TrxName());
             tkMovDet.setZ_Stech_TK_Mov_ID(tkMov.get_ID());
-            tkMov.set_ValueOfColumn("AD_Client_ID", tkMov.getAD_Client_ID());
-            tkMov.setAD_Org_ID(tkMov.getAD_Org_ID());
+            tkMovDet.set_ValueOfColumn("AD_Client_ID", tkMov.getAD_Client_ID());
+            tkMovDet.setAD_Org_ID(tkMov.getAD_Org_ID());
             tkMovDet.setZ_StechInterfaceVta_ID(tkMov.getZ_StechInterfaceVta_ID());
             tkMovDet.setJSonBody(jsonDetalle.toString());
             tkMovDet.setDateTrx(tkMov.getDateTrx());
