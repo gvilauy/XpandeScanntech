@@ -9,6 +9,8 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.compiere.util.CLogger;
+import org.compiere.util.DB;
+import org.compiere.util.TimeUtil;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONTokener;
@@ -277,6 +279,7 @@ public class MZStechInterfaceVta extends X_Z_StechInterfaceVta {
             tkMovPago.set_ValueOfColumn("AD_Client_ID", tkMov.getAD_Client_ID());
             tkMovPago.setAD_Org_ID(tkMov.getAD_Org_ID());
             tkMovPago.setZ_StechInterfaceVta_ID(tkMov.getZ_StechInterfaceVta_ID());
+            tkMovPago.setDateTrx(tkMov.getDateTrx());
             tkMovPago.setJSonBody(jsonMedioPago.toString());
 
             // codigoTipoPago
@@ -398,6 +401,7 @@ public class MZStechInterfaceVta extends X_Z_StechInterfaceVta {
             tkMovDetDtos.setZ_Stech_TK_MovDet_ID(tkMovDet.get_ID());
             tkMovDetDtos.setZ_StechInterfaceVta_ID(tkMovDet.getZ_StechInterfaceVta_ID());
             tkMovDetDtos.setJSonBody(jsonDetDto.toString());
+            tkMovDetDtos.setDateTrx(tkMovDet.getDateTrx());
 
             // idDescuento
             if (!jsonDetDto.get("idDescuento").equals(JSONObject.NULL)){
@@ -474,6 +478,7 @@ public class MZStechInterfaceVta extends X_Z_StechInterfaceVta {
             String fchHra = fch.substring(0, 4)+fch.substring(5, 7)+fch.substring(8, 10)+fch.substring(11, 13)+fch.substring(14, 16)+fch.substring(17, 19);
             Timestamp fchOperacion =  DateUtils.convertStringToTimestamp_YYYYMMddHHMMss(fchHra);
             tkMov.setSC_FechaOperacion(fchOperacion);
+            tkMov.setDateTrx(TimeUtil.trunc(tkMov.getSC_FechaOperacion(), TimeUtil.TRUNC_DAY));
 
             // tipoOperacion
             if (!jsonMovimiento.get("tipoOperacion").equals(JSONObject.NULL)){
@@ -577,6 +582,7 @@ public class MZStechInterfaceVta extends X_Z_StechInterfaceVta {
             tkMov.setAD_Org_ID(tkMov.getAD_Org_ID());
             tkMovDet.setZ_StechInterfaceVta_ID(tkMov.getZ_StechInterfaceVta_ID());
             tkMovDet.setJSonBody(jsonDetalle.toString());
+            tkMovDet.setDateTrx(tkMov.getDateTrx());
 
             // codigoTipoDetalle
             if (!jsonDetalle.get("codigoTipoDetalle").equals(JSONObject.NULL)){
@@ -591,11 +597,65 @@ public class MZStechInterfaceVta extends X_Z_StechInterfaceVta {
             // codigoArticulo
             if (!jsonDetalle.get("codigoArticulo").equals(JSONObject.NULL)){
                 tkMovDet.setSC_CodigoArticulo(jsonDetalle.get("codigoArticulo").toString().trim());
+
+
+                // Obtengo ID del producto en ADempiere, según codigo de articulo leído desde Scanntech.
+                // Primero le saco los ceros por delante del codigo que le pone Scanntech.
+                String codArticulo = tkMovDet.getSC_CodigoArticulo();
+                if (codArticulo.indexOf("00000000000000") == 0){
+                    codArticulo = codArticulo.replace("00000000000000","");
+                }
+                else if (codArticulo.indexOf("0000000000000") == 0){
+                    codArticulo = codArticulo.replace("0000000000000","");
+                }
+                else if (codArticulo.indexOf("000000000000") == 0){
+                    codArticulo = codArticulo.replace("000000000000","");
+                }
+                else if (codArticulo.indexOf("00000000000") == 0){
+                    codArticulo = codArticulo.replace("00000000000","");
+                }
+                else if (codArticulo.indexOf("0000000000") == 0){
+                    codArticulo = codArticulo.replace("0000000000","");
+                }
+                else if (codArticulo.indexOf("000000000") == 0){
+                    codArticulo = codArticulo.replace("000000000","");
+                }
+                else if (codArticulo.indexOf("00000000") == 0){
+                    codArticulo = codArticulo.replace("00000000","");
+                }
+                else if (codArticulo.indexOf("0000000") == 0){
+                    codArticulo = codArticulo.replace("0000000","");
+                }
+                else if (codArticulo.indexOf("000000") == 0){
+                    codArticulo = codArticulo.replace("000000","");
+                }
+                else if (codArticulo.indexOf("00000") == 0){
+                    codArticulo = codArticulo.replace("00000","");
+                }
+                else if (codArticulo.indexOf("0000") == 0){
+                    codArticulo = codArticulo.replace("0000","");
+                }
+                else if (codArticulo.indexOf("000") == 0){
+                    codArticulo = codArticulo.replace("000","");
+                }
+                String sql = " select m_product_id from m_product where value='" + codArticulo + "'";
+                int mProductID = DB.getSQLValueEx(null, sql);
+                if (mProductID > 0){
+                    tkMovDet.setM_Product_ID(mProductID);
+                }
+
             }
 
             // codigoBarras
             if (!jsonDetalle.get("codigoBarras").equals(JSONObject.NULL)){
                 tkMovDet.setSC_CodigoBarras(jsonDetalle.get("codigoBarras").toString().trim());
+
+                // Obtengo ID del codigo de barras en ADempiere
+                String sql = " select z_productoupc_id from z_productoupc where upc='" + tkMovDet.getSC_CodigoBarras() + "'";
+                int zProductoUpcID = DB.getSQLValueEx(null, sql);
+                if (zProductoUpcID > 0){
+                    tkMovDet.setZ_ProductoUPC_ID(zProductoUpcID);
+                }
             }
 
             // descripcionArticulo

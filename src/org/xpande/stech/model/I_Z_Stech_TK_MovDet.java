@@ -79,6 +79,19 @@ public interface I_Z_Stech_TK_MovDet
 	  */
 	public int getCreatedBy();
 
+    /** Column name DateTrx */
+    public static final String COLUMNNAME_DateTrx = "DateTrx";
+
+	/** Set Transaction Date.
+	  * Transaction Date
+	  */
+	public void setDateTrx(Timestamp DateTrx);
+
+	/** Get Transaction Date.
+	  * Transaction Date
+	  */
+	public Timestamp getDateTrx();
+
     /** Column name IsActive */
     public static final String COLUMNNAME_IsActive = "IsActive";
 

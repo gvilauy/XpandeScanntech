@@ -19,6 +19,7 @@ package org.xpande.stech.model;
 
 import java.math.BigDecimal;
 import java.sql.ResultSet;
+import java.sql.Timestamp;
 import java.util.Properties;
 import org.compiere.model.*;
 import org.compiere.util.Env;
@@ -74,6 +75,23 @@ public class X_Z_Stech_TK_MovDetDtos extends PO implements I_Z_Stech_TK_MovDetDt
         .append(get_ID()).append("]");
       return sb.toString();
     }
+
+	/** Set Transaction Date.
+		@param DateTrx 
+		Transaction Date
+	  */
+	public void setDateTrx (Timestamp DateTrx)
+	{
+		set_Value (COLUMNNAME_DateTrx, DateTrx);
+	}
+
+	/** Get Transaction Date.
+		@return Transaction Date
+	  */
+	public Timestamp getDateTrx () 
+	{
+		return (Timestamp)get_Value(COLUMNNAME_DateTrx);
+	}
 
 	/** Set JSonBody.
 		@param JSonBody 

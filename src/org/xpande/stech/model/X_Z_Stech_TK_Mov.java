@@ -78,6 +78,23 @@ public class X_Z_Stech_TK_Mov extends PO implements I_Z_Stech_TK_Mov, I_Persiste
       return sb.toString();
     }
 
+	/** Set Transaction Date.
+		@param DateTrx 
+		Transaction Date
+	  */
+	public void setDateTrx (Timestamp DateTrx)
+	{
+		set_Value (COLUMNNAME_DateTrx, DateTrx);
+	}
+
+	/** Get Transaction Date.
+		@return Transaction Date
+	  */
+	public Timestamp getDateTrx () 
+	{
+		return (Timestamp)get_Value(COLUMNNAME_DateTrx);
+	}
+
 	/** Set JSonBody.
 		@param JSonBody 
 		Body de información utilizado en aplicaciones móbiles con JSon
