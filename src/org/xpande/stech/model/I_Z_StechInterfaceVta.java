@@ -21,17 +21,17 @@ import java.sql.Timestamp;
 import org.compiere.model.*;
 import org.compiere.util.KeyNamePair;
 
-/** Generated Interface for Z_Stech_TK_MovDetDtos
+/** Generated Interface for Z_StechInterfaceVta
  *  @author Adempiere (generated) 
  *  @version Release 3.9.0
  */
-public interface I_Z_Stech_TK_MovDetDtos 
+public interface I_Z_StechInterfaceVta 
 {
 
-    /** TableName=Z_Stech_TK_MovDetDtos */
-    public static final String Table_Name = "Z_Stech_TK_MovDetDtos";
+    /** TableName=Z_StechInterfaceVta */
+    public static final String Table_Name = "Z_StechInterfaceVta";
 
-    /** AD_Table_ID=1000256 */
+    /** AD_Table_ID=1000258 */
     public static final int Table_ID = MTable.getTable_ID(Table_Name);
 
     KeyNamePair Model = new KeyNamePair(Table_ID, Table_Name);
@@ -63,6 +63,19 @@ public interface I_Z_Stech_TK_MovDetDtos
 	  */
 	public int getAD_Org_ID();
 
+    /** Column name ContadorLineas */
+    public static final String COLUMNNAME_ContadorLineas = "ContadorLineas";
+
+	/** Set ContadorLineas.
+	  * Contador de lineas procesadas
+	  */
+	public void setContadorLineas(int ContadorLineas);
+
+	/** Get ContadorLineas.
+	  * Contador de lineas procesadas
+	  */
+	public int getContadorLineas();
+
     /** Column name Created */
     public static final String COLUMNNAME_Created = "Created";
 
@@ -79,6 +92,71 @@ public interface I_Z_Stech_TK_MovDetDtos
 	  */
 	public int getCreatedBy();
 
+    /** Column name DateFrom */
+    public static final String COLUMNNAME_DateFrom = "DateFrom";
+
+	/** Set Date From.
+	  * Starting date for a range
+	  */
+	public void setDateFrom(Timestamp DateFrom);
+
+	/** Get Date From.
+	  * Starting date for a range
+	  */
+	public Timestamp getDateFrom();
+
+    /** Column name DateTo */
+    public static final String COLUMNNAME_DateTo = "DateTo";
+
+	/** Set Date To.
+	  * End date of a date range
+	  */
+	public void setDateTo(Timestamp DateTo);
+
+	/** Get Date To.
+	  * End date of a date range
+	  */
+	public Timestamp getDateTo();
+
+    /** Column name DateTrx */
+    public static final String COLUMNNAME_DateTrx = "DateTrx";
+
+	/** Set Transaction Date.
+	  * Transaction Date
+	  */
+	public void setDateTrx(Timestamp DateTrx);
+
+	/** Get Transaction Date.
+	  * Transaction Date
+	  */
+	public Timestamp getDateTrx();
+
+    /** Column name Description */
+    public static final String COLUMNNAME_Description = "Description";
+
+	/** Set Description.
+	  * Optional short description of the record
+	  */
+	public void setDescription(String Description);
+
+	/** Get Description.
+	  * Optional short description of the record
+	  */
+	public String getDescription();
+
+    /** Column name EndDate */
+    public static final String COLUMNNAME_EndDate = "EndDate";
+
+	/** Set End Date.
+	  * Last effective date (inclusive)
+	  */
+	public void setEndDate(Timestamp EndDate);
+
+	/** Get End Date.
+	  * Last effective date (inclusive)
+	  */
+	public Timestamp getEndDate();
+
     /** Column name IsActive */
     public static final String COLUMNNAME_IsActive = "IsActive";
 
@@ -92,54 +170,18 @@ public interface I_Z_Stech_TK_MovDetDtos
 	  */
 	public boolean isActive();
 
-    /** Column name JSonBody */
-    public static final String COLUMNNAME_JSonBody = "JSonBody";
+    /** Column name StartDate */
+    public static final String COLUMNNAME_StartDate = "StartDate";
 
-	/** Set JSonBody.
-	  * Body de información utilizado en aplicaciones móbiles con JSon
+	/** Set Start Date.
+	  * First effective day (inclusive)
 	  */
-	public void setJSonBody(String JSonBody);
+	public void setStartDate(Timestamp StartDate);
 
-	/** Get JSonBody.
-	  * Body de información utilizado en aplicaciones móbiles con JSon
+	/** Get Start Date.
+	  * First effective day (inclusive)
 	  */
-	public String getJSonBody();
-
-    /** Column name SC_IdDescuento */
-    public static final String COLUMNNAME_SC_IdDescuento = "SC_IdDescuento";
-
-	/** Set SC_IdDescuento	  */
-	public void setSC_IdDescuento(int SC_IdDescuento);
-
-	/** Get SC_IdDescuento	  */
-	public int getSC_IdDescuento();
-
-    /** Column name SC_IdPromocion */
-    public static final String COLUMNNAME_SC_IdPromocion = "SC_IdPromocion";
-
-	/** Set SC_IdPromocion	  */
-	public void setSC_IdPromocion(String SC_IdPromocion);
-
-	/** Get SC_IdPromocion	  */
-	public String getSC_IdPromocion();
-
-    /** Column name SC_ImporteDescuento */
-    public static final String COLUMNNAME_SC_ImporteDescuento = "SC_ImporteDescuento";
-
-	/** Set SC_ImporteDescuento	  */
-	public void setSC_ImporteDescuento(BigDecimal SC_ImporteDescuento);
-
-	/** Get SC_ImporteDescuento	  */
-	public BigDecimal getSC_ImporteDescuento();
-
-    /** Column name SC_TipoDescuento */
-    public static final String COLUMNNAME_SC_TipoDescuento = "SC_TipoDescuento";
-
-	/** Set SC_TipoDescuento	  */
-	public void setSC_TipoDescuento(String SC_TipoDescuento);
-
-	/** Get SC_TipoDescuento	  */
-	public String getSC_TipoDescuento();
+	public Timestamp getStartDate();
 
     /** Column name Updated */
     public static final String COLUMNNAME_Updated = "Updated";
@@ -178,37 +220,4 @@ public interface I_Z_Stech_TK_MovDetDtos
 
 	/** Get Z_StechInterfaceVta ID	  */
 	public int getZ_StechInterfaceVta_ID();
-
-	public I_Z_StechInterfaceVta getZ_StechInterfaceVta() throws RuntimeException;
-
-    /** Column name Z_Stech_TK_MovDetDtos_ID */
-    public static final String COLUMNNAME_Z_Stech_TK_MovDetDtos_ID = "Z_Stech_TK_MovDetDtos_ID";
-
-	/** Set Z_Stech_TK_MovDetDtos ID	  */
-	public void setZ_Stech_TK_MovDetDtos_ID(int Z_Stech_TK_MovDetDtos_ID);
-
-	/** Get Z_Stech_TK_MovDetDtos ID	  */
-	public int getZ_Stech_TK_MovDetDtos_ID();
-
-    /** Column name Z_Stech_TK_MovDet_ID */
-    public static final String COLUMNNAME_Z_Stech_TK_MovDet_ID = "Z_Stech_TK_MovDet_ID";
-
-	/** Set Z_Stech_TK_MovDet ID	  */
-	public void setZ_Stech_TK_MovDet_ID(int Z_Stech_TK_MovDet_ID);
-
-	/** Get Z_Stech_TK_MovDet ID	  */
-	public int getZ_Stech_TK_MovDet_ID();
-
-	public I_Z_Stech_TK_MovDet getZ_Stech_TK_MovDet() throws RuntimeException;
-
-    /** Column name Z_Stech_TK_Mov_ID */
-    public static final String COLUMNNAME_Z_Stech_TK_Mov_ID = "Z_Stech_TK_Mov_ID";
-
-	/** Set Z_Stech_TK_Mov ID	  */
-	public void setZ_Stech_TK_Mov_ID(int Z_Stech_TK_Mov_ID);
-
-	/** Get Z_Stech_TK_Mov ID	  */
-	public int getZ_Stech_TK_Mov_ID();
-
-	public I_Z_Stech_TK_Mov getZ_Stech_TK_Mov() throws RuntimeException;
 }

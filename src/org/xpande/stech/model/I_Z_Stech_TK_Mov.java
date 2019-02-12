@@ -92,6 +92,19 @@ public interface I_Z_Stech_TK_Mov
 	  */
 	public boolean isActive();
 
+    /** Column name JSonBody */
+    public static final String COLUMNNAME_JSonBody = "JSonBody";
+
+	/** Set JSonBody.
+	  * Body de información utilizado en aplicaciones móbiles con JSon
+	  */
+	public void setJSonBody(String JSonBody);
+
+	/** Get JSonBody.
+	  * Body de información utilizado en aplicaciones móbiles con JSon
+	  */
+	public String getJSonBody();
+
     /** Column name SC_CantidadItems */
     public static final String COLUMNNAME_SC_CantidadItems = "SC_CantidadItems";
 
@@ -208,10 +221,10 @@ public interface I_Z_Stech_TK_Mov
     public static final String COLUMNNAME_SC_NumeroMov = "SC_NumeroMov";
 
 	/** Set SC_NumeroMov	  */
-	public void setSC_NumeroMov(int SC_NumeroMov);
+	public void setSC_NumeroMov(String SC_NumeroMov);
 
 	/** Get SC_NumeroMov	  */
-	public int getSC_NumeroMov();
+	public String getSC_NumeroMov();
 
     /** Column name SC_NumeroOperacion */
     public static final String COLUMNNAME_SC_NumeroOperacion = "SC_NumeroOperacion";
@@ -295,6 +308,17 @@ public interface I_Z_Stech_TK_Mov
 	  * Immutable Universally Unique Identifier
 	  */
 	public String getUUID();
+
+    /** Column name Z_StechInterfaceVta_ID */
+    public static final String COLUMNNAME_Z_StechInterfaceVta_ID = "Z_StechInterfaceVta_ID";
+
+	/** Set Z_StechInterfaceVta ID	  */
+	public void setZ_StechInterfaceVta_ID(int Z_StechInterfaceVta_ID);
+
+	/** Get Z_StechInterfaceVta ID	  */
+	public int getZ_StechInterfaceVta_ID();
+
+	public I_Z_StechInterfaceVta getZ_StechInterfaceVta() throws RuntimeException;
 
     /** Column name Z_Stech_TK_Mov_ID */
     public static final String COLUMNNAME_Z_Stech_TK_Mov_ID = "Z_Stech_TK_Mov_ID";

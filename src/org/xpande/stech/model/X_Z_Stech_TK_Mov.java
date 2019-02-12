@@ -33,7 +33,7 @@ public class X_Z_Stech_TK_Mov extends PO implements I_Z_Stech_TK_Mov, I_Persiste
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20190114L;
+	private static final long serialVersionUID = 20190212L;
 
     /** Standard Constructor */
     public X_Z_Stech_TK_Mov (Properties ctx, int Z_Stech_TK_Mov_ID, String trxName)
@@ -45,7 +45,7 @@ public class X_Z_Stech_TK_Mov extends PO implements I_Z_Stech_TK_Mov, I_Persiste
 // N
 			setSC_CuponCancelado (false);
 // N
-			setUUID (null);
+			setZ_StechInterfaceVta_ID (0);
 			setZ_Stech_TK_Mov_ID (0);
         } */
     }
@@ -77,6 +77,23 @@ public class X_Z_Stech_TK_Mov extends PO implements I_Z_Stech_TK_Mov, I_Persiste
         .append(get_ID()).append("]");
       return sb.toString();
     }
+
+	/** Set JSonBody.
+		@param JSonBody 
+		Body de información utilizado en aplicaciones móbiles con JSon
+	  */
+	public void setJSonBody (String JSonBody)
+	{
+		set_Value (COLUMNNAME_JSonBody, JSonBody);
+	}
+
+	/** Get JSonBody.
+		@return Body de información utilizado en aplicaciones móbiles con JSon
+	  */
+	public String getJSonBody () 
+	{
+		return (String)get_Value(COLUMNNAME_JSonBody);
+	}
 
 	/** Set SC_CantidadItems.
 		@param SC_CantidadItems SC_CantidadItems	  */
@@ -286,19 +303,16 @@ public class X_Z_Stech_TK_Mov extends PO implements I_Z_Stech_TK_Mov, I_Persiste
 
 	/** Set SC_NumeroMov.
 		@param SC_NumeroMov SC_NumeroMov	  */
-	public void setSC_NumeroMov (int SC_NumeroMov)
+	public void setSC_NumeroMov (String SC_NumeroMov)
 	{
-		set_Value (COLUMNNAME_SC_NumeroMov, Integer.valueOf(SC_NumeroMov));
+		set_Value (COLUMNNAME_SC_NumeroMov, SC_NumeroMov);
 	}
 
 	/** Get SC_NumeroMov.
 		@return SC_NumeroMov	  */
-	public int getSC_NumeroMov () 
+	public String getSC_NumeroMov () 
 	{
-		Integer ii = (Integer)get_Value(COLUMNNAME_SC_NumeroMov);
-		if (ii == null)
-			 return 0;
-		return ii.intValue();
+		return (String)get_Value(COLUMNNAME_SC_NumeroMov);
 	}
 
 	/** Set SC_NumeroOperacion.
@@ -420,6 +434,31 @@ public class X_Z_Stech_TK_Mov extends PO implements I_Z_Stech_TK_Mov, I_Persiste
 	public String getUUID () 
 	{
 		return (String)get_Value(COLUMNNAME_UUID);
+	}
+
+	public I_Z_StechInterfaceVta getZ_StechInterfaceVta() throws RuntimeException
+    {
+		return (I_Z_StechInterfaceVta)MTable.get(getCtx(), I_Z_StechInterfaceVta.Table_Name)
+			.getPO(getZ_StechInterfaceVta_ID(), get_TrxName());	}
+
+	/** Set Z_StechInterfaceVta ID.
+		@param Z_StechInterfaceVta_ID Z_StechInterfaceVta ID	  */
+	public void setZ_StechInterfaceVta_ID (int Z_StechInterfaceVta_ID)
+	{
+		if (Z_StechInterfaceVta_ID < 1) 
+			set_Value (COLUMNNAME_Z_StechInterfaceVta_ID, null);
+		else 
+			set_Value (COLUMNNAME_Z_StechInterfaceVta_ID, Integer.valueOf(Z_StechInterfaceVta_ID));
+	}
+
+	/** Get Z_StechInterfaceVta ID.
+		@return Z_StechInterfaceVta ID	  */
+	public int getZ_StechInterfaceVta_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_Z_StechInterfaceVta_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
 	}
 
 	/** Set Z_Stech_TK_Mov ID.

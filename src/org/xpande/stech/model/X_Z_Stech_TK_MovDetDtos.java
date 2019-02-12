@@ -32,7 +32,7 @@ public class X_Z_Stech_TK_MovDetDtos extends PO implements I_Z_Stech_TK_MovDetDt
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20190114L;
+	private static final long serialVersionUID = 20190212L;
 
     /** Standard Constructor */
     public X_Z_Stech_TK_MovDetDtos (Properties ctx, int Z_Stech_TK_MovDetDtos_ID, String trxName)
@@ -40,6 +40,7 @@ public class X_Z_Stech_TK_MovDetDtos extends PO implements I_Z_Stech_TK_MovDetDt
       super (ctx, Z_Stech_TK_MovDetDtos_ID, trxName);
       /** if (Z_Stech_TK_MovDetDtos_ID == 0)
         {
+			setZ_StechInterfaceVta_ID (0);
 			setZ_Stech_TK_MovDetDtos_ID (0);
 			setZ_Stech_TK_MovDet_ID (0);
 			setZ_Stech_TK_Mov_ID (0);
@@ -73,6 +74,23 @@ public class X_Z_Stech_TK_MovDetDtos extends PO implements I_Z_Stech_TK_MovDetDt
         .append(get_ID()).append("]");
       return sb.toString();
     }
+
+	/** Set JSonBody.
+		@param JSonBody 
+		Body de información utilizado en aplicaciones móbiles con JSon
+	  */
+	public void setJSonBody (String JSonBody)
+	{
+		set_Value (COLUMNNAME_JSonBody, JSonBody);
+	}
+
+	/** Get JSonBody.
+		@return Body de información utilizado en aplicaciones móbiles con JSon
+	  */
+	public String getJSonBody () 
+	{
+		return (String)get_Value(COLUMNNAME_JSonBody);
+	}
 
 	/** Set SC_IdDescuento.
 		@param SC_IdDescuento SC_IdDescuento	  */
@@ -151,6 +169,31 @@ public class X_Z_Stech_TK_MovDetDtos extends PO implements I_Z_Stech_TK_MovDetDt
 	public String getUUID () 
 	{
 		return (String)get_Value(COLUMNNAME_UUID);
+	}
+
+	public I_Z_StechInterfaceVta getZ_StechInterfaceVta() throws RuntimeException
+    {
+		return (I_Z_StechInterfaceVta)MTable.get(getCtx(), I_Z_StechInterfaceVta.Table_Name)
+			.getPO(getZ_StechInterfaceVta_ID(), get_TrxName());	}
+
+	/** Set Z_StechInterfaceVta ID.
+		@param Z_StechInterfaceVta_ID Z_StechInterfaceVta ID	  */
+	public void setZ_StechInterfaceVta_ID (int Z_StechInterfaceVta_ID)
+	{
+		if (Z_StechInterfaceVta_ID < 1) 
+			set_Value (COLUMNNAME_Z_StechInterfaceVta_ID, null);
+		else 
+			set_Value (COLUMNNAME_Z_StechInterfaceVta_ID, Integer.valueOf(Z_StechInterfaceVta_ID));
+	}
+
+	/** Get Z_StechInterfaceVta ID.
+		@return Z_StechInterfaceVta ID	  */
+	public int getZ_StechInterfaceVta_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_Z_StechInterfaceVta_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
 	}
 
 	/** Set Z_Stech_TK_MovDetDtos ID.

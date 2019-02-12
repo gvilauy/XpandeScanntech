@@ -33,7 +33,7 @@ public class X_Z_Stech_TK_MovDet extends PO implements I_Z_Stech_TK_MovDet, I_Pe
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20190114L;
+	private static final long serialVersionUID = 20190212L;
 
     /** Standard Constructor */
     public X_Z_Stech_TK_MovDet (Properties ctx, int Z_Stech_TK_MovDet_ID, String trxName)
@@ -41,7 +41,7 @@ public class X_Z_Stech_TK_MovDet extends PO implements I_Z_Stech_TK_MovDet, I_Pe
       super (ctx, Z_Stech_TK_MovDet_ID, trxName);
       /** if (Z_Stech_TK_MovDet_ID == 0)
         {
-			setUUID (null);
+			setZ_StechInterfaceVta_ID (0);
 			setZ_Stech_TK_MovDet_ID (0);
 			setZ_Stech_TK_Mov_ID (0);
         } */
@@ -74,6 +74,51 @@ public class X_Z_Stech_TK_MovDet extends PO implements I_Z_Stech_TK_MovDet, I_Pe
         .append(get_ID()).append("]");
       return sb.toString();
     }
+
+	/** Set JSonBody.
+		@param JSonBody 
+		Body de información utilizado en aplicaciones móbiles con JSon
+	  */
+	public void setJSonBody (String JSonBody)
+	{
+		set_Value (COLUMNNAME_JSonBody, JSonBody);
+	}
+
+	/** Get JSonBody.
+		@return Body de información utilizado en aplicaciones móbiles con JSon
+	  */
+	public String getJSonBody () 
+	{
+		return (String)get_Value(COLUMNNAME_JSonBody);
+	}
+
+	public I_M_Product getM_Product() throws RuntimeException
+    {
+		return (I_M_Product)MTable.get(getCtx(), I_M_Product.Table_Name)
+			.getPO(getM_Product_ID(), get_TrxName());	}
+
+	/** Set Product.
+		@param M_Product_ID 
+		Product, Service, Item
+	  */
+	public void setM_Product_ID (int M_Product_ID)
+	{
+		if (M_Product_ID < 1) 
+			set_Value (COLUMNNAME_M_Product_ID, null);
+		else 
+			set_Value (COLUMNNAME_M_Product_ID, Integer.valueOf(M_Product_ID));
+	}
+
+	/** Get Product.
+		@return Product, Service, Item
+	  */
+	public int getM_Product_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_M_Product_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
 
 	/** Set SC_Cantidad.
 		@param SC_Cantidad SC_Cantidad	  */
@@ -341,6 +386,51 @@ public class X_Z_Stech_TK_MovDet extends PO implements I_Z_Stech_TK_MovDet, I_Pe
 	public String getUUID () 
 	{
 		return (String)get_Value(COLUMNNAME_UUID);
+	}
+
+	/** Set Z_ProductoUPC ID.
+		@param Z_ProductoUPC_ID Z_ProductoUPC ID	  */
+	public void setZ_ProductoUPC_ID (int Z_ProductoUPC_ID)
+	{
+		if (Z_ProductoUPC_ID < 1) 
+			set_Value (COLUMNNAME_Z_ProductoUPC_ID, null);
+		else 
+			set_Value (COLUMNNAME_Z_ProductoUPC_ID, Integer.valueOf(Z_ProductoUPC_ID));
+	}
+
+	/** Get Z_ProductoUPC ID.
+		@return Z_ProductoUPC ID	  */
+	public int getZ_ProductoUPC_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_Z_ProductoUPC_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
+	public I_Z_StechInterfaceVta getZ_StechInterfaceVta() throws RuntimeException
+    {
+		return (I_Z_StechInterfaceVta)MTable.get(getCtx(), I_Z_StechInterfaceVta.Table_Name)
+			.getPO(getZ_StechInterfaceVta_ID(), get_TrxName());	}
+
+	/** Set Z_StechInterfaceVta ID.
+		@param Z_StechInterfaceVta_ID Z_StechInterfaceVta ID	  */
+	public void setZ_StechInterfaceVta_ID (int Z_StechInterfaceVta_ID)
+	{
+		if (Z_StechInterfaceVta_ID < 1) 
+			set_Value (COLUMNNAME_Z_StechInterfaceVta_ID, null);
+		else 
+			set_Value (COLUMNNAME_Z_StechInterfaceVta_ID, Integer.valueOf(Z_StechInterfaceVta_ID));
+	}
+
+	/** Get Z_StechInterfaceVta ID.
+		@return Z_StechInterfaceVta ID	  */
+	public int getZ_StechInterfaceVta_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_Z_StechInterfaceVta_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
 	}
 
 	/** Set Z_Stech_TK_MovDet ID.

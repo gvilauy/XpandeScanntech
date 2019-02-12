@@ -33,7 +33,7 @@ public class X_Z_Stech_TK_MovPago extends PO implements I_Z_Stech_TK_MovPago, I_
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20190114L;
+	private static final long serialVersionUID = 20190212L;
 
     /** Standard Constructor */
     public X_Z_Stech_TK_MovPago (Properties ctx, int Z_Stech_TK_MovPago_ID, String trxName)
@@ -43,7 +43,7 @@ public class X_Z_Stech_TK_MovPago extends PO implements I_Z_Stech_TK_MovPago, I_
         {
 			setSC_Cambio (false);
 // N
-			setUUID (null);
+			setZ_StechInterfaceVta_ID (0);
 			setZ_Stech_TK_Mov_ID (0);
 			setZ_Stech_TK_MovPago_ID (0);
         } */
@@ -76,6 +76,23 @@ public class X_Z_Stech_TK_MovPago extends PO implements I_Z_Stech_TK_MovPago, I_
         .append(get_ID()).append("]");
       return sb.toString();
     }
+
+	/** Set JSonBody.
+		@param JSonBody 
+		Body de información utilizado en aplicaciones móbiles con JSon
+	  */
+	public void setJSonBody (String JSonBody)
+	{
+		set_Value (COLUMNNAME_JSonBody, JSonBody);
+	}
+
+	/** Get JSonBody.
+		@return Body de información utilizado en aplicaciones móbiles con JSon
+	  */
+	public String getJSonBody () 
+	{
+		return (String)get_Value(COLUMNNAME_JSonBody);
+	}
 
 	/** Set SC_Cambio.
 		@param SC_Cambio SC_Cambio	  */
@@ -179,19 +196,16 @@ public class X_Z_Stech_TK_MovPago extends PO implements I_Z_Stech_TK_MovPago, I_
 
 	/** Set SC_ComercioCredito.
 		@param SC_ComercioCredito SC_ComercioCredito	  */
-	public void setSC_ComercioCredito (BigDecimal SC_ComercioCredito)
+	public void setSC_ComercioCredito (String SC_ComercioCredito)
 	{
 		set_Value (COLUMNNAME_SC_ComercioCredito, SC_ComercioCredito);
 	}
 
 	/** Get SC_ComercioCredito.
 		@return SC_ComercioCredito	  */
-	public BigDecimal getSC_ComercioCredito () 
+	public String getSC_ComercioCredito () 
 	{
-		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_SC_ComercioCredito);
-		if (bd == null)
-			 return Env.ZERO;
-		return bd;
+		return (String)get_Value(COLUMNNAME_SC_ComercioCredito);
 	}
 
 	/** Set SC_CotizacionCompra.
@@ -378,6 +392,31 @@ public class X_Z_Stech_TK_MovPago extends PO implements I_Z_Stech_TK_MovPago, I_
 	public String getUUID () 
 	{
 		return (String)get_Value(COLUMNNAME_UUID);
+	}
+
+	public I_Z_StechInterfaceVta getZ_StechInterfaceVta() throws RuntimeException
+    {
+		return (I_Z_StechInterfaceVta)MTable.get(getCtx(), I_Z_StechInterfaceVta.Table_Name)
+			.getPO(getZ_StechInterfaceVta_ID(), get_TrxName());	}
+
+	/** Set Z_StechInterfaceVta ID.
+		@param Z_StechInterfaceVta_ID Z_StechInterfaceVta ID	  */
+	public void setZ_StechInterfaceVta_ID (int Z_StechInterfaceVta_ID)
+	{
+		if (Z_StechInterfaceVta_ID < 1) 
+			set_Value (COLUMNNAME_Z_StechInterfaceVta_ID, null);
+		else 
+			set_Value (COLUMNNAME_Z_StechInterfaceVta_ID, Integer.valueOf(Z_StechInterfaceVta_ID));
+	}
+
+	/** Get Z_StechInterfaceVta ID.
+		@return Z_StechInterfaceVta ID	  */
+	public int getZ_StechInterfaceVta_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_Z_StechInterfaceVta_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
 	}
 
 	public I_Z_Stech_TK_Mov getZ_Stech_TK_Mov() throws RuntimeException
