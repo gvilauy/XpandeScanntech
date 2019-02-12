@@ -4,6 +4,7 @@ import org.compiere.process.ProcessInfoParameter;
 import org.compiere.process.SvrProcess;
 import org.xpande.stech.model.MZScanntechConfig;
 import org.xpande.stech.model.MZScanntechConfigOrg;
+import org.xpande.stech.model.MZStechInterfaceVta;
 import org.xpande.stech.utils.ProcesadorInterfaceOut;
 
 import java.math.BigDecimal;
@@ -42,35 +43,30 @@ public class InterfaceVentas extends SvrProcess {
             }
         }
 
-        this.procesadorInterfaceOut = new ProcesadorInterfaceOut(getCtx(), get_TrxName());
+        //this.procesadorInterfaceOut = new ProcesadorInterfaceOut(getCtx(), get_TrxName());
 
     }
 
     @Override
     protected String doIt() throws Exception {
 
-        String message = null;
-
         MZScanntechConfig scanntechConfig = MZScanntechConfig.getDefault(getCtx(), get_TrxName());
 
-        if (this.adOrgID > 0){
-            MZScanntechConfigOrg configOrg = scanntechConfig.getOrgConfig(this.adOrgID);
-            message = this.procesadorInterfaceOut.executeInterfaceMov(configOrg, this.fechaConsulta);
-        }
-        else {
-            // Tengo que procesar todas las organización que tienen a Scanntech como POS
+        // Si indico organización, proceso solo para esta, sino proceso para todas las que tenga asociadas al proveedor de POS
+        List<MZScanntechConfigOrg> orgList = scanntechConfig.getOrganizationsByOrg(this.adOrgID);
 
-            List<MZScanntechConfigOrg> configOrgList = scanntechConfig.getOrganization();
-            for (MZScanntechConfigOrg configOrg: configOrgList){
-                message = this.procesadorInterfaceOut.executeInterfaceMov(configOrg, this.fechaConsulta);
-                if (message != null){
-                    return "@Error@ " + message;
-                }
+        for (MZScanntechConfigOrg configOrg: orgList){
+
+            MZStechInterfaceVta interfaceVta = new MZStechInterfaceVta(getCtx(), 0, get_TrxName());
+            interfaceVta.set_ValueOfColumn("AD_Client_ID", scanntechConfig.getAD_Client_ID());
+            interfaceVta.setAD_Org_ID(configOrg.getAD_OrgTrx_ID());
+            interfaceVta.saveEx();
+
+            String message = interfaceVta.execute(configOrg, this.fechaConsulta);
+
+            if (message != null){
+                return "@Error@ " + message;
             }
-        }
-
-        if (message != null){
-            return "@Error@ " + message;
         }
 
         return "OK";

@@ -121,4 +121,22 @@ public class MZScanntechConfig extends X_Z_ScanntechConfig {
     }
 
 
+    /***
+     * Obtiene y retorna lista de organizaciones asociadas a la configuracion del proveedor de POS Scanntech.
+     * Xpande. Created by Gabriel Vila on 2/12/19.
+     * @return
+     */
+    public List<MZScanntechConfigOrg> getOrganizationsByOrg(int adOrgTrxID){
+
+        String whereClause = X_Z_ScanntechConfigOrg.COLUMNNAME_Z_ScanntechConfig_ID + " =" + this.get_ID();
+
+        if (adOrgTrxID > 0){
+            whereClause += " AND " + X_Z_ScanntechConfigOrg.COLUMNNAME_AD_OrgTrx_ID + " =" + adOrgTrxID;
+        }
+
+        List<MZScanntechConfigOrg> lines = new Query(getCtx(), I_Z_ScanntechConfigOrg.Table_Name, whereClause, get_TrxName()).setOnlyActiveRecords(true).list();
+
+        return lines;
+    }
+
 }
