@@ -208,6 +208,15 @@ public interface I_Z_Stech_TK_MovPago
 	/** Get SC_DocumentoCliente	  */
 	public String getSC_DocumentoCliente();
 
+    /** Column name SC_FechaOperacion */
+    public static final String COLUMNNAME_SC_FechaOperacion = "SC_FechaOperacion";
+
+	/** Set SC_FechaOperacion	  */
+	public void setSC_FechaOperacion(Timestamp SC_FechaOperacion);
+
+	/** Get SC_FechaOperacion	  */
+	public Timestamp getSC_FechaOperacion();
+
     /** Column name SC_FechaVencimiento */
     public static final String COLUMNNAME_SC_FechaVencimiento = "SC_FechaVencimiento";
 
@@ -309,6 +318,17 @@ public interface I_Z_Stech_TK_MovPago
 	  */
 	public String getUUID();
 
+    /** Column name Z_StechCreditos_ID */
+    public static final String COLUMNNAME_Z_StechCreditos_ID = "Z_StechCreditos_ID";
+
+	/** Set Z_StechCreditos ID	  */
+	public void setZ_StechCreditos_ID(int Z_StechCreditos_ID);
+
+	/** Get Z_StechCreditos ID	  */
+	public int getZ_StechCreditos_ID();
+
+	public I_Z_StechCreditos getZ_StechCreditos() throws RuntimeException;
+
     /** Column name Z_StechInterfaceVta_ID */
     public static final String COLUMNNAME_Z_StechInterfaceVta_ID = "Z_StechInterfaceVta_ID";
 
@@ -319,6 +339,17 @@ public interface I_Z_Stech_TK_MovPago
 	public int getZ_StechInterfaceVta_ID();
 
 	public I_Z_StechInterfaceVta getZ_StechInterfaceVta() throws RuntimeException;
+
+    /** Column name Z_StechMedioPago_ID */
+    public static final String COLUMNNAME_Z_StechMedioPago_ID = "Z_StechMedioPago_ID";
+
+	/** Set Z_StechMedioPago ID	  */
+	public void setZ_StechMedioPago_ID(int Z_StechMedioPago_ID);
+
+	/** Get Z_StechMedioPago ID	  */
+	public int getZ_StechMedioPago_ID();
+
+	public I_Z_StechMedioPago getZ_StechMedioPago() throws RuntimeException;
 
     /** Column name Z_Stech_TK_Mov_ID */
     public static final String COLUMNNAME_Z_Stech_TK_Mov_ID = "Z_Stech_TK_Mov_ID";

@@ -33,7 +33,7 @@ public class X_Z_Stech_TK_MovPago extends PO implements I_Z_Stech_TK_MovPago, I_
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20190212L;
+	private static final long serialVersionUID = 20190221L;
 
     /** Standard Constructor */
     public X_Z_Stech_TK_MovPago (Properties ctx, int Z_Stech_TK_MovPago_ID, String trxName)
@@ -273,6 +273,19 @@ public class X_Z_Stech_TK_MovPago extends PO implements I_Z_Stech_TK_MovPago, I_
 		return (String)get_Value(COLUMNNAME_SC_DocumentoCliente);
 	}
 
+	/** Set SC_FechaOperacion.
+		@param SC_FechaOperacion SC_FechaOperacion	  */
+	public void setSC_FechaOperacion (Timestamp SC_FechaOperacion)
+	{
+		throw new IllegalArgumentException ("SC_FechaOperacion is virtual column");	}
+
+	/** Get SC_FechaOperacion.
+		@return SC_FechaOperacion	  */
+	public Timestamp getSC_FechaOperacion () 
+	{
+		return (Timestamp)get_Value(COLUMNNAME_SC_FechaOperacion);
+	}
+
 	/** Set SC_FechaVencimiento.
 		@param SC_FechaVencimiento SC_FechaVencimiento	  */
 	public void setSC_FechaVencimiento (Timestamp SC_FechaVencimiento)
@@ -411,6 +424,31 @@ public class X_Z_Stech_TK_MovPago extends PO implements I_Z_Stech_TK_MovPago, I_
 		return (String)get_Value(COLUMNNAME_UUID);
 	}
 
+	public I_Z_StechCreditos getZ_StechCreditos() throws RuntimeException
+    {
+		return (I_Z_StechCreditos)MTable.get(getCtx(), I_Z_StechCreditos.Table_Name)
+			.getPO(getZ_StechCreditos_ID(), get_TrxName());	}
+
+	/** Set Z_StechCreditos ID.
+		@param Z_StechCreditos_ID Z_StechCreditos ID	  */
+	public void setZ_StechCreditos_ID (int Z_StechCreditos_ID)
+	{
+		if (Z_StechCreditos_ID < 1) 
+			set_Value (COLUMNNAME_Z_StechCreditos_ID, null);
+		else 
+			set_Value (COLUMNNAME_Z_StechCreditos_ID, Integer.valueOf(Z_StechCreditos_ID));
+	}
+
+	/** Get Z_StechCreditos ID.
+		@return Z_StechCreditos ID	  */
+	public int getZ_StechCreditos_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_Z_StechCreditos_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
 	public I_Z_StechInterfaceVta getZ_StechInterfaceVta() throws RuntimeException
     {
 		return (I_Z_StechInterfaceVta)MTable.get(getCtx(), I_Z_StechInterfaceVta.Table_Name)
@@ -431,6 +469,31 @@ public class X_Z_Stech_TK_MovPago extends PO implements I_Z_Stech_TK_MovPago, I_
 	public int getZ_StechInterfaceVta_ID () 
 	{
 		Integer ii = (Integer)get_Value(COLUMNNAME_Z_StechInterfaceVta_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
+	public I_Z_StechMedioPago getZ_StechMedioPago() throws RuntimeException
+    {
+		return (I_Z_StechMedioPago)MTable.get(getCtx(), I_Z_StechMedioPago.Table_Name)
+			.getPO(getZ_StechMedioPago_ID(), get_TrxName());	}
+
+	/** Set Z_StechMedioPago ID.
+		@param Z_StechMedioPago_ID Z_StechMedioPago ID	  */
+	public void setZ_StechMedioPago_ID (int Z_StechMedioPago_ID)
+	{
+		if (Z_StechMedioPago_ID < 1) 
+			set_Value (COLUMNNAME_Z_StechMedioPago_ID, null);
+		else 
+			set_Value (COLUMNNAME_Z_StechMedioPago_ID, Integer.valueOf(Z_StechMedioPago_ID));
+	}
+
+	/** Get Z_StechMedioPago ID.
+		@return Z_StechMedioPago ID	  */
+	public int getZ_StechMedioPago_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_Z_StechMedioPago_ID);
 		if (ii == null)
 			 return 0;
 		return ii.intValue();

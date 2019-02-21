@@ -271,6 +271,7 @@ public class MZStechInterfaceVta extends X_Z_StechInterfaceVta {
     private void setJsonMedioPagoMov(MZStechTKMov tkMov, JSONObject jsonMedioPago) {
 
         MZStechTKMovPago tkMovPago = null;
+        String sql = "";
 
         try{
 
@@ -285,6 +286,12 @@ public class MZStechInterfaceVta extends X_Z_StechInterfaceVta {
             // codigoTipoPago
             if (!jsonMedioPago.get("codigoTipoPago").equals(JSONObject.NULL)){
                 tkMovPago.setSC_CodigoTipoPago(Integer.valueOf(jsonMedioPago.get("codigoTipoPago").toString().trim()));
+
+                sql = "select z_stechmediopago_id from z_stechmediopago where value ='" + tkMovPago.getSC_CodigoTipoPago() + "'";
+                int idAux = DB.getSQLValueEx(null, sql);
+                if (idAux > 0){
+                    tkMovPago.setZ_StechMedioPago_ID(idAux);
+                }
             }
 
             // codigoPlanPagos
@@ -348,6 +355,12 @@ public class MZStechInterfaceVta extends X_Z_StechInterfaceVta {
             // codigoCredito
             if (!jsonMedioPago.get("codigoCredito").equals(JSONObject.NULL)){
                 tkMovPago.setSC_CodigoCredito(Integer.valueOf(jsonMedioPago.get("codigoCredito").toString().trim()));
+
+                sql = "select z_stechcreditos_id from z_stechcreditos where value ='" + tkMovPago.getSC_CodigoCredito() + "'";
+                int idAux = DB.getSQLValueEx(null, sql);
+                if (idAux > 0){
+                    tkMovPago.setZ_StechCreditos_ID(idAux);
+                }
             }
 
             // numeroCuotasPago
