@@ -10,6 +10,7 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.compiere.util.CLogger;
 import org.compiere.util.DB;
+import org.compiere.util.Env;
 import org.compiere.util.TimeUtil;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -735,6 +736,11 @@ public class MZStechInterfaceVta extends X_Z_StechInterfaceVta {
             }
 
             tkMovDet.saveEx();
+
+            // Hago un update para forzar el trigger
+            tkMovDet.set_ValueOfColumn("CreatedBy", this.getCreatedBy());
+            tkMovDet.saveEx();
+
         }
         catch (Exception e){
             throw new AdempiereException(e);
