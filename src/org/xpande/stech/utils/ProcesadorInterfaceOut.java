@@ -866,7 +866,8 @@ public class ProcesadorInterfaceOut {
                 cTaxCategoryID = taxCategoryID_Aux;
             }
 
-            MTax tax = TaxUtils.getLastTaxByCategory(this.ctx, cTaxCategoryID, null);
+            //MTax tax = TaxUtils.getLastTaxByCategory(this.ctx, cTaxCategoryID, null);
+            MTax tax = TaxUtils.getDefaultTaxByCategory(this.ctx, cTaxCategoryID, null);
             if ((tax == null) || (tax.get_ID() <= 0)){
                 throw new AdempiereException("No hay Impuesto asociado a la Categoría de Impuesto del Producto");
             }
