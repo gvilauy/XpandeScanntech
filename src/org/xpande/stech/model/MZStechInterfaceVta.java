@@ -460,7 +460,7 @@ public class MZStechInterfaceVta extends X_Z_StechInterfaceVta {
 
             tkMov = new MZStechTKMov(getCtx(), 0, get_TrxName());
             tkMov.set_ValueOfColumn("AD_Client_ID", this.getAD_Client_ID());
-            tkMov.setAD_Org_ID(this.getAD_Org_ID());
+            tkMov.setAD_Org_ID(configOrg.getAD_OrgTrx_ID());
             tkMov.setZ_StechInterfaceVta_ID(this.get_ID());
             tkMov.setJSonBody(jsonMovimiento.toString());
 
