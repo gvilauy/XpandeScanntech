@@ -251,6 +251,10 @@ public class MZStechInterfaceVta extends X_Z_StechInterfaceVta {
 
                         this.setJsonMedioPagoMov(tkMov, jsonMedioPago);
                     }
+
+                    // En scanntech hay medios de pago del tipo VALE que dentro del mismo nro. de movimiento se asocian a otro medio de pago.
+                    // Aquí se copian los datos del medio de pago asociado, al registro del VALE.
+                    this.setInfoVales(tkMov);
                 }
             }
 
@@ -260,6 +264,55 @@ public class MZStechInterfaceVta extends X_Z_StechInterfaceVta {
         }
 
         return message;
+    }
+
+
+    /***
+     * En scanntech hay medios de pago del tipo VALE que dentro del mismo nro. de movimiento se asocian a otro medio de pago.
+     * Aquí se copian los datos del medio de pago asociado, al registro del VALE.
+     * Xpande. Created by Gabriel Vila on 6/3/19.
+      * @param tkMov
+     */
+    private void setInfoVales(MZStechTKMov tkMov) {
+
+        String sql = "";
+
+        try{
+
+            String codigoMedioPagoVale = "12";
+
+            List<MZStechTKMovPago> tkMovPagoList = tkMov.getMediosPagoByCodigo(codigoMedioPagoVale);
+            for (MZStechTKMovPago tkMovPago: tkMovPagoList){
+
+                // Obtengo ID del medio de pago asociado al VALE en el mismo movimiento.
+                sql = " select max(z_stech_tk_movpago_id) as id from z_stech_tk_movpago where z_stech_tk_mov_id =" + this.get_ID() +
+                        " and sc_codigotipopago <>'" + codigoMedioPagoVale + "' ";
+                int ID_MovPagoAsociado = DB.getSQLValueEx(get_TrxName(), sql);
+                if (ID_MovPagoAsociado > 0){
+                    MZStechTKMovPago tkMovPagoAsociado = new MZStechTKMovPago(getCtx(), ID_MovPagoAsociado, get_TrxName());
+                    if ((tkMovPagoAsociado != null) && (tkMovPagoAsociado.get_ID() > 0)){
+                        // Copio info del medio de paso asociado en el VALE
+                        tkMovPago.setSC_CodigoPlanPagos(tkMovPagoAsociado.getSC_CodigoPlanPagos());
+                        tkMovPago.setSC_NumeroTarjeta(tkMovPagoAsociado.getSC_NumeroTarjeta());
+                        tkMovPago.setSC_NumeroAutorizacion(tkMovPagoAsociado.getSC_NumeroAutorizacion());
+                        tkMovPago.setSC_FechaVencimiento(tkMovPagoAsociado.getSC_FechaVencimiento());
+                        tkMovPago.setSC_CodigoCredito(tkMovPagoAsociado.getSC_CodigoCredito());
+                        if (tkMovPagoAsociado.getZ_StechCreditos_ID() > 0){
+                            tkMovPago.setZ_StechCreditos_ID(tkMovPagoAsociado.getZ_StechCreditos_ID());
+                        }
+                        tkMovPago.setSC_NumeroDocumentoPago(tkMovPagoAsociado.getSC_NumeroDocumentoPago());
+                        tkMovPago.setSC_NumeroCuotasPago(tkMovPagoAsociado.getSC_NumeroCuotasPago());
+                        tkMovPago.setSC_TerminalCredito(tkMovPagoAsociado.getSC_TerminalCredito());
+                        tkMovPago.setSC_ComercioCredito(tkMovPagoAsociado.getSC_ComercioCredito());
+                        tkMovPago.saveEx();
+                    }
+                }
+            }
+
+        }
+        catch (Exception e){
+            throw new AdempiereException(e);
+        }
     }
 
 

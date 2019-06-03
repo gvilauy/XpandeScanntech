@@ -1,10 +1,12 @@
 package org.xpande.stech.model;
 
 import org.adempiere.exceptions.AdempiereException;
+import org.compiere.model.Query;
 import org.compiere.util.DB;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.List;
 import java.util.Properties;
 
 /**
@@ -58,6 +60,22 @@ public class MZStechTKMov  extends X_Z_Stech_TK_Mov {
         }
 
         return id;
+    }
+
+    /***
+     * Obtiene y retorna lista de medios de pago, asociados a este movimiento, según código de medio de pago recibido.
+     * Xpande. Created by Gabriel Vila on 6/3/19.
+     * @param codigoMedioPagoVale
+     * @return
+     */
+    public List<MZStechTKMovPago> getMediosPagoByCodigo(String codigoMedioPago){
+
+        String whereClause = X_Z_Stech_TK_MovPago.COLUMNNAME_Z_Stech_TK_Mov_ID + " =" + this.get_ID() +
+                " AND " + X_Z_Stech_TK_MovPago.COLUMNNAME_SC_CodigoTipoPago + " ='" + codigoMedioPago + "' ";
+
+        List<MZStechTKMovPago> lines = new Query(getCtx(), I_Z_Stech_TK_MovPago.Table_Name, whereClause, get_TrxName()).list();
+
+        return lines;
     }
 
 }
