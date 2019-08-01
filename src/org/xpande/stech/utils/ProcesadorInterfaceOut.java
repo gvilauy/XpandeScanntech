@@ -399,9 +399,9 @@ public class ProcesadorInterfaceOut {
                     priceList = (MPriceList) interfaceOut.getM_PriceList();
                 }
                 else{
-                    priceList = PriceListUtils.getPriceListByOrg(this.ctx, interfaceOut.getAD_Client_ID(), configOrg.getAD_OrgTrx_ID(), 142, true, null);
+                    priceList = PriceListUtils.getPriceListByOrg(this.ctx, interfaceOut.getAD_Client_ID(), configOrg.getAD_OrgTrx_ID(), 142, true, null, null);
                     if ((priceList == null) || (priceList.get_ID() <= 0)){
-                        priceList = PriceListUtils.getPriceListByOrg(this.ctx, interfaceOut.getAD_Client_ID(), configOrg.getAD_OrgTrx_ID(), 100, true, null);
+                        priceList = PriceListUtils.getPriceListByOrg(this.ctx, interfaceOut.getAD_Client_ID(), configOrg.getAD_OrgTrx_ID(), 100, true, null, null);
                     }
                 }
                 // Precio de venta
