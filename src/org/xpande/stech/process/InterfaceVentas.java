@@ -2,6 +2,7 @@ package org.xpande.stech.process;
 
 import org.compiere.process.ProcessInfoParameter;
 import org.compiere.process.SvrProcess;
+import org.compiere.util.TimeUtil;
 import org.xpande.stech.model.MZScanntechConfig;
 import org.xpande.stech.model.MZScanntechConfigOrg;
 import org.xpande.stech.model.MZStechInterfaceVta;
@@ -54,6 +55,10 @@ public class InterfaceVentas extends SvrProcess {
 
         // Si indico organización, proceso solo para esta, sino proceso para todas las que tenga asociadas al proveedor de POS
         List<MZScanntechConfigOrg> orgList = scanntechConfig.getOrganizationsByOrg(this.adOrgID);
+
+        if (this.fechaConsulta == null){
+            this.fechaConsulta = TimeUtil.trunc(new Timestamp(System.currentTimeMillis()), TimeUtil.TRUNC_DAY);
+        }
 
         for (MZScanntechConfigOrg configOrg: orgList){
 
