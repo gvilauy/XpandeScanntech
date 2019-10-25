@@ -20,7 +20,7 @@ import java.util.List;
 public class InterfaceVentas extends SvrProcess {
 
     private ProcesadorInterfaceOut procesadorInterfaceOut = null;
-    private int adOrgID = 1000000;
+    private int adOrgID = 0;
     private Timestamp fechaConsulta = null;
 
     @Override

@@ -617,6 +617,21 @@ public class MZStechInterfaceVta extends X_Z_StechInterfaceVta {
                 tkMov.setSC_CuponAnulada(jsonMovimiento.getBoolean("cuponAnulada"));
             }
 
+            // nombreFactura
+            if (!jsonMovimiento.get("nombreFactura").equals(JSONObject.NULL)){
+                tkMov.setSC_NombreFactura(jsonMovimiento.get("nombreFactura").toString().trim());
+            }
+
+            // rucFactura
+            if (!jsonMovimiento.get("rucFactura").equals(JSONObject.NULL)){
+                tkMov.setSC_RucFactura(jsonMovimiento.get("rucFactura").toString().trim());
+            }
+
+            // direccionFactura
+            if (!jsonMovimiento.get("direccionFactura").equals(JSONObject.NULL)){
+                tkMov.setSC_DireccionFactura(jsonMovimiento.get("direccionFactura").toString().trim());
+            }
+
             tkMov.saveEx();
 
             cantMovProcesados++;

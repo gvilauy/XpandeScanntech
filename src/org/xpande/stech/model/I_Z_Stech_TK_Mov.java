@@ -221,6 +221,19 @@ public interface I_Z_Stech_TK_Mov
 	/** Get SC_DescuentoTotal	  */
 	public BigDecimal getSC_DescuentoTotal();
 
+    /** Column name SC_DireccionFactura */
+    public static final String COLUMNNAME_SC_DireccionFactura = "SC_DireccionFactura";
+
+	/** Set SC_DireccionFactura.
+	  * Direccion de factura para Scanntech
+	  */
+	public void setSC_DireccionFactura(String SC_DireccionFactura);
+
+	/** Get SC_DireccionFactura.
+	  * Direccion de factura para Scanntech
+	  */
+	public String getSC_DireccionFactura();
+
     /** Column name SC_FechaOperacion */
     public static final String COLUMNNAME_SC_FechaOperacion = "SC_FechaOperacion";
 
@@ -229,6 +242,19 @@ public interface I_Z_Stech_TK_Mov
 
 	/** Get SC_FechaOperacion	  */
 	public Timestamp getSC_FechaOperacion();
+
+    /** Column name SC_NombreFactura */
+    public static final String COLUMNNAME_SC_NombreFactura = "SC_NombreFactura";
+
+	/** Set SC_NombreFactura.
+	  * Nombre de factura para Scanntech
+	  */
+	public void setSC_NombreFactura(String SC_NombreFactura);
+
+	/** Get SC_NombreFactura.
+	  * Nombre de factura para Scanntech
+	  */
+	public String getSC_NombreFactura();
 
     /** Column name SC_NumeroMov */
     public static final String COLUMNNAME_SC_NumeroMov = "SC_NumeroMov";
@@ -256,6 +282,19 @@ public interface I_Z_Stech_TK_Mov
 
 	/** Get SC_Redondeo	  */
 	public BigDecimal getSC_Redondeo();
+
+    /** Column name SC_RucFactura */
+    public static final String COLUMNNAME_SC_RucFactura = "SC_RucFactura";
+
+	/** Set SC_RucFactura.
+	  * RUC de Factura para Scanntech
+	  */
+	public void setSC_RucFactura(String SC_RucFactura);
+
+	/** Get SC_RucFactura.
+	  * RUC de Factura para Scanntech
+	  */
+	public String getSC_RucFactura();
 
     /** Column name SC_SerieCfe */
     public static final String COLUMNNAME_SC_SerieCfe = "SC_SerieCfe";

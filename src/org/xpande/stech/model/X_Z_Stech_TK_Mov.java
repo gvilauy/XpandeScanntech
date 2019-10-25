@@ -33,7 +33,7 @@ public class X_Z_Stech_TK_Mov extends PO implements I_Z_Stech_TK_Mov, I_Persiste
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20190212L;
+	private static final long serialVersionUID = 20191024L;
 
     /** Standard Constructor */
     public X_Z_Stech_TK_Mov (Properties ctx, int Z_Stech_TK_Mov_ID, String trxName)
@@ -304,6 +304,23 @@ public class X_Z_Stech_TK_Mov extends PO implements I_Z_Stech_TK_Mov, I_Persiste
 		return bd;
 	}
 
+	/** Set SC_DireccionFactura.
+		@param SC_DireccionFactura 
+		Direccion de factura para Scanntech
+	  */
+	public void setSC_DireccionFactura (String SC_DireccionFactura)
+	{
+		set_Value (COLUMNNAME_SC_DireccionFactura, SC_DireccionFactura);
+	}
+
+	/** Get SC_DireccionFactura.
+		@return Direccion de factura para Scanntech
+	  */
+	public String getSC_DireccionFactura () 
+	{
+		return (String)get_Value(COLUMNNAME_SC_DireccionFactura);
+	}
+
 	/** Set SC_FechaOperacion.
 		@param SC_FechaOperacion SC_FechaOperacion	  */
 	public void setSC_FechaOperacion (Timestamp SC_FechaOperacion)
@@ -316,6 +333,23 @@ public class X_Z_Stech_TK_Mov extends PO implements I_Z_Stech_TK_Mov, I_Persiste
 	public Timestamp getSC_FechaOperacion () 
 	{
 		return (Timestamp)get_Value(COLUMNNAME_SC_FechaOperacion);
+	}
+
+	/** Set SC_NombreFactura.
+		@param SC_NombreFactura 
+		Nombre de factura para Scanntech
+	  */
+	public void setSC_NombreFactura (String SC_NombreFactura)
+	{
+		set_Value (COLUMNNAME_SC_NombreFactura, SC_NombreFactura);
+	}
+
+	/** Get SC_NombreFactura.
+		@return Nombre de factura para Scanntech
+	  */
+	public String getSC_NombreFactura () 
+	{
+		return (String)get_Value(COLUMNNAME_SC_NombreFactura);
 	}
 
 	/** Set SC_NumeroMov.
@@ -361,6 +395,23 @@ public class X_Z_Stech_TK_Mov extends PO implements I_Z_Stech_TK_Mov, I_Persiste
 		if (bd == null)
 			 return Env.ZERO;
 		return bd;
+	}
+
+	/** Set SC_RucFactura.
+		@param SC_RucFactura 
+		RUC de Factura para Scanntech
+	  */
+	public void setSC_RucFactura (String SC_RucFactura)
+	{
+		set_Value (COLUMNNAME_SC_RucFactura, SC_RucFactura);
+	}
+
+	/** Get SC_RucFactura.
+		@return RUC de Factura para Scanntech
+	  */
+	public String getSC_RucFactura () 
+	{
+		return (String)get_Value(COLUMNNAME_SC_RucFactura);
 	}
 
 	/** Set SC_SerieCfe.
