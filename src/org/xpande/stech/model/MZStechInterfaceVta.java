@@ -280,13 +280,14 @@ public class MZStechInterfaceVta extends X_Z_StechInterfaceVta {
         try{
 
             String codigoMedioPagoVale = "12";
+            String codigoMedioPagoEfectivo ="9";
 
             List<MZStechTKMovPago> tkMovPagoList = tkMov.getMediosPagoByCodigo(codigoMedioPagoVale);
             for (MZStechTKMovPago tkMovPago: tkMovPagoList){
 
                 // Obtengo ID del medio de pago asociado al VALE en el mismo movimiento.
-                sql = " select max(z_stech_tk_movpago_id) as id from z_stech_tk_movpago where z_stech_tk_mov_id =" + this.get_ID() +
-                        " and sc_codigotipopago <>'" + codigoMedioPagoVale + "' ";
+                sql = " select max(z_stech_tk_movpago_id) as id from z_stech_tk_movpago where z_stech_tk_mov_id =" + tkMov.get_ID() +
+                        " and (sc_codigotipopago <> '" + codigoMedioPagoVale + "' and sc_codigotipopago <> '" + codigoMedioPagoEfectivo + "')";
                 int ID_MovPagoAsociado = DB.getSQLValueEx(get_TrxName(), sql);
                 if (ID_MovPagoAsociado > 0){
                     MZStechTKMovPago tkMovPagoAsociado = new MZStechTKMovPago(getCtx(), ID_MovPagoAsociado, get_TrxName());
