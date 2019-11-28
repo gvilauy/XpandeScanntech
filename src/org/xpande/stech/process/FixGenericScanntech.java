@@ -29,7 +29,7 @@ public class FixGenericScanntech extends SvrProcess {
         ResultSet rs = null;
 
         try{
-            sql = " select distinct z_stech_tk_mov_id from z_stech_tk_movpago where datetrx between '2019-11-01 00:00:00' and '2019-11-27 00:00:00' and sc_codigotipopago ='12' and ad_org_id = 1000000\n" +
+            sql = " select distinct z_stech_tk_mov_id from z_stech_tk_movpago where datetrx between '2019-11-01 00:00:00' and '2019-11-27 00:00:00' and sc_codigotipopago ='12' and ad_org_id = 1000000" +
                     "order by z_stech_tk_mov_id ";
 
         	pstmt = DB.prepareStatement(sql, get_TrxName());
