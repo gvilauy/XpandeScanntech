@@ -1,6 +1,7 @@
 package org.xpande.stech.model;
 
 import org.compiere.model.MTax;
+import org.compiere.model.Query;
 
 import java.sql.ResultSet;
 import java.util.Properties;
@@ -29,6 +30,23 @@ public class MZScanntechConfigTax extends X_Z_ScanntechConfigTax {
         }
 
         return true;
+    }
+
+    /***
+     * Obtiene y retorna modelo ID de impuesto recibido.
+     * Xpande. Created by Gabriel Vila on 4/2/20.
+     * @param ctx
+     * @param cTaxID
+     * @param trxName
+     * @return
+     */
+    public static MZScanntechConfigTax getByTaxID(Properties ctx, int cTaxID, String trxName){
+
+        String whereClause = X_Z_ScanntechConfigTax.COLUMNNAME_C_Tax_ID + " =" + cTaxID;
+
+        MZScanntechConfigTax model = new Query(ctx, I_Z_ScanntechConfigTax.Table_Name, whereClause, trxName).setOnlyActiveRecords(true).first();
+
+        return model;
     }
 
 }

@@ -172,6 +172,19 @@ public interface I_Z_Stech_TK_MovPago
 	/** Get SC_CodigoTipoPago	  */
 	public int getSC_CodigoTipoPago();
 
+    /** Column name SC_CodigoVale */
+    public static final String COLUMNNAME_SC_CodigoVale = "SC_CodigoVale";
+
+	/** Set SC_CodigoVale.
+	  * Código de Vale para POS Scanntech
+	  */
+	public void setSC_CodigoVale(int SC_CodigoVale);
+
+	/** Get SC_CodigoVale.
+	  * Código de Vale para POS Scanntech
+	  */
+	public int getSC_CodigoVale();
+
     /** Column name SC_ComercioCredito */
     public static final String COLUMNNAME_SC_ComercioCredito = "SC_ComercioCredito";
 
@@ -198,6 +211,32 @@ public interface I_Z_Stech_TK_MovPago
 
 	/** Get SC_CotizacionVenta	  */
 	public BigDecimal getSC_CotizacionVenta();
+
+    /** Column name SC_DescuentoAfam */
+    public static final String COLUMNNAME_SC_DescuentoAfam = "SC_DescuentoAfam";
+
+	/** Set SC_DescuentoAfam.
+	  * Descuento Afam para POS Scanntech
+	  */
+	public void setSC_DescuentoAfam(BigDecimal SC_DescuentoAfam);
+
+	/** Get SC_DescuentoAfam.
+	  * Descuento Afam para POS Scanntech
+	  */
+	public BigDecimal getSC_DescuentoAfam();
+
+    /** Column name SC_DescuentoIncFin */
+    public static final String COLUMNNAME_SC_DescuentoIncFin = "SC_DescuentoIncFin";
+
+	/** Set SC_DescuentoIncFin.
+	  * Descuento por inclusión financiera para POS Scanntech
+	  */
+	public void setSC_DescuentoIncFin(BigDecimal SC_DescuentoIncFin);
+
+	/** Get SC_DescuentoIncFin.
+	  * Descuento por inclusión financiera para POS Scanntech
+	  */
+	public BigDecimal getSC_DescuentoIncFin();
 
     /** Column name SC_DocumentoCliente */
     public static final String COLUMNNAME_SC_DocumentoCliente = "SC_DocumentoCliente";

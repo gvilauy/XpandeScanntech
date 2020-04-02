@@ -33,7 +33,7 @@ public class X_Z_Stech_TK_MovPago extends PO implements I_Z_Stech_TK_MovPago, I_
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20190221L;
+	private static final long serialVersionUID = 20200402L;
 
     /** Standard Constructor */
     public X_Z_Stech_TK_MovPago (Properties ctx, int Z_Stech_TK_MovPago_ID, String trxName)
@@ -211,6 +211,26 @@ public class X_Z_Stech_TK_MovPago extends PO implements I_Z_Stech_TK_MovPago, I_
 		return ii.intValue();
 	}
 
+	/** Set SC_CodigoVale.
+		@param SC_CodigoVale 
+		Código de Vale para POS Scanntech
+	  */
+	public void setSC_CodigoVale (int SC_CodigoVale)
+	{
+		set_Value (COLUMNNAME_SC_CodigoVale, Integer.valueOf(SC_CodigoVale));
+	}
+
+	/** Get SC_CodigoVale.
+		@return Código de Vale para POS Scanntech
+	  */
+	public int getSC_CodigoVale () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_SC_CodigoVale);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
 	/** Set SC_ComercioCredito.
 		@param SC_ComercioCredito SC_ComercioCredito	  */
 	public void setSC_ComercioCredito (String SC_ComercioCredito)
@@ -254,6 +274,46 @@ public class X_Z_Stech_TK_MovPago extends PO implements I_Z_Stech_TK_MovPago, I_
 	public BigDecimal getSC_CotizacionVenta () 
 	{
 		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_SC_CotizacionVenta);
+		if (bd == null)
+			 return Env.ZERO;
+		return bd;
+	}
+
+	/** Set SC_DescuentoAfam.
+		@param SC_DescuentoAfam 
+		Descuento Afam para POS Scanntech
+	  */
+	public void setSC_DescuentoAfam (BigDecimal SC_DescuentoAfam)
+	{
+		set_Value (COLUMNNAME_SC_DescuentoAfam, SC_DescuentoAfam);
+	}
+
+	/** Get SC_DescuentoAfam.
+		@return Descuento Afam para POS Scanntech
+	  */
+	public BigDecimal getSC_DescuentoAfam () 
+	{
+		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_SC_DescuentoAfam);
+		if (bd == null)
+			 return Env.ZERO;
+		return bd;
+	}
+
+	/** Set SC_DescuentoIncFin.
+		@param SC_DescuentoIncFin 
+		Descuento por inclusión financiera para POS Scanntech
+	  */
+	public void setSC_DescuentoIncFin (BigDecimal SC_DescuentoIncFin)
+	{
+		set_Value (COLUMNNAME_SC_DescuentoIncFin, SC_DescuentoIncFin);
+	}
+
+	/** Get SC_DescuentoIncFin.
+		@return Descuento por inclusión financiera para POS Scanntech
+	  */
+	public BigDecimal getSC_DescuentoIncFin () 
+	{
+		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_SC_DescuentoIncFin);
 		if (bd == null)
 			 return Env.ZERO;
 		return bd;

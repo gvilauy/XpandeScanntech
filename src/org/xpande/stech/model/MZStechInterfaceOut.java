@@ -407,7 +407,13 @@ public class MZStechInterfaceOut extends X_Z_StechInterfaceOut {
             MTax tax = new MTax(getCtx(), taxesIDs[0], null);
 
             // Seteo tasa de impuesto venta
-            jsonObject.put("ivaVenta", tax.getRate().setScale(2, BigDecimal.ROUND_HALF_UP));
+            //jsonObject.put("ivaVenta", tax.getRate().setScale(2, BigDecimal.ROUND_HALF_UP));
+            MZScanntechConfigTax configTax = MZScanntechConfigTax.getByTaxID(getCtx(), tax.get_ID(), null);
+            if ((configTax == null) || (configTax.get_ID() <= 0)){
+                this.errorMessage = "No se obtuvo Código de IVA de Scanntech para impuesto : " + tax.getName();
+                return null;
+            }
+            jsonObject.put("codigoIva", Integer.valueOf(configTax.getSC_CodigoIVA()));
 
             // Seteo categoria y familia (rubro y familia en el sistema)
             if (product.get_ValueAsInt("Z_ProductoRubro_ID") > 0){

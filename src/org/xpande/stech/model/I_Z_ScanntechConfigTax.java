@@ -122,6 +122,19 @@ public interface I_Z_ScanntechConfigTax
 	  */
 	public boolean isActive();
 
+    /** Column name SC_CodigoIVA */
+    public static final String COLUMNNAME_SC_CodigoIVA = "SC_CodigoIVA";
+
+	/** Set SC_CodigoIVA.
+	  * Codigo de impuesto para POS Scanntech
+	  */
+	public void setSC_CodigoIVA(String SC_CodigoIVA);
+
+	/** Get SC_CodigoIVA.
+	  * Codigo de impuesto para POS Scanntech
+	  */
+	public String getSC_CodigoIVA();
+
     /** Column name SC_PorcentajeIVA */
     public static final String COLUMNNAME_SC_PorcentajeIVA = "SC_PorcentajeIVA";
 

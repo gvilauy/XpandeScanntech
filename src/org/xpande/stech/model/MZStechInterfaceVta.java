@@ -433,6 +433,21 @@ public class MZStechInterfaceVta extends X_Z_StechInterfaceVta {
                 tkMovPago.setSC_ComercioCredito(jsonMedioPago.get("comercioCredito").toString().trim());
             }
 
+            // codigoVale
+            if (!jsonMedioPago.get("codigoVale").equals(JSONObject.NULL)){
+                tkMovPago.setSC_CodigoVale(Integer.valueOf(jsonMedioPago.get("codigoVale").toString().trim()));
+            }
+
+            // descuentoAfam
+            if (!jsonMedioPago.get("descuentoAfam").equals(JSONObject.NULL)){
+                tkMovPago.setSC_DescuentoAfam(BigDecimal.valueOf(jsonMedioPago.getDouble("descuentoAfam")));
+            }
+
+            // descuentoInclusionFinanciera
+            if (!jsonMedioPago.get("descuentoInclusionFinanciera").equals(JSONObject.NULL)){
+                tkMovPago.setSC_DescuentoIncFin(BigDecimal.valueOf(jsonMedioPago.getDouble("descuentoInclusionFinanciera")));
+            }
+
             // cambio
             tkMovPago.setSC_Cambio(jsonMedioPago.getBoolean("cambio"));
 
