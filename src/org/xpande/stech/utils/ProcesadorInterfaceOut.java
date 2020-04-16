@@ -871,7 +871,16 @@ public class ProcesadorInterfaceOut {
             if ((tax == null) || (tax.get_ID() <= 0)){
                 throw new AdempiereException("No hay Impuesto asociado a la Categoría de Impuesto del Producto");
             }
-            jsonProduct.put("ivaVenta", tax.getRate());
+            //jsonProduct.put("ivaVenta", tax.getRate());
+
+
+            // Seteo tasa de impuesto venta
+            //jsonObject.put("ivaVenta", tax.getRate().setScale(2, BigDecimal.ROUND_HALF_UP));
+            MZScanntechConfigTax configTax = MZScanntechConfigTax.getByTaxID(ctx, tax.get_ID(), null);
+            if ((configTax == null) || (configTax.get_ID() <= 0)){
+                throw new AdempiereException("No se obtuvo Código de IVA de Scanntech para impuesto : " + tax.getName());
+            }
+            jsonProduct.put("codigoIva", Integer.valueOf(configTax.getSC_CodigoIVA()));
 
             jsonProduct.put("precioVenta", priceSO);
 
