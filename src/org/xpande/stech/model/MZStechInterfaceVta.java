@@ -252,9 +252,11 @@ public class MZStechInterfaceVta extends X_Z_StechInterfaceVta {
                         this.setJsonMedioPagoMov(tkMov, jsonMedioPago);
                     }
 
+                    /*
                     // En scanntech hay medios de pago del tipo VALE que dentro del mismo nro. de movimiento se asocian a otro medio de pago.
                     // Aquí se copian los datos del medio de pago asociado, al registro del VALE.
-                    this.setInfoVales(tkMov);
+                    //this.setInfoVales(tkMov);
+                    */
                 }
             }
 
