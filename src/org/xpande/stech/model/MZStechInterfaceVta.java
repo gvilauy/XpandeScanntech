@@ -409,14 +409,30 @@ public class MZStechInterfaceVta extends X_Z_StechInterfaceVta {
                 tkMovPago.setSC_NumeroDocumentoPago(jsonMedioPago.get("numeroDocumentoPago").toString().trim());
             }
 
+            // codigoVale
+            boolean tengoCreditoID = false;
+            if (!jsonMedioPago.get("codigoVale").equals(JSONObject.NULL)){
+
+                tkMovPago.setSC_CodigoVale(Integer.valueOf(jsonMedioPago.get("codigoVale").toString().trim()));
+
+                sql = "select z_stechcreditos_id from z_stechcreditos where value ='" + tkMovPago.getSC_CodigoVale() + "'";
+                int idAux = DB.getSQLValueEx(null, sql);
+                if (idAux > 0){
+                    tkMovPago.setZ_StechCreditos_ID(idAux);
+                    tengoCreditoID = true;
+                }
+            }
+
             // codigoCredito
             if (!jsonMedioPago.get("codigoCredito").equals(JSONObject.NULL)){
                 tkMovPago.setSC_CodigoCredito(Integer.valueOf(jsonMedioPago.get("codigoCredito").toString().trim()));
 
-                sql = "select z_stechcreditos_id from z_stechcreditos where value ='" + tkMovPago.getSC_CodigoCredito() + "'";
-                int idAux = DB.getSQLValueEx(null, sql);
-                if (idAux > 0){
-                    tkMovPago.setZ_StechCreditos_ID(idAux);
+                if (!tengoCreditoID){
+                    sql = "select z_stechcreditos_id from z_stechcreditos where value ='" + tkMovPago.getSC_CodigoCredito() + "'";
+                    int idAux = DB.getSQLValueEx(null, sql);
+                    if (idAux > 0){
+                        tkMovPago.setZ_StechCreditos_ID(idAux);
+                    }
                 }
             }
 
@@ -433,11 +449,6 @@ public class MZStechInterfaceVta extends X_Z_StechInterfaceVta {
             // comercioCredito
             if (!jsonMedioPago.get("comercioCredito").equals(JSONObject.NULL)){
                 tkMovPago.setSC_ComercioCredito(jsonMedioPago.get("comercioCredito").toString().trim());
-            }
-
-            // codigoVale
-            if (!jsonMedioPago.get("codigoVale").equals(JSONObject.NULL)){
-                tkMovPago.setSC_CodigoVale(Integer.valueOf(jsonMedioPago.get("codigoVale").toString().trim()));
             }
 
             // descuentoAfam
@@ -809,6 +820,11 @@ public class MZStechInterfaceVta extends X_Z_StechInterfaceVta {
                 String fchHra = fch.substring(0, 4)+fch.substring(5, 7)+fch.substring(8, 10)+fch.substring(11, 13)+fch.substring(14, 16)+fch.substring(17, 19);
                 Timestamp fchServicio =  DateUtils.convertStringToTimestamp_YYYYMMddHHMMss(fchHra);
                 tkMovDet.setSC_FechaServicio(fchServicio);
+            }
+
+            // codigoIVA
+            if (!jsonDetalle.get("codigoIVA").equals(JSONObject.NULL)){
+                tkMovDet.setSC_CodigoIVA(jsonDetalle.get("codigoIVA").toString().trim());
             }
 
             // porcentajeIVA

@@ -33,7 +33,7 @@ public class X_Z_Stech_TK_MovDet extends PO implements I_Z_Stech_TK_MovDet, I_Pe
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20190212L;
+	private static final long serialVersionUID = 20200424L;
 
     /** Standard Constructor */
     public X_Z_Stech_TK_MovDet (Properties ctx, int Z_Stech_TK_MovDet_ID, String trxName)
@@ -211,6 +211,23 @@ public class X_Z_Stech_TK_MovDet extends PO implements I_Z_Stech_TK_MovDet, I_Pe
 		if (ii == null)
 			 return 0;
 		return ii.intValue();
+	}
+
+	/** Set SC_CodigoIVA.
+		@param SC_CodigoIVA 
+		Codigo de impuesto para POS Scanntech
+	  */
+	public void setSC_CodigoIVA (String SC_CodigoIVA)
+	{
+		set_Value (COLUMNNAME_SC_CodigoIVA, SC_CodigoIVA);
+	}
+
+	/** Get SC_CodigoIVA.
+		@return Codigo de impuesto para POS Scanntech
+	  */
+	public String getSC_CodigoIVA () 
+	{
+		return (String)get_Value(COLUMNNAME_SC_CodigoIVA);
 	}
 
 	/** Set SC_CodigoServicio.

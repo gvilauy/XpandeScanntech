@@ -56,7 +56,7 @@ public interface I_Z_Stech_TK_MovDet
 	/** Set Organization.
 	  * Organizational entity within client
 	  */
-	public void setAD_Org_ID(int AD_Org_ID);
+	public void setAD_Org_ID (int AD_Org_ID);
 
 	/** Get Organization.
 	  * Organizational entity within client
@@ -85,7 +85,7 @@ public interface I_Z_Stech_TK_MovDet
 	/** Set Transaction Date.
 	  * Transaction Date
 	  */
-	public void setDateTrx(Timestamp DateTrx);
+	public void setDateTrx (Timestamp DateTrx);
 
 	/** Get Transaction Date.
 	  * Transaction Date
@@ -98,7 +98,7 @@ public interface I_Z_Stech_TK_MovDet
 	/** Set Active.
 	  * The record is active in the system
 	  */
-	public void setIsActive(boolean IsActive);
+	public void setIsActive (boolean IsActive);
 
 	/** Get Active.
 	  * The record is active in the system
@@ -111,7 +111,7 @@ public interface I_Z_Stech_TK_MovDet
 	/** Set JSonBody.
 	  * Body de información utilizado en aplicaciones móbiles con JSon
 	  */
-	public void setJSonBody(String JSonBody);
+	public void setJSonBody (String JSonBody);
 
 	/** Get JSonBody.
 	  * Body de información utilizado en aplicaciones móbiles con JSon
@@ -124,7 +124,7 @@ public interface I_Z_Stech_TK_MovDet
 	/** Set Product.
 	  * Product, Service, Item
 	  */
-	public void setM_Product_ID(int M_Product_ID);
+	public void setM_Product_ID (int M_Product_ID);
 
 	/** Get Product.
 	  * Product, Service, Item
@@ -137,7 +137,7 @@ public interface I_Z_Stech_TK_MovDet
     public static final String COLUMNNAME_SC_Cantidad = "SC_Cantidad";
 
 	/** Set SC_Cantidad	  */
-	public void setSC_Cantidad(BigDecimal SC_Cantidad);
+	public void setSC_Cantidad (BigDecimal SC_Cantidad);
 
 	/** Get SC_Cantidad	  */
 	public BigDecimal getSC_Cantidad();
@@ -146,7 +146,7 @@ public interface I_Z_Stech_TK_MovDet
     public static final String COLUMNNAME_SC_CodigoArticulo = "SC_CodigoArticulo";
 
 	/** Set SC_CodigoArticulo	  */
-	public void setSC_CodigoArticulo(String SC_CodigoArticulo);
+	public void setSC_CodigoArticulo (String SC_CodigoArticulo);
 
 	/** Get SC_CodigoArticulo	  */
 	public String getSC_CodigoArticulo();
@@ -155,7 +155,7 @@ public interface I_Z_Stech_TK_MovDet
     public static final String COLUMNNAME_SC_CodigoArticuloPadre = "SC_CodigoArticuloPadre";
 
 	/** Set SC_CodigoArticuloPadre	  */
-	public void setSC_CodigoArticuloPadre(String SC_CodigoArticuloPadre);
+	public void setSC_CodigoArticuloPadre (String SC_CodigoArticuloPadre);
 
 	/** Get SC_CodigoArticuloPadre	  */
 	public String getSC_CodigoArticuloPadre();
@@ -164,7 +164,7 @@ public interface I_Z_Stech_TK_MovDet
     public static final String COLUMNNAME_SC_CodigoBarras = "SC_CodigoBarras";
 
 	/** Set SC_CodigoBarras	  */
-	public void setSC_CodigoBarras(String SC_CodigoBarras);
+	public void setSC_CodigoBarras (String SC_CodigoBarras);
 
 	/** Get SC_CodigoBarras	  */
 	public String getSC_CodigoBarras();
@@ -173,16 +173,29 @@ public interface I_Z_Stech_TK_MovDet
     public static final String COLUMNNAME_SC_CodigoCategoria = "SC_CodigoCategoria";
 
 	/** Set SC_CodigoCategoria	  */
-	public void setSC_CodigoCategoria(int SC_CodigoCategoria);
+	public void setSC_CodigoCategoria (int SC_CodigoCategoria);
 
 	/** Get SC_CodigoCategoria	  */
 	public int getSC_CodigoCategoria();
+
+    /** Column name SC_CodigoIVA */
+    public static final String COLUMNNAME_SC_CodigoIVA = "SC_CodigoIVA";
+
+	/** Set SC_CodigoIVA.
+	  * Codigo de impuesto para POS Scanntech
+	  */
+	public void setSC_CodigoIVA (String SC_CodigoIVA);
+
+	/** Get SC_CodigoIVA.
+	  * Codigo de impuesto para POS Scanntech
+	  */
+	public String getSC_CodigoIVA();
 
     /** Column name SC_CodigoServicio */
     public static final String COLUMNNAME_SC_CodigoServicio = "SC_CodigoServicio";
 
 	/** Set SC_CodigoServicio	  */
-	public void setSC_CodigoServicio(int SC_CodigoServicio);
+	public void setSC_CodigoServicio (int SC_CodigoServicio);
 
 	/** Get SC_CodigoServicio	  */
 	public int getSC_CodigoServicio();
@@ -191,7 +204,7 @@ public interface I_Z_Stech_TK_MovDet
     public static final String COLUMNNAME_SC_CodigoTipoDetalle = "SC_CodigoTipoDetalle";
 
 	/** Set SC_CodigoTipoDetalle	  */
-	public void setSC_CodigoTipoDetalle(int SC_CodigoTipoDetalle);
+	public void setSC_CodigoTipoDetalle (int SC_CodigoTipoDetalle);
 
 	/** Get SC_CodigoTipoDetalle	  */
 	public int getSC_CodigoTipoDetalle();
@@ -200,7 +213,7 @@ public interface I_Z_Stech_TK_MovDet
     public static final String COLUMNNAME_SC_DescripcionArticulo = "SC_DescripcionArticulo";
 
 	/** Set SC_DescripcionArticulo	  */
-	public void setSC_DescripcionArticulo(String SC_DescripcionArticulo);
+	public void setSC_DescripcionArticulo (String SC_DescripcionArticulo);
 
 	/** Get SC_DescripcionArticulo	  */
 	public String getSC_DescripcionArticulo();
@@ -209,7 +222,7 @@ public interface I_Z_Stech_TK_MovDet
     public static final String COLUMNNAME_SC_Descuento = "SC_Descuento";
 
 	/** Set SC_Descuento	  */
-	public void setSC_Descuento(BigDecimal SC_Descuento);
+	public void setSC_Descuento (BigDecimal SC_Descuento);
 
 	/** Get SC_Descuento	  */
 	public BigDecimal getSC_Descuento();
@@ -218,7 +231,7 @@ public interface I_Z_Stech_TK_MovDet
     public static final String COLUMNNAME_SC_FechaServicio = "SC_FechaServicio";
 
 	/** Set SC_FechaServicio	  */
-	public void setSC_FechaServicio(Timestamp SC_FechaServicio);
+	public void setSC_FechaServicio (Timestamp SC_FechaServicio);
 
 	/** Get SC_FechaServicio	  */
 	public Timestamp getSC_FechaServicio();
@@ -227,7 +240,7 @@ public interface I_Z_Stech_TK_MovDet
     public static final String COLUMNNAME_SC_Importe = "SC_Importe";
 
 	/** Set SC_Importe	  */
-	public void setSC_Importe(BigDecimal SC_Importe);
+	public void setSC_Importe (BigDecimal SC_Importe);
 
 	/** Get SC_Importe	  */
 	public BigDecimal getSC_Importe();
@@ -236,7 +249,7 @@ public interface I_Z_Stech_TK_MovDet
     public static final String COLUMNNAME_SC_ImporteUnitario = "SC_ImporteUnitario";
 
 	/** Set SC_ImporteUnitario	  */
-	public void setSC_ImporteUnitario(BigDecimal SC_ImporteUnitario);
+	public void setSC_ImporteUnitario (BigDecimal SC_ImporteUnitario);
 
 	/** Get SC_ImporteUnitario	  */
 	public BigDecimal getSC_ImporteUnitario();
@@ -245,7 +258,7 @@ public interface I_Z_Stech_TK_MovDet
     public static final String COLUMNNAME_SC_MedidaVenta = "SC_MedidaVenta";
 
 	/** Set SC_MedidaVenta	  */
-	public void setSC_MedidaVenta(String SC_MedidaVenta);
+	public void setSC_MedidaVenta (String SC_MedidaVenta);
 
 	/** Get SC_MedidaVenta	  */
 	public String getSC_MedidaVenta();
@@ -254,7 +267,7 @@ public interface I_Z_Stech_TK_MovDet
     public static final String COLUMNNAME_SC_MontoIVA = "SC_MontoIVA";
 
 	/** Set SC_MontoIVA	  */
-	public void setSC_MontoIVA(BigDecimal SC_MontoIVA);
+	public void setSC_MontoIVA (BigDecimal SC_MontoIVA);
 
 	/** Get SC_MontoIVA	  */
 	public BigDecimal getSC_MontoIVA();
@@ -263,7 +276,7 @@ public interface I_Z_Stech_TK_MovDet
     public static final String COLUMNNAME_SC_NumeroServicio = "SC_NumeroServicio";
 
 	/** Set SC_NumeroServicio	  */
-	public void setSC_NumeroServicio(String SC_NumeroServicio);
+	public void setSC_NumeroServicio (String SC_NumeroServicio);
 
 	/** Get SC_NumeroServicio	  */
 	public String getSC_NumeroServicio();
@@ -272,7 +285,7 @@ public interface I_Z_Stech_TK_MovDet
     public static final String COLUMNNAME_SC_PorcentajeIVA = "SC_PorcentajeIVA";
 
 	/** Set SC_PorcentajeIVA	  */
-	public void setSC_PorcentajeIVA(BigDecimal SC_PorcentajeIVA);
+	public void setSC_PorcentajeIVA (BigDecimal SC_PorcentajeIVA);
 
 	/** Get SC_PorcentajeIVA	  */
 	public BigDecimal getSC_PorcentajeIVA();
@@ -299,7 +312,7 @@ public interface I_Z_Stech_TK_MovDet
 	/** Set Immutable Universally Unique Identifier.
 	  * Immutable Universally Unique Identifier
 	  */
-	public void setUUID(String UUID);
+	public void setUUID (String UUID);
 
 	/** Get Immutable Universally Unique Identifier.
 	  * Immutable Universally Unique Identifier
@@ -310,7 +323,7 @@ public interface I_Z_Stech_TK_MovDet
     public static final String COLUMNNAME_Z_ProductoUPC_ID = "Z_ProductoUPC_ID";
 
 	/** Set Z_ProductoUPC ID	  */
-	public void setZ_ProductoUPC_ID(int Z_ProductoUPC_ID);
+	public void setZ_ProductoUPC_ID (int Z_ProductoUPC_ID);
 
 	/** Get Z_ProductoUPC ID	  */
 	public int getZ_ProductoUPC_ID();
@@ -319,7 +332,7 @@ public interface I_Z_Stech_TK_MovDet
     public static final String COLUMNNAME_Z_StechInterfaceVta_ID = "Z_StechInterfaceVta_ID";
 
 	/** Set Z_StechInterfaceVta ID	  */
-	public void setZ_StechInterfaceVta_ID(int Z_StechInterfaceVta_ID);
+	public void setZ_StechInterfaceVta_ID (int Z_StechInterfaceVta_ID);
 
 	/** Get Z_StechInterfaceVta ID	  */
 	public int getZ_StechInterfaceVta_ID();
@@ -330,7 +343,7 @@ public interface I_Z_Stech_TK_MovDet
     public static final String COLUMNNAME_Z_Stech_TK_MovDet_ID = "Z_Stech_TK_MovDet_ID";
 
 	/** Set Z_Stech_TK_MovDet ID	  */
-	public void setZ_Stech_TK_MovDet_ID(int Z_Stech_TK_MovDet_ID);
+	public void setZ_Stech_TK_MovDet_ID (int Z_Stech_TK_MovDet_ID);
 
 	/** Get Z_Stech_TK_MovDet ID	  */
 	public int getZ_Stech_TK_MovDet_ID();
@@ -339,7 +352,7 @@ public interface I_Z_Stech_TK_MovDet
     public static final String COLUMNNAME_Z_Stech_TK_Mov_ID = "Z_Stech_TK_Mov_ID";
 
 	/** Set Z_Stech_TK_Mov ID	  */
-	public void setZ_Stech_TK_Mov_ID(int Z_Stech_TK_Mov_ID);
+	public void setZ_Stech_TK_Mov_ID (int Z_Stech_TK_Mov_ID);
 
 	/** Get Z_Stech_TK_Mov ID	  */
 	public int getZ_Stech_TK_Mov_ID();
