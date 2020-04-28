@@ -30,7 +30,7 @@ public class X_Z_StechCreditos extends PO implements I_Z_StechCreditos, I_Persis
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20190221L;
+	private static final long serialVersionUID = 20200428L;
 
     /** Standard Constructor */
     public X_Z_StechCreditos (Properties ctx, int Z_StechCreditos_ID, String trxName)
@@ -141,6 +141,66 @@ public class X_Z_StechCreditos extends PO implements I_Z_StechCreditos, I_Persis
 		return (String)get_Value(COLUMNNAME_Value);
 	}
 
+	/** Set Z_MedioPago ID.
+		@param Z_MedioPago_ID Z_MedioPago ID	  */
+	public void setZ_MedioPago_ID (int Z_MedioPago_ID)
+	{
+		if (Z_MedioPago_ID < 1) 
+			set_Value (COLUMNNAME_Z_MedioPago_ID, null);
+		else 
+			set_Value (COLUMNNAME_Z_MedioPago_ID, Integer.valueOf(Z_MedioPago_ID));
+	}
+
+	/** Get Z_MedioPago ID.
+		@return Z_MedioPago ID	  */
+	public int getZ_MedioPago_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_Z_MedioPago_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
+	/** Set Z_MedioPagoIdent ID.
+		@param Z_MedioPagoIdent_ID Z_MedioPagoIdent ID	  */
+	public void setZ_MedioPagoIdent_ID (int Z_MedioPagoIdent_ID)
+	{
+		if (Z_MedioPagoIdent_ID < 1) 
+			set_Value (COLUMNNAME_Z_MedioPagoIdent_ID, null);
+		else 
+			set_Value (COLUMNNAME_Z_MedioPagoIdent_ID, Integer.valueOf(Z_MedioPagoIdent_ID));
+	}
+
+	/** Get Z_MedioPagoIdent ID.
+		@return Z_MedioPagoIdent ID	  */
+	public int getZ_MedioPagoIdent_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_Z_MedioPagoIdent_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
+	/** Set Z_MPagoIdentProd ID.
+		@param Z_MPagoIdentProd_ID Z_MPagoIdentProd ID	  */
+	public void setZ_MPagoIdentProd_ID (int Z_MPagoIdentProd_ID)
+	{
+		if (Z_MPagoIdentProd_ID < 1) 
+			set_Value (COLUMNNAME_Z_MPagoIdentProd_ID, null);
+		else 
+			set_Value (COLUMNNAME_Z_MPagoIdentProd_ID, Integer.valueOf(Z_MPagoIdentProd_ID));
+	}
+
+	/** Get Z_MPagoIdentProd ID.
+		@return Z_MPagoIdentProd ID	  */
+	public int getZ_MPagoIdentProd_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_Z_MPagoIdentProd_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
 	public I_Z_ScanntechConfig getZ_ScanntechConfig() throws RuntimeException
     {
 		return (I_Z_ScanntechConfig)MTable.get(getCtx(), I_Z_ScanntechConfig.Table_Name)
@@ -181,6 +241,31 @@ public class X_Z_StechCreditos extends PO implements I_Z_StechCreditos, I_Persis
 	public int getZ_StechCreditos_ID () 
 	{
 		Integer ii = (Integer)get_Value(COLUMNNAME_Z_StechCreditos_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
+	public I_Z_StechMedioPago getZ_StechMedioPago() throws RuntimeException
+    {
+		return (I_Z_StechMedioPago)MTable.get(getCtx(), I_Z_StechMedioPago.Table_Name)
+			.getPO(getZ_StechMedioPago_ID(), get_TrxName());	}
+
+	/** Set Z_StechMedioPago ID.
+		@param Z_StechMedioPago_ID Z_StechMedioPago ID	  */
+	public void setZ_StechMedioPago_ID (int Z_StechMedioPago_ID)
+	{
+		if (Z_StechMedioPago_ID < 1) 
+			set_Value (COLUMNNAME_Z_StechMedioPago_ID, null);
+		else 
+			set_Value (COLUMNNAME_Z_StechMedioPago_ID, Integer.valueOf(Z_StechMedioPago_ID));
+	}
+
+	/** Get Z_StechMedioPago ID.
+		@return Z_StechMedioPago ID	  */
+	public int getZ_StechMedioPago_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_Z_StechMedioPago_ID);
 		if (ii == null)
 			 return 0;
 		return ii.intValue();

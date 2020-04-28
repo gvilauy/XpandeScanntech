@@ -30,7 +30,7 @@ public class X_Z_StechMedioPago extends PO implements I_Z_StechMedioPago, I_Pers
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20190221L;
+	private static final long serialVersionUID = 20200428L;
 
     /** Standard Constructor */
     public X_Z_StechMedioPago (Properties ctx, int Z_StechMedioPago_ID, String trxName)
@@ -38,6 +38,8 @@ public class X_Z_StechMedioPago extends PO implements I_Z_StechMedioPago, I_Pers
       super (ctx, Z_StechMedioPago_ID, trxName);
       /** if (Z_StechMedioPago_ID == 0)
         {
+			setIsAsientoVtaPOS (true);
+// Y
 			setName (null);
 			setValue (null);
 			setZ_ScanntechConfig_ID (0);
@@ -90,6 +92,30 @@ public class X_Z_StechMedioPago extends PO implements I_Z_StechMedioPago, I_Pers
 		return (String)get_Value(COLUMNNAME_Description);
 	}
 
+	/** Set IsAsientoVtaPOS.
+		@param IsAsientoVtaPOS 
+		Si se utiliza o no para asiento de venta POS
+	  */
+	public void setIsAsientoVtaPOS (boolean IsAsientoVtaPOS)
+	{
+		set_Value (COLUMNNAME_IsAsientoVtaPOS, Boolean.valueOf(IsAsientoVtaPOS));
+	}
+
+	/** Get IsAsientoVtaPOS.
+		@return Si se utiliza o no para asiento de venta POS
+	  */
+	public boolean isAsientoVtaPOS () 
+	{
+		Object oo = get_Value(COLUMNNAME_IsAsientoVtaPOS);
+		if (oo != null) 
+		{
+			 if (oo instanceof Boolean) 
+				 return ((Boolean)oo).booleanValue(); 
+			return "Y".equals(oo);
+		}
+		return false;
+	}
+
 	/** Set Name.
 		@param Name 
 		Alphanumeric identifier of the entity
@@ -139,6 +165,26 @@ public class X_Z_StechMedioPago extends PO implements I_Z_StechMedioPago, I_Pers
 	public String getValue () 
 	{
 		return (String)get_Value(COLUMNNAME_Value);
+	}
+
+	/** Set Z_MedioPago ID.
+		@param Z_MedioPago_ID Z_MedioPago ID	  */
+	public void setZ_MedioPago_ID (int Z_MedioPago_ID)
+	{
+		if (Z_MedioPago_ID < 1) 
+			set_Value (COLUMNNAME_Z_MedioPago_ID, null);
+		else 
+			set_Value (COLUMNNAME_Z_MedioPago_ID, Integer.valueOf(Z_MedioPago_ID));
+	}
+
+	/** Get Z_MedioPago ID.
+		@return Z_MedioPago ID	  */
+	public int getZ_MedioPago_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_Z_MedioPago_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
 	}
 
 	public I_Z_ScanntechConfig getZ_ScanntechConfig() throws RuntimeException

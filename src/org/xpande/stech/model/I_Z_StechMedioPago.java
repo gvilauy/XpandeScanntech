@@ -56,7 +56,7 @@ public interface I_Z_StechMedioPago
 	/** Set Organization.
 	  * Organizational entity within client
 	  */
-	public void setAD_Org_ID(int AD_Org_ID);
+	public void setAD_Org_ID (int AD_Org_ID);
 
 	/** Get Organization.
 	  * Organizational entity within client
@@ -85,7 +85,7 @@ public interface I_Z_StechMedioPago
 	/** Set Description.
 	  * Optional short description of the record
 	  */
-	public void setDescription(String Description);
+	public void setDescription (String Description);
 
 	/** Get Description.
 	  * Optional short description of the record
@@ -98,12 +98,25 @@ public interface I_Z_StechMedioPago
 	/** Set Active.
 	  * The record is active in the system
 	  */
-	public void setIsActive(boolean IsActive);
+	public void setIsActive (boolean IsActive);
 
 	/** Get Active.
 	  * The record is active in the system
 	  */
 	public boolean isActive();
+
+    /** Column name IsAsientoVtaPOS */
+    public static final String COLUMNNAME_IsAsientoVtaPOS = "IsAsientoVtaPOS";
+
+	/** Set IsAsientoVtaPOS.
+	  * Si se utiliza o no para asiento de venta POS
+	  */
+	public void setIsAsientoVtaPOS (boolean IsAsientoVtaPOS);
+
+	/** Get IsAsientoVtaPOS.
+	  * Si se utiliza o no para asiento de venta POS
+	  */
+	public boolean isAsientoVtaPOS();
 
     /** Column name Name */
     public static final String COLUMNNAME_Name = "Name";
@@ -111,7 +124,7 @@ public interface I_Z_StechMedioPago
 	/** Set Name.
 	  * Alphanumeric identifier of the entity
 	  */
-	public void setName(String Name);
+	public void setName (String Name);
 
 	/** Get Name.
 	  * Alphanumeric identifier of the entity
@@ -140,7 +153,7 @@ public interface I_Z_StechMedioPago
 	/** Set Immutable Universally Unique Identifier.
 	  * Immutable Universally Unique Identifier
 	  */
-	public void setUUID(String UUID);
+	public void setUUID (String UUID);
 
 	/** Get Immutable Universally Unique Identifier.
 	  * Immutable Universally Unique Identifier
@@ -153,18 +166,27 @@ public interface I_Z_StechMedioPago
 	/** Set Search Key.
 	  * Search key for the record in the format required - must be unique
 	  */
-	public void setValue(String Value);
+	public void setValue (String Value);
 
 	/** Get Search Key.
 	  * Search key for the record in the format required - must be unique
 	  */
 	public String getValue();
 
+    /** Column name Z_MedioPago_ID */
+    public static final String COLUMNNAME_Z_MedioPago_ID = "Z_MedioPago_ID";
+
+	/** Set Z_MedioPago ID	  */
+	public void setZ_MedioPago_ID (int Z_MedioPago_ID);
+
+	/** Get Z_MedioPago ID	  */
+	public int getZ_MedioPago_ID();
+
     /** Column name Z_ScanntechConfig_ID */
     public static final String COLUMNNAME_Z_ScanntechConfig_ID = "Z_ScanntechConfig_ID";
 
 	/** Set Z_ScanntechConfig ID	  */
-	public void setZ_ScanntechConfig_ID(int Z_ScanntechConfig_ID);
+	public void setZ_ScanntechConfig_ID (int Z_ScanntechConfig_ID);
 
 	/** Get Z_ScanntechConfig ID	  */
 	public int getZ_ScanntechConfig_ID();
@@ -175,7 +197,7 @@ public interface I_Z_StechMedioPago
     public static final String COLUMNNAME_Z_StechMedioPago_ID = "Z_StechMedioPago_ID";
 
 	/** Set Z_StechMedioPago ID	  */
-	public void setZ_StechMedioPago_ID(int Z_StechMedioPago_ID);
+	public void setZ_StechMedioPago_ID (int Z_StechMedioPago_ID);
 
 	/** Get Z_StechMedioPago ID	  */
 	public int getZ_StechMedioPago_ID();
