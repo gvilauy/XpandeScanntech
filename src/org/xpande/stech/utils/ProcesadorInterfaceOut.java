@@ -956,7 +956,6 @@ public class ProcesadorInterfaceOut {
 
             httpClient = HttpClientBuilder.create().setDefaultRequestConfig(config).build();
 
-
             HttpPost request = new HttpPost(url);
 
             /*
