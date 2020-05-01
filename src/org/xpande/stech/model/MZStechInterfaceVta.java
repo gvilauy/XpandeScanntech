@@ -958,7 +958,7 @@ public class MZStechInterfaceVta extends X_Z_StechInterfaceVta {
                 return;
             }
 
-            sql = " select mov.sc_tipocfe, mov.sc_rucfactura, mov.sc_seriecfe, mov.sc_numerooperacion, " +
+            sql = " select mov.sc_tipocfe, mov.sc_rucfactura, mov.sc_seriecfe, mov.sc_numerooperacion, mov.Z_Stech_TK_Mov_ID, " +
                     " sum(coalesce(a.sc_importe,0) + coalesce(a.sc_descuentoafam,0) + coalesce(a.sc_descuentoincfin,0)) as sc_importe " +
                     " from z_stech_tk_movpago a " +
                     " inner join z_stech_tk_mov mov on a.z_stech_tk_mov_id = mov.z_stech_tk_mov_id " +
@@ -967,7 +967,7 @@ public class MZStechInterfaceVta extends X_Z_StechInterfaceVta {
                     " and mov.sc_tipooperacion='VENTA' " +
                     " and mov.z_stechinterfacevta_id =" + this.get_ID() +
                     " and mp.ventacredito ='Y' " +
-                    " group by 1,2,3,4 " +
+                    " group by 1,2,3,4,5 " +
                     " order by 1,2,3,4 ";
 
             pstmt = DB.prepareStatement(sql, get_TrxName());
@@ -975,9 +975,24 @@ public class MZStechInterfaceVta extends X_Z_StechInterfaceVta {
 
             while(rs.next()){
 
+                MZStechVtaCtaCte stechVtaCtaCte = new MZStechVtaCtaCte(getCtx(), 0, get_TrxName());
+                stechVtaCtaCte.setZ_StechInterfaceVta_ID(this.get_ID());
+                stechVtaCtaCte.setZ_Stech_TK_Mov_ID(rs.getInt("Z_Stech_TK_Mov_ID"));
+                stechVtaCtaCte.setAD_Org_ID(this.getAD_Org_ID());
+                stechVtaCtaCte.set_ValueOfColumn("AD_Client_ID", this.scanntechConfig.getAD_Client_ID());
+                stechVtaCtaCte.setDateTrx(this.getDateTrx());
+                stechVtaCtaCte.setSC_TipoCfe(rs.getInt("sc_tipocfe"));
+                stechVtaCtaCte.setSC_RucFactura(rs.getString("sc_rucfactura"));
+                stechVtaCtaCte.setSC_SerieCfe(rs.getString("sc_seriecfe"));
+                stechVtaCtaCte.setSC_NumeroOperacion(rs.getString("sc_numerooperacion"));
+                stechVtaCtaCte.setSC_Importe(rs.getBigDecimal("sc_importe"));
+
                 BigDecimal amtTotal = rs.getBigDecimal("sc_importe");
                 if (amtTotal == null) amtTotal = Env.ZERO;
                 if (amtTotal.compareTo(Env.ZERO) == 0){
+                    stechVtaCtaCte.setIsExecuted(false);
+                    stechVtaCtaCte.setErrorMsg("Venta con importe CERO");
+                    stechVtaCtaCte.saveEx();
                     continue;
                 }
                 if (amtTotal.compareTo(Env.ZERO) < 0){
@@ -986,7 +1001,7 @@ public class MZStechInterfaceVta extends X_Z_StechInterfaceVta {
 
                 // Determino tipo de documento segun tipo cfe obtenido
                 int cDocTypeID = 0;
-                String tipoCFE = rs.getString("st_tipocfe").trim();
+                String tipoCFE = String.valueOf(rs.getInt("st_tipocfe"));
                 String descCFE ="", numeroComprobante= "";
 
                 // e-ticket o e-factura
@@ -1013,6 +1028,9 @@ public class MZStechInterfaceVta extends X_Z_StechInterfaceVta {
                 }
 
                 if (cDocTypeID <= 0){
+                    stechVtaCtaCte.setIsExecuted(false);
+                    stechVtaCtaCte.setErrorMsg("No se pudo obtener tipo de documento a considerar desde configuración scanntech");
+                    stechVtaCtaCte.saveEx();
                     continue;
                 }
                 MDocType docType = new MDocType(getCtx(), cDocTypeID, null);
@@ -1027,6 +1045,9 @@ public class MZStechInterfaceVta extends X_Z_StechInterfaceVta {
                 }
                 else {
                     // No tengo identificador de socio de negocio, no hago nada.
+                    stechVtaCtaCte.setIsExecuted(false);
+                    stechVtaCtaCte.setErrorMsg("Venta sin Número de Identificación asociado");
+                    stechVtaCtaCte.saveEx();
                     continue;
                 }
 
@@ -1034,6 +1055,9 @@ public class MZStechInterfaceVta extends X_Z_StechInterfaceVta {
                 if (partnersIDs.length <= 0){
 
                     // No tengo socio de negocio en ADempiere con el numero de identificación recibido.
+                    stechVtaCtaCte.setIsExecuted(false);
+                    stechVtaCtaCte.setErrorMsg("No se encontró un Socio de Negocio para el nro. de identificación : " + stechVtaCtaCte.getSC_RucFactura());
+                    stechVtaCtaCte.saveEx();
                     continue;
                 }
                 cBParnterID = partnersIDs[0];
@@ -1041,12 +1065,18 @@ public class MZStechInterfaceVta extends X_Z_StechInterfaceVta {
 
                 MBPartnerLocation[] partnerLocations = partner.getLocations(true);
                 if (partnerLocations.length <= 0){
+                    stechVtaCtaCte.setIsExecuted(false);
+                    stechVtaCtaCte.setErrorMsg("Socio de Negocio no tiene Localización configurada");
+                    stechVtaCtaCte.saveEx();
                     continue;
                 }
                 MBPartnerLocation partnerLocation = partnerLocations[0];
 
                 MPaymentTerm paymentTerm = FinancialUtils.getPaymentTermByDefault(getCtx(), null);
                 if ((paymentTerm == null) || (paymentTerm.get_ID() <= 0)){
+                    stechVtaCtaCte.setIsExecuted(false);
+                    stechVtaCtaCte.setErrorMsg("No se pudo obtener Término de Pago por defecto.");
+                    stechVtaCtaCte.saveEx();
                     continue;
                 }
 
@@ -1080,6 +1110,9 @@ public class MZStechInterfaceVta extends X_Z_StechInterfaceVta {
                 MPriceList priceList = PriceListUtils.getPriceListByOrg(getCtx(), invoice.getAD_Client_ID(), invoice.getAD_Org_ID(),
                         invoice.getC_Currency_ID(), true, null, null);
                 if ((priceList == null) || (priceList.get_ID() <= 0)){
+                    stechVtaCtaCte.setIsExecuted(false);
+                    stechVtaCtaCte.setErrorMsg("No se pudo obtener Lista de Precios para esta organización - moneda.");
+                    stechVtaCtaCte.saveEx();
                     continue;
                 }
 
@@ -1112,11 +1145,20 @@ public class MZStechInterfaceVta extends X_Z_StechInterfaceVta {
                     String message = "";
                     if (invoice.getProcessMsg() != null) message = invoice.getProcessMsg();
                     System.out.println("No se pudo completar Invoice en Venta Crédito Scanntech : " + message);
+
+                    stechVtaCtaCte.setIsExecuted(false);
+                    stechVtaCtaCte.setErrorMsg("Error al completar Invoice : " + message);
+                    stechVtaCtaCte.saveEx();
                 }
                 else{
                     invoice.saveEx();
-                }
 
+                    stechVtaCtaCte.setIsExecuted(true);
+                    stechVtaCtaCte.setC_Invoice_ID(invoice.get_ID());
+                    stechVtaCtaCte.setC_BPartner_ID(invoice.getC_BPartner_ID());
+                    stechVtaCtaCte.setC_BPartner_Location_ID(invoice.getC_BPartner_Location_ID());
+                    stechVtaCtaCte.saveEx();
+                }
             }
         }
         catch (Exception e){
