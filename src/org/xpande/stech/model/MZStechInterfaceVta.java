@@ -1001,7 +1001,7 @@ public class MZStechInterfaceVta extends X_Z_StechInterfaceVta {
 
                 // Determino tipo de documento segun tipo cfe obtenido
                 int cDocTypeID = 0;
-                String tipoCFE = String.valueOf(rs.getInt("st_tipocfe"));
+                String tipoCFE = String.valueOf(rs.getInt("sc_tipocfe"));
                 String descCFE ="", numeroComprobante= "";
 
                 // e-ticket o e-factura
@@ -1085,7 +1085,7 @@ public class MZStechInterfaceVta extends X_Z_StechInterfaceVta {
 
                 MInvoice invoice = new MInvoice(getCtx(), 0, get_TrxName());
                 invoice.set_ValueOfColumn("AD_Client_ID", this.scanntechConfig.getAD_Client_ID());
-                invoice.setAD_Org_ID(rs.getInt(this.getAD_Org_ID()));
+                invoice.setAD_Org_ID(this.getAD_Org_ID());
                 invoice.setIsSOTrx(true);
                 invoice.setC_DocTypeTarget_ID(cDocTypeID);
                 invoice.setC_DocType_ID(cDocTypeID);
