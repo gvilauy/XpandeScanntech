@@ -59,6 +59,25 @@ public class MZStechInterfaceVta extends X_Z_StechInterfaceVta {
         super(ctx, rs, trxName);
     }
 
+    /***
+     * Obtiene y retorna modelo segun organización y fecha pos recibidos.
+     * Xpande. Created by Gabriel Vila on 5/7/20.
+     * @param ctx
+     * @param adOrgID
+     * @param dateTrx
+     * @param trxName
+     * @return
+     */
+    public static MZStechInterfaceVta getByOrgDate(Properties ctx, int adOrgID, Timestamp dateTrx, String trxName) {
+
+        String whereClause = X_Z_StechInterfaceVta.COLUMNNAME_AD_Org_ID + " =" + adOrgID +
+                " AND " + X_Z_StechInterfaceVta.COLUMNNAME_DateTrx + " ='" + dateTrx + "' ";
+
+        MZStechInterfaceVta model = new Query(ctx, I_Z_StechInterfaceVta.Table_Name, whereClause, trxName).first();
+
+        return model;
+    }
+
 
     /***
      * Ejecuta el proceso de interface de ventas desde el POS Scanntech hacia ADempiere.
@@ -1170,4 +1189,17 @@ public class MZStechInterfaceVta extends X_Z_StechInterfaceVta {
         }
     }
 
+    /***
+     * Obtiene y retorna lista de modelos de venta por cuenta corriente para esta interface de venta.
+     * Xpande. Created by Gabriel Vila on 5/7/20.
+     * @return
+     */
+    public List<MZStechVtaCtaCte> getVtasCtaCte() {
+
+        String whereClause = X_Z_StechVtaCtaCte.COLUMNNAME_Z_StechInterfaceVta_ID + " =" + this.get_ID();
+
+        List<MZStechVtaCtaCte> lines = new Query(getCtx(), I_Z_StechVtaCtaCte.Table_Name, whereClause, get_TrxName()).list();
+
+        return lines;
+    }
 }
