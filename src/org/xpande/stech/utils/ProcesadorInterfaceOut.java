@@ -231,8 +231,12 @@ public class ProcesadorInterfaceOut {
                 return jsonPartner;
             }
 
-            // Codigo interno
-            jsonPartner.put("codigoCliente", partner.getValue().trim());
+            // Codigo interno (max. 7 caracteres)
+            String codInterno = partner.getValue().trim();
+            if (codInterno.length() > 7){
+                codInterno = codInterno.substring(0 , 7);
+            }
+            jsonPartner.put("codigoCliente", codInterno);
 
             // Nombre (max.100 caracteres)
             String nombre = partner.getName().trim();
