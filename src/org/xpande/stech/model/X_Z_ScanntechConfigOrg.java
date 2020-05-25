@@ -30,7 +30,7 @@ public class X_Z_ScanntechConfigOrg extends PO implements I_Z_ScanntechConfigOrg
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20180211L;
+	private static final long serialVersionUID = 20200525L;
 
     /** Standard Constructor */
     public X_Z_ScanntechConfigOrg (Properties ctx, int Z_ScanntechConfigOrg_ID, String trxName)
@@ -128,6 +128,23 @@ public class X_Z_ScanntechConfigOrg extends PO implements I_Z_ScanntechConfigOrg
 	public String getCodigoLocalPos () 
 	{
 		return (String)get_Value(COLUMNNAME_CodigoLocalPos);
+	}
+
+	/** Set Name.
+		@param Name 
+		Alphanumeric identifier of the entity
+	  */
+	public void setName (String Name)
+	{
+		set_Value (COLUMNNAME_Name, Name);
+	}
+
+	/** Get Name.
+		@return Alphanumeric identifier of the entity
+	  */
+	public String getName () 
+	{
+		return (String)get_Value(COLUMNNAME_Name);
 	}
 
 	public I_Z_ScanntechConfig getZ_ScanntechConfig() throws RuntimeException

@@ -56,7 +56,7 @@ public interface I_Z_ScanntechConfigOrg
 	/** Set Organization.
 	  * Organizational entity within client
 	  */
-	public void setAD_Org_ID(int AD_Org_ID);
+	public void setAD_Org_ID (int AD_Org_ID);
 
 	/** Get Organization.
 	  * Organizational entity within client
@@ -69,7 +69,7 @@ public interface I_Z_ScanntechConfigOrg
 	/** Set Trx Organization.
 	  * Performing or initiating organization
 	  */
-	public void setAD_OrgTrx_ID(int AD_OrgTrx_ID);
+	public void setAD_OrgTrx_ID (int AD_OrgTrx_ID);
 
 	/** Get Trx Organization.
 	  * Performing or initiating organization
@@ -82,7 +82,7 @@ public interface I_Z_ScanntechConfigOrg
 	/** Set CodigoEmpPos.
 	  * Codigo de empresa para el proveedor de POS
 	  */
-	public void setCodigoEmpPos(String CodigoEmpPos);
+	public void setCodigoEmpPos (String CodigoEmpPos);
 
 	/** Get CodigoEmpPos.
 	  * Codigo de empresa para el proveedor de POS
@@ -95,7 +95,7 @@ public interface I_Z_ScanntechConfigOrg
 	/** Set CodigoLocalPos.
 	  * Codigo de local para interface POS
 	  */
-	public void setCodigoLocalPos(String CodigoLocalPos);
+	public void setCodigoLocalPos (String CodigoLocalPos);
 
 	/** Get CodigoLocalPos.
 	  * Codigo de local para interface POS
@@ -124,12 +124,25 @@ public interface I_Z_ScanntechConfigOrg
 	/** Set Active.
 	  * The record is active in the system
 	  */
-	public void setIsActive(boolean IsActive);
+	public void setIsActive (boolean IsActive);
 
 	/** Get Active.
 	  * The record is active in the system
 	  */
 	public boolean isActive();
+
+    /** Column name Name */
+    public static final String COLUMNNAME_Name = "Name";
+
+	/** Set Name.
+	  * Alphanumeric identifier of the entity
+	  */
+	public void setName (String Name);
+
+	/** Get Name.
+	  * Alphanumeric identifier of the entity
+	  */
+	public String getName();
 
     /** Column name Updated */
     public static final String COLUMNNAME_Updated = "Updated";
@@ -151,7 +164,7 @@ public interface I_Z_ScanntechConfigOrg
     public static final String COLUMNNAME_Z_ScanntechConfig_ID = "Z_ScanntechConfig_ID";
 
 	/** Set Z_ScanntechConfig ID	  */
-	public void setZ_ScanntechConfig_ID(int Z_ScanntechConfig_ID);
+	public void setZ_ScanntechConfig_ID (int Z_ScanntechConfig_ID);
 
 	/** Get Z_ScanntechConfig ID	  */
 	public int getZ_ScanntechConfig_ID();
@@ -162,7 +175,7 @@ public interface I_Z_ScanntechConfigOrg
     public static final String COLUMNNAME_Z_ScanntechConfigOrg_ID = "Z_ScanntechConfigOrg_ID";
 
 	/** Set Z_ScanntechConfigOrg ID	  */
-	public void setZ_ScanntechConfigOrg_ID(int Z_ScanntechConfigOrg_ID);
+	public void setZ_ScanntechConfigOrg_ID (int Z_ScanntechConfigOrg_ID);
 
 	/** Get Z_ScanntechConfigOrg ID	  */
 	public int getZ_ScanntechConfigOrg_ID();
