@@ -32,7 +32,7 @@ public class X_Z_ScanntechConfigTax extends PO implements I_Z_ScanntechConfigTax
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20200402L;
+	private static final long serialVersionUID = 20200525L;
 
     /** Standard Constructor */
     public X_Z_ScanntechConfigTax (Properties ctx, int Z_ScanntechConfigTax_ID, String trxName)
@@ -40,6 +40,8 @@ public class X_Z_ScanntechConfigTax extends PO implements I_Z_ScanntechConfigTax
       super (ctx, Z_ScanntechConfigTax_ID, trxName);
       /** if (Z_ScanntechConfigTax_ID == 0)
         {
+			setAplicaInterface (false);
+// N
 			setC_TaxCategory_ID (0);
 			setC_Tax_ID (0);
 			setSC_PorcentajeIVA (Env.ZERO);
@@ -75,6 +77,30 @@ public class X_Z_ScanntechConfigTax extends PO implements I_Z_ScanntechConfigTax
         .append(get_ID()).append("]");
       return sb.toString();
     }
+
+	/** Set AplicaInterface.
+		@param AplicaInterface 
+		Si aplica o no en interface de datos
+	  */
+	public void setAplicaInterface (boolean AplicaInterface)
+	{
+		set_Value (COLUMNNAME_AplicaInterface, Boolean.valueOf(AplicaInterface));
+	}
+
+	/** Get AplicaInterface.
+		@return Si aplica o no en interface de datos
+	  */
+	public boolean isAplicaInterface () 
+	{
+		Object oo = get_Value(COLUMNNAME_AplicaInterface);
+		if (oo != null) 
+		{
+			 if (oo instanceof Boolean) 
+				 return ((Boolean)oo).booleanValue(); 
+			return "Y".equals(oo);
+		}
+		return false;
+	}
 
 	public I_C_TaxCategory getC_TaxCategory() throws RuntimeException
     {
@@ -127,6 +153,34 @@ public class X_Z_ScanntechConfigTax extends PO implements I_Z_ScanntechConfigTax
 	public int getC_Tax_ID () 
 	{
 		Integer ii = (Integer)get_Value(COLUMNNAME_C_Tax_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
+	public I_M_Product getM_Product() throws RuntimeException
+    {
+		return (I_M_Product)MTable.get(getCtx(), I_M_Product.Table_Name)
+			.getPO(getM_Product_ID(), get_TrxName());	}
+
+	/** Set Product.
+		@param M_Product_ID 
+		Product, Service, Item
+	  */
+	public void setM_Product_ID (int M_Product_ID)
+	{
+		if (M_Product_ID < 1) 
+			set_Value (COLUMNNAME_M_Product_ID, null);
+		else 
+			set_Value (COLUMNNAME_M_Product_ID, Integer.valueOf(M_Product_ID));
+	}
+
+	/** Get Product.
+		@return Product, Service, Item
+	  */
+	public int getM_Product_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_M_Product_ID);
 		if (ii == null)
 			 return 0;
 		return ii.intValue();

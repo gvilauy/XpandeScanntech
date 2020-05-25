@@ -56,12 +56,25 @@ public interface I_Z_ScanntechConfigTax
 	/** Set Organization.
 	  * Organizational entity within client
 	  */
-	public void setAD_Org_ID(int AD_Org_ID);
+	public void setAD_Org_ID (int AD_Org_ID);
 
 	/** Get Organization.
 	  * Organizational entity within client
 	  */
 	public int getAD_Org_ID();
+
+    /** Column name AplicaInterface */
+    public static final String COLUMNNAME_AplicaInterface = "AplicaInterface";
+
+	/** Set AplicaInterface.
+	  * Si aplica o no en interface de datos
+	  */
+	public void setAplicaInterface (boolean AplicaInterface);
+
+	/** Get AplicaInterface.
+	  * Si aplica o no en interface de datos
+	  */
+	public boolean isAplicaInterface();
 
     /** Column name Created */
     public static final String COLUMNNAME_Created = "Created";
@@ -85,7 +98,7 @@ public interface I_Z_ScanntechConfigTax
 	/** Set Tax Category.
 	  * Tax Category
 	  */
-	public void setC_TaxCategory_ID(int C_TaxCategory_ID);
+	public void setC_TaxCategory_ID (int C_TaxCategory_ID);
 
 	/** Get Tax Category.
 	  * Tax Category
@@ -100,7 +113,7 @@ public interface I_Z_ScanntechConfigTax
 	/** Set Tax.
 	  * Tax identifier
 	  */
-	public void setC_Tax_ID(int C_Tax_ID);
+	public void setC_Tax_ID (int C_Tax_ID);
 
 	/** Get Tax.
 	  * Tax identifier
@@ -115,12 +128,27 @@ public interface I_Z_ScanntechConfigTax
 	/** Set Active.
 	  * The record is active in the system
 	  */
-	public void setIsActive(boolean IsActive);
+	public void setIsActive (boolean IsActive);
 
 	/** Get Active.
 	  * The record is active in the system
 	  */
 	public boolean isActive();
+
+    /** Column name M_Product_ID */
+    public static final String COLUMNNAME_M_Product_ID = "M_Product_ID";
+
+	/** Set Product.
+	  * Product, Service, Item
+	  */
+	public void setM_Product_ID (int M_Product_ID);
+
+	/** Get Product.
+	  * Product, Service, Item
+	  */
+	public int getM_Product_ID();
+
+	public I_M_Product getM_Product() throws RuntimeException;
 
     /** Column name SC_CodigoIVA */
     public static final String COLUMNNAME_SC_CodigoIVA = "SC_CodigoIVA";
@@ -128,7 +156,7 @@ public interface I_Z_ScanntechConfigTax
 	/** Set SC_CodigoIVA.
 	  * Codigo de impuesto para POS Scanntech
 	  */
-	public void setSC_CodigoIVA(String SC_CodigoIVA);
+	public void setSC_CodigoIVA (String SC_CodigoIVA);
 
 	/** Get SC_CodigoIVA.
 	  * Codigo de impuesto para POS Scanntech
@@ -139,7 +167,7 @@ public interface I_Z_ScanntechConfigTax
     public static final String COLUMNNAME_SC_PorcentajeIVA = "SC_PorcentajeIVA";
 
 	/** Set SC_PorcentajeIVA	  */
-	public void setSC_PorcentajeIVA(BigDecimal SC_PorcentajeIVA);
+	public void setSC_PorcentajeIVA (BigDecimal SC_PorcentajeIVA);
 
 	/** Get SC_PorcentajeIVA	  */
 	public BigDecimal getSC_PorcentajeIVA();
@@ -166,7 +194,7 @@ public interface I_Z_ScanntechConfigTax
 	/** Set Immutable Universally Unique Identifier.
 	  * Immutable Universally Unique Identifier
 	  */
-	public void setUUID(String UUID);
+	public void setUUID (String UUID);
 
 	/** Get Immutable Universally Unique Identifier.
 	  * Immutable Universally Unique Identifier
@@ -177,7 +205,7 @@ public interface I_Z_ScanntechConfigTax
     public static final String COLUMNNAME_Z_ScanntechConfig_ID = "Z_ScanntechConfig_ID";
 
 	/** Set Z_ScanntechConfig ID	  */
-	public void setZ_ScanntechConfig_ID(int Z_ScanntechConfig_ID);
+	public void setZ_ScanntechConfig_ID (int Z_ScanntechConfig_ID);
 
 	/** Get Z_ScanntechConfig ID	  */
 	public int getZ_ScanntechConfig_ID();
@@ -188,7 +216,7 @@ public interface I_Z_ScanntechConfigTax
     public static final String COLUMNNAME_Z_ScanntechConfigTax_ID = "Z_ScanntechConfigTax_ID";
 
 	/** Set Z_ScanntechConfigTax ID	  */
-	public void setZ_ScanntechConfigTax_ID(int Z_ScanntechConfigTax_ID);
+	public void setZ_ScanntechConfigTax_ID (int Z_ScanntechConfigTax_ID);
 
 	/** Get Z_ScanntechConfigTax ID	  */
 	public int getZ_ScanntechConfigTax_ID();

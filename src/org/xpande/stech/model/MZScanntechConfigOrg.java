@@ -21,6 +21,22 @@ public class MZScanntechConfigOrg extends X_Z_ScanntechConfigOrg {
         super(ctx, rs, trxName);
     }
 
+    /***
+     * Obtiene y retorna modelo según nombre de organización para Scanntech.
+     * @param ctx
+     * @param nomLocal
+     * @param trxName
+     * @return
+     */
+    public static MZScanntechConfigOrg getByName(Properties ctx, String nomSucursal, String trxName) {
+
+        String whereClause = X_Z_ScanntechConfigOrg.COLUMNNAME_Name + " ='" + nomSucursal + "'";
+
+        MZScanntechConfigOrg model = new Query(ctx, I_Z_ScanntechConfigOrg.Table_Name, whereClause, trxName).first();
+
+        return model;
+    }
+
 
     /***
      * Obtiene lista de cajas asociadas a esta organización.
