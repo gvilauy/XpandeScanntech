@@ -77,8 +77,8 @@ public class MZStechLoadInv extends X_Z_StechLoadInv implements DocAction, DocOp
 		}
 		else if (docStatus.equalsIgnoreCase(STATUS_Completed)){
 
-			options[newIndex++] = DocumentEngine.ACTION_None;
-			//options[newIndex++] = DocumentEngine.ACTION_ReActivate;
+			//options[newIndex++] = DocumentEngine.ACTION_None;
+			options[newIndex++] = DocumentEngine.ACTION_ReActivate;
 			//options[newIndex++] = DocumentEngine.ACTION_Void;
 		}
 
@@ -337,11 +337,42 @@ public class MZStechLoadInv extends X_Z_StechLoadInv implements DocAction, DocOp
 	 */
 	public boolean reActivateIt()
 	{
-		log.info("reActivateIt - " + toString());
-		setProcessed(false);
-		if (reverseCorrectIt())
-			return true;
-		return false;
+		// Before reActivate
+		m_processMsg = ModelValidationEngine.get().fireDocValidate(this,ModelValidator.TIMING_BEFORE_REACTIVATE);
+		if (m_processMsg != null)
+			return false;
+
+		// Obtengo lista de comprobantes generados en el sistema
+		List<MZStechLoadAud> loadAudList = this.getLinesAud();
+		for (MZStechLoadAud loadAud: loadAudList){
+
+			if (loadAud.getC_Invoice_ID() > 0){
+				MInvoice invoice = (MInvoice) loadAud.getC_Invoice();
+				if (!invoice.reActivateIt()) {
+					if (invoice.getProcessMsg() != null) {
+						m_processMsg = " No se puedo reactivar Comprobante " + invoice.getDocumentNo() + ". " + invoice.getProcessMsg();
+					} else {
+						m_processMsg = " No se puedo reactivar Comprobante " + invoice.getDocumentNo();
+					}
+					return false;
+				}
+				else {
+					invoice.saveEx();
+					invoice.deleteEx(true);
+				}
+			}
+		}
+
+		// After reActivate
+		m_processMsg = ModelValidationEngine.get().fireDocValidate(this,ModelValidator.TIMING_AFTER_REACTIVATE);
+		if (m_processMsg != null)
+			return false;
+
+		this.setProcessed(false);
+		this.setDocStatus(DOCSTATUS_InProgress);
+		this.setDocAction(DOCACTION_Complete);
+
+		return true;
 	}	//	reActivateIt
 	
 	
@@ -761,6 +792,21 @@ public class MZStechLoadInv extends X_Z_StechLoadInv implements DocAction, DocOp
 	}
 
 	/***
+	 * Obtiene y retorna lineas de comprobantes generados en el sistema.
+	 * Xpande. Created by Gabriel Vila on 5/27/20.
+	 * @return
+	 */
+	public List<MZStechLoadAud> getLinesAud(){
+
+		String whereClause = X_Z_StechLoadAud.COLUMNNAME_Z_StechLoadInv_ID + " =" + this.get_ID();
+
+		List<MZStechLoadAud> lines = new Query(getCtx(), I_Z_StechLoadAud.Table_Name, whereClause, get_TrxName()).list();
+
+		return lines;
+	}
+
+
+	/***
 	 * Genero Comprobante de Compra.
 	 * Xpande. Created by Gabriel Vila on 5/27/20.
 	 * @return
@@ -863,6 +909,13 @@ public class MZStechLoadInv extends X_Z_StechLoadInv implements DocAction, DocOp
 					MPriceList priceList = (MPriceList)socioListaPrecio.getM_PriceList();
 					invoice.setIsTaxIncluded(priceList.isTaxIncluded());
 
+					if (loadInvFile.getAmtRounding().compareTo(Env.ZERO) >= 0){
+						invoice.set_ValueOfColumn("AmtRounding", loadInvFile.getAmtRounding());
+					}
+					else{
+						invoice.set_ValueOfColumn("AmtRounding", loadInvFile.getAmtRounding().negate());
+					}
+
 					invoice.saveEx();
 
 					adOrgIDAux = loadInvFile.getAD_OrgTrx_ID();
@@ -882,21 +935,32 @@ public class MZStechLoadInv extends X_Z_StechLoadInv implements DocAction, DocOp
 				invLine.setQtyInvoiced(Env.ONE);
 				invLine.setC_Tax_ID(loadInvFile.get_ID());
 
+				BigDecimal precioTotal = loadInvFile.getLineTotalAmt();
+				if (precioTotal.compareTo(Env.ZERO) < 0){
+					precioTotal = precioTotal.negate();
+				}
+
+				BigDecimal precioNeto = loadInvFile.getLineNetAmt();
+				if (precioNeto.compareTo(Env.ZERO) < 0){
+					precioNeto = precioNeto.negate();
+				}
+
+
 				if (invoice.isTaxIncluded()){
-					invLine.setPriceActual(loadInvFile.getLineTotalAmt());
-					invLine.setPriceList(loadInvFile.getLineTotalAmt());
-					invLine.setPriceLimit(loadInvFile.getLineTotalAmt());
-					invLine.setPriceEntered(loadInvFile.getLineTotalAmt());
-					invLine.set_ValueOfColumn("PricePO", loadInvFile.getLineTotalAmt());
-					invLine.set_ValueOfColumn("PricePONoDto", loadInvFile.getLineTotalAmt());
+					invLine.setPriceActual(precioTotal);
+					invLine.setPriceList(precioTotal);
+					invLine.setPriceLimit(precioTotal);
+					invLine.setPriceEntered(precioTotal);
+					invLine.set_ValueOfColumn("PricePO", precioTotal);
+					invLine.set_ValueOfColumn("PricePONoDto", precioTotal);
 				}
 				else {
-					invLine.setPriceActual(loadInvFile.getLineNetAmt());
-					invLine.setPriceList(loadInvFile.getLineNetAmt());
-					invLine.setPriceLimit(loadInvFile.getLineNetAmt());
-					invLine.setPriceEntered(loadInvFile.getLineNetAmt());
-					invLine.set_ValueOfColumn("PricePO", loadInvFile.getLineNetAmt());
-					invLine.set_ValueOfColumn("PricePONoDto", loadInvFile.getLineNetAmt());
+					invLine.setPriceActual(precioNeto);
+					invLine.setPriceList(precioNeto);
+					invLine.setPriceLimit(precioNeto);
+					invLine.setPriceEntered(precioNeto);
+					invLine.set_ValueOfColumn("PricePO", precioNeto);
+					invLine.set_ValueOfColumn("PricePONoDto", precioNeto);
 				}
 				invLine.setLineNetAmt();
 				invLine.saveEx();
