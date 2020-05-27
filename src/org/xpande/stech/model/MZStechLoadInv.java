@@ -39,9 +39,7 @@ import org.xpande.comercial.model.MZComercialConfig;
 import org.xpande.comercial.utils.ComercialUtils;
 import org.xpande.core.model.MZSocioListaPrecio;
 import org.xpande.core.utils.DateUtils;
-import org.xpande.financial.model.I_Z_LoadPagoFile;
-import org.xpande.financial.model.MZLoadPagoFile;
-import org.xpande.financial.model.X_Z_LoadPagoFile;
+
 
 /** Generated Model for Z_StechLoadInv
  *  @author Adempiere (generated) 
@@ -181,12 +179,15 @@ public class MZStechLoadInv extends X_Z_StechLoadInv implements DocAction, DocOp
 		
 		MDocType dt = MDocType.get(getCtx(), getC_DocType_ID());
 
+		/*
 		//	Std Period open?
 		if (!MPeriod.isOpen(getCtx(), getDateDoc(), dt.getDocBaseType(), getAD_Org_ID()))
 		{
 			m_processMsg = "@PeriodClosed@";
 			return DocAction.STATUS_Invalid;
 		}
+		*/
+
 		//	Add up Amounts
 		m_processMsg = ModelValidationEngine.get().fireDocValidate(this, ModelValidator.TIMING_AFTER_PREPARE);
 		if (m_processMsg != null)
@@ -777,7 +778,7 @@ public class MZStechLoadInv extends X_Z_StechLoadInv implements DocAction, DocOp
 					" from z_stechloadinvfile " +
 					" where z_stechloadinv_id =" + this.get_ID() +
 					" and isconfirmed ='Y' " +
-					" order by ad_orgtrx_id, c_bpartner_id, c_doctype_id, documentserie, documentno, datetrx ";
+					" order by ad_orgtrx_id, c_bpartner_id, c_doctypeinvoice_id, documentserie, documentnoref, datetrx ";
 
 			pstmt = DB.prepareStatement(sql, get_TrxName());
 			rs = pstmt.executeQuery();
@@ -803,6 +804,20 @@ public class MZStechLoadInv extends X_Z_StechLoadInv implements DocAction, DocOp
 						}
 						else{
 							invoice.saveEx();
+
+							// Guardo Auditoría
+							MZStechLoadAud stechLoadAud = new MZStechLoadAud(getCtx(), 0, get_TrxName());
+							stechLoadAud.setZ_StechLoadInv_ID(this.get_ID());
+							stechLoadAud.setAD_OrgTrx_ID(invoice.getAD_Org_ID());
+							stechLoadAud.setC_BPartner_ID(invoice.getC_BPartner_ID());
+							stechLoadAud.setC_Currency_ID(invoice.getC_Currency_ID());
+							stechLoadAud.setC_DocTypeInvoice_ID(invoice.getC_DocTypeTarget_ID());
+							stechLoadAud.setC_Invoice_ID(invoice.get_ID());
+							stechLoadAud.setDateInvoiced(invoice.getDateInvoiced());
+							stechLoadAud.setDocumentNoRef(invoice.getDocumentNo());
+							stechLoadAud.setDocumentSerie(invoice.get_ValueAsString("DocumentSerie"));
+							stechLoadAud.setGrandTotal(invoice.getGrandTotal());
+							stechLoadAud.saveEx();
 						}
 					}
 
@@ -859,6 +874,7 @@ public class MZStechLoadInv extends X_Z_StechLoadInv implements DocAction, DocOp
 
 				// Genero linea de invoice
 				MInvoiceLine invLine = new MInvoiceLine(invoice);
+				invLine.setAD_Org_ID(invoice.getAD_Org_ID());
 				invLine.setC_Invoice_ID(invoice.get_ID());
 				invLine.setM_Product_ID(loadInvFile.getM_Product_ID());
 				invLine.setC_UOM_ID(100);
@@ -894,6 +910,19 @@ public class MZStechLoadInv extends X_Z_StechLoadInv implements DocAction, DocOp
 				}
 				else{
 					invoice.saveEx();
+					// Guardo Auditoría
+					MZStechLoadAud stechLoadAud = new MZStechLoadAud(getCtx(), 0, get_TrxName());
+					stechLoadAud.setZ_StechLoadInv_ID(this.get_ID());
+					stechLoadAud.setAD_OrgTrx_ID(invoice.getAD_Org_ID());
+					stechLoadAud.setC_BPartner_ID(invoice.getC_BPartner_ID());
+					stechLoadAud.setC_Currency_ID(invoice.getC_Currency_ID());
+					stechLoadAud.setC_DocTypeInvoice_ID(invoice.getC_DocTypeTarget_ID());
+					stechLoadAud.setC_Invoice_ID(invoice.get_ID());
+					stechLoadAud.setDateInvoiced(invoice.getDateInvoiced());
+					stechLoadAud.setDocumentNoRef(invoice.getDocumentNo());
+					stechLoadAud.setDocumentSerie(invoice.get_ValueAsString("DocumentSerie"));
+					stechLoadAud.setGrandTotal(invoice.getGrandTotal());
+					stechLoadAud.saveEx();
 				}
 			}
 
