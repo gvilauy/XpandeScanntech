@@ -20,6 +20,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.math.BigDecimal;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Timestamp;
 import java.util.List;
@@ -36,6 +37,7 @@ import org.compiere.util.DB;
 import org.compiere.util.Env;
 import org.xpande.comercial.model.MZComercialConfig;
 import org.xpande.comercial.utils.ComercialUtils;
+import org.xpande.core.model.MZSocioListaPrecio;
 import org.xpande.core.utils.DateUtils;
 import org.xpande.financial.model.I_Z_LoadPagoFile;
 import org.xpande.financial.model.MZLoadPagoFile;
@@ -240,7 +242,13 @@ public class MZStechLoadInv extends X_Z_StechLoadInv implements DocAction, DocOp
 			approveIt();
 		log.info(toString());
 		//
-		
+
+		// Genero comprobantes de venta.
+		m_processMsg =  this.generateInvoices();
+		if (m_processMsg != null){
+			return DocAction.STATUS_Invalid;
+		}
+
 		//	User Validation
 		String valid = ModelValidationEngine.get().fireDocValidate(this, ModelValidator.TIMING_AFTER_COMPLETE);
 		if (valid != null)
@@ -255,7 +263,7 @@ public class MZStechLoadInv extends X_Z_StechLoadInv implements DocAction, DocOp
 		setDocAction(DOCACTION_Close);
 		return DocAction.STATUS_Completed;
 	}	//	completeIt
-	
+
 	/**
 	 * 	Set the definite document number after completed
 	 */
@@ -551,6 +559,9 @@ public class MZStechLoadInv extends X_Z_StechLoadInv implements DocAction, DocOp
 					continue;
 				}
 
+				stechLoadInvFile.setIsConfirmed(true);
+				stechLoadInvFile.setAD_OrgTrx_ID(configOrg.getAD_OrgTrx_ID());
+
 				// Obtengo impuesto según tasa indicada en la linea.
 				// Si la tasa no es númerica, elimino linea y la ignoro totalmente.
 				if ((stechLoadInvFile.getSC_CodigoIVA() == null) || (stechLoadInvFile.getSC_CodigoIVA().trim().equalsIgnoreCase(""))){
@@ -567,65 +578,72 @@ public class MZStechLoadInv extends X_Z_StechLoadInv implements DocAction, DocOp
 					}
 				}
 
-				stechLoadInvFile.setIsConfirmed(true);
-				stechLoadInvFile.setAD_OrgTrx_ID(configOrg.getAD_OrgTrx_ID());
-
 				// Obtengo impuesto según tasa ingresada
-				MZScanntechConfigTax configTax = MZScanntechConfigTax.getByRateAplicaInterface(getCtx(), stechLoadInvFile.getSC_CodigoIVA(), true, null);
-				if ((configTax == null) || (configTax.get_ID() <= 0)){
-					stechLoadInvFile.setIsConfirmed(false);
-					stechLoadInvFile.setErrorMsg("No se encuentra Tasa de Impuesto en configuración scanntech.");
-				}
-				else {
-					stechLoadInvFile.setC_Tax_ID(configTax.getC_Tax_ID());
-					if (configTax.getM_Product_ID() <= 0){
+				if (stechLoadInvFile.isConfirmed()){
+					MZScanntechConfigTax configTax = MZScanntechConfigTax.getByRateAplicaInterface(getCtx(), stechLoadInvFile.getSC_CodigoIVA(), true, null);
+					if ((configTax == null) || (configTax.get_ID() <= 0)){
 						stechLoadInvFile.setIsConfirmed(false);
-						stechLoadInvFile.setErrorMsg("No se encuentra Producto para Tasa de Impuesto en configuración scanntech.");
+						stechLoadInvFile.setErrorMsg("No se encuentra Tasa de Impuesto en configuración scanntech.");
 					}
-					else{
-						stechLoadInvFile.setM_Product_ID(configTax.getM_Product_ID());
+					else {
+						stechLoadInvFile.setC_Tax_ID(configTax.getC_Tax_ID());
+						if (configTax.getM_Product_ID() <= 0){
+							stechLoadInvFile.setIsConfirmed(false);
+							stechLoadInvFile.setErrorMsg("No se encuentra Producto para Tasa de Impuesto en configuración scanntech.");
+						}
+						else{
+							stechLoadInvFile.setM_Product_ID(configTax.getM_Product_ID());
+						}
 					}
 				}
 
 				// Tipo de Documento
-				if ((stechLoadInvFile.getNomDocumento() == null) || (stechLoadInvFile.getNomDocumento().trim().equalsIgnoreCase(""))){
-					stechLoadInvFile.setIsConfirmed(false);
-					stechLoadInvFile.setErrorMsg("Debe indicar Tipo de Documento");
-				}
-				else{
-					if (stechLoadInvFile.getNomDocumento().trim().toUpperCase().equalsIgnoreCase("FACTURA")){
-						stechLoadInvFile.setC_DocTypeInvoice_ID(comercialConfig.getDefaultDocAPI_ID());
+				if (stechLoadInvFile.isConfirmed()){
+					if ((stechLoadInvFile.getNomDocumento() == null) || (stechLoadInvFile.getNomDocumento().trim().equalsIgnoreCase(""))){
+						stechLoadInvFile.setIsConfirmed(false);
+						stechLoadInvFile.setErrorMsg("Debe indicar Tipo de Documento");
 					}
-					else {
-						stechLoadInvFile.setC_DocTypeInvoice_ID(comercialConfig.getDefaultDocAPC_ID());
+					else{
+						if (stechLoadInvFile.getNomDocumento().trim().toUpperCase().equalsIgnoreCase("FACTURA")){
+							stechLoadInvFile.setC_DocTypeInvoice_ID(comercialConfig.getDefaultDocAPI_ID());
+						}
+						else {
+							stechLoadInvFile.setC_DocTypeInvoice_ID(comercialConfig.getDefaultDocAPC_ID());
+						}
 					}
 				}
 
 				// Serie Documento
-				if ((stechLoadInvFile.getDocumentSerie() == null) || (stechLoadInvFile.getDocumentSerie().trim().equalsIgnoreCase(""))){
-					stechLoadInvFile.setIsConfirmed(false);
-					stechLoadInvFile.setErrorMsg("Debe indicar Serie del Documento");
+				if (stechLoadInvFile.isConfirmed()){
+					if ((stechLoadInvFile.getDocumentSerie() == null) || (stechLoadInvFile.getDocumentSerie().trim().equalsIgnoreCase(""))){
+						stechLoadInvFile.setIsConfirmed(false);
+						stechLoadInvFile.setErrorMsg("Debe indicar Serie del Documento");
+					}
 				}
 
 				// Numero Documento
-				if ((stechLoadInvFile.getDocumentNoRef() == null) || (stechLoadInvFile.getDocumentNoRef().trim().equalsIgnoreCase(""))){
-					stechLoadInvFile.setIsConfirmed(false);
-					stechLoadInvFile.setErrorMsg("Debe indicar Número del Documento");
+				if (stechLoadInvFile.isConfirmed()){
+					if ((stechLoadInvFile.getDocumentNoRef() == null) || (stechLoadInvFile.getDocumentNoRef().trim().equalsIgnoreCase(""))){
+						stechLoadInvFile.setIsConfirmed(false);
+						stechLoadInvFile.setErrorMsg("Debe indicar Número del Documento");
+					}
 				}
 
 				// Socio de Negocio por RUT
-				if ((stechLoadInvFile.getTaxID() == null) || (stechLoadInvFile.getTaxID().trim().equalsIgnoreCase(""))){
-					stechLoadInvFile.setIsConfirmed(false);
-					stechLoadInvFile.setErrorMsg("Debe indicar Número de Identificación del Socio de Negocio, en la Linea del Archivo");
-				}
-				else{
-					MBPartner partner = ComercialUtils.getPartnerByTaxID(getCtx(), stechLoadInvFile.getTaxID(), null);
-					if ((partner == null) || (partner.get_ID() <= 0)){
+				if (stechLoadInvFile.isConfirmed()){
+					if ((stechLoadInvFile.getTaxID() == null) || (stechLoadInvFile.getTaxID().trim().equalsIgnoreCase(""))){
 						stechLoadInvFile.setIsConfirmed(false);
-						stechLoadInvFile.setErrorMsg("No existe Socio de Negocio definido en el sistema con ese Número de Identificación : " + stechLoadInvFile.getTaxID());
+						stechLoadInvFile.setErrorMsg("Debe indicar Número de Identificación del Socio de Negocio, en la Linea del Archivo");
 					}
 					else{
-						stechLoadInvFile.setC_BPartner_ID(partner.get_ID());
+						MBPartner partner = ComercialUtils.getPartnerByTaxID(getCtx(), stechLoadInvFile.getTaxID(), null);
+						if ((partner == null) || (partner.get_ID() <= 0)){
+							stechLoadInvFile.setIsConfirmed(false);
+							stechLoadInvFile.setErrorMsg("No existe Socio de Negocio definido en el sistema con ese Número de Identificación : " + stechLoadInvFile.getTaxID());
+						}
+						else{
+							stechLoadInvFile.setC_BPartner_ID(partner.get_ID());
+						}
 					}
 				}
 
@@ -640,59 +658,71 @@ public class MZStechLoadInv extends X_Z_StechLoadInv implements DocAction, DocOp
 				}
 
 				// Moneda
-				if ((stechLoadInvFile.getNomMoneda() == null) || (stechLoadInvFile.getNomMoneda().trim().equalsIgnoreCase(""))){
-					stechLoadInvFile.setIsConfirmed(false);
-					stechLoadInvFile.setErrorMsg("Debe indicar Moneda");
-				}
-				else {
-					if (stechLoadInvFile.getNomMoneda().toUpperCase().trim().equalsIgnoreCase("U$S")){
-						stechLoadInvFile.setC_Currency_ID(100);
+				if (stechLoadInvFile.isConfirmed()){
+					if ((stechLoadInvFile.getNomMoneda() == null) || (stechLoadInvFile.getNomMoneda().trim().equalsIgnoreCase(""))){
+						stechLoadInvFile.setIsConfirmed(false);
+						stechLoadInvFile.setErrorMsg("Debe indicar Moneda");
 					}
 					else {
-						stechLoadInvFile.setC_Currency_ID(142);
+						if (stechLoadInvFile.getNomMoneda().toUpperCase().trim().equalsIgnoreCase("U$S")){
+							stechLoadInvFile.setC_Currency_ID(100);
+						}
+						else {
+							stechLoadInvFile.setC_Currency_ID(142);
+						}
 					}
 				}
 
 				// Fecha comprobante
-				if ((stechLoadInvFile.getFechaCadena() == null) || (stechLoadInvFile.getFechaCadena().trim().equalsIgnoreCase(""))){
-					stechLoadInvFile.setIsConfirmed(false);
-					stechLoadInvFile.setErrorMsg("Debe indicar Fecha de Comprobante");
-				}
-				else{
-					Timestamp fecDoc = DateUtils.convertStringToTimestamp_ddMMyyyy(stechLoadInvFile.getFechaCadena());
-					if (fecDoc == null){
+				if (stechLoadInvFile.isConfirmed()){
+					if ((stechLoadInvFile.getFechaCadena() == null) || (stechLoadInvFile.getFechaCadena().trim().equalsIgnoreCase(""))){
 						stechLoadInvFile.setIsConfirmed(false);
-						stechLoadInvFile.setErrorMsg("Formato de Fecha de Emisión inválido : " + stechLoadInvFile.getFechaCadena());
+						stechLoadInvFile.setErrorMsg("Debe indicar Fecha de Comprobante");
 					}
-					stechLoadInvFile.setDateTrx(fecDoc);
+					else{
+						Timestamp fecDoc = DateUtils.convertStringToTimestamp_MMddyyyy(stechLoadInvFile.getFechaCadena(), "/");
+						if (fecDoc == null){
+							stechLoadInvFile.setIsConfirmed(false);
+							stechLoadInvFile.setErrorMsg("Formato de Fecha de Emisión inválido : " + stechLoadInvFile.getFechaCadena());
+						}
+						stechLoadInvFile.setDateTrx(fecDoc);
+					}
 				}
 
 				// Montos
 				if (stechLoadInvFile.getAmtRounding() == null) stechLoadInvFile.setAmtRounding(Env.ZERO);
 
-				if ((stechLoadInvFile.getTotalAmt() == null) || (stechLoadInvFile.getTotalAmt().compareTo(Env.ZERO) <= 0)){
+				if (stechLoadInvFile.getTotalAmt() == null){
 					stechLoadInvFile.setIsConfirmed(false);
 					stechLoadInvFile.setErrorMsg("Debe indicar Total del Comprobante");
 				}
 
-				if ((stechLoadInvFile.getAmtSubtotal() == null) || (stechLoadInvFile.getAmtSubtotal().compareTo(Env.ZERO) <= 0)){
-					stechLoadInvFile.setIsConfirmed(false);
-					stechLoadInvFile.setErrorMsg("Debe indicar Subtotal del Comprobante");
+				if (stechLoadInvFile.isConfirmed()){
+					if (stechLoadInvFile.getAmtSubtotal() == null){
+						stechLoadInvFile.setIsConfirmed(false);
+						stechLoadInvFile.setErrorMsg("Debe indicar Subtotal del Comprobante");
+					}
 				}
 
-				if ((stechLoadInvFile.getLineTotalAmt() == null) || (stechLoadInvFile.getLineTotalAmt().compareTo(Env.ZERO) <= 0)){
-					stechLoadInvFile.setIsConfirmed(false);
-					stechLoadInvFile.setErrorMsg("Debe indicar Total Lineas con Impuesto");
+				if (stechLoadInvFile.isConfirmed()){
+					if (stechLoadInvFile.getLineTotalAmt() == null){
+						stechLoadInvFile.setIsConfirmed(false);
+						stechLoadInvFile.setErrorMsg("Debe indicar Total Lineas con Impuesto");
+					}
 				}
 
-				if ((stechLoadInvFile.getTaxAmt() == null) || (stechLoadInvFile.getTaxAmt().compareTo(Env.ZERO) <= 0)){
-					stechLoadInvFile.setIsConfirmed(false);
-					stechLoadInvFile.setErrorMsg("Debe indicar Monto Impuesto");
+				if (stechLoadInvFile.isConfirmed()){
+					if (stechLoadInvFile.getTaxAmt() == null){
+						stechLoadInvFile.setIsConfirmed(false);
+						stechLoadInvFile.setErrorMsg("Debe indicar Monto Impuesto");
+					}
 				}
 
-				if ((stechLoadInvFile.getLineNetAmt() == null) || (stechLoadInvFile.getLineNetAmt().compareTo(Env.ZERO) <= 0)){
-					stechLoadInvFile.setIsConfirmed(false);
-					stechLoadInvFile.setErrorMsg("Debe indicar Total Lineas sin Impuesto");
+				if (stechLoadInvFile.isConfirmed()){
+					if (stechLoadInvFile.getLineNetAmt() == null){
+						stechLoadInvFile.setIsConfirmed(false);
+						stechLoadInvFile.setErrorMsg("Debe indicar Total Lineas sin Impuesto");
+					}
 				}
 
 				if (stechLoadInvFile.isConfirmed()){
@@ -728,4 +758,155 @@ public class MZStechLoadInv extends X_Z_StechLoadInv implements DocAction, DocOp
 
 		return lines;
 	}
+
+	/***
+	 * Genero Comprobante de Compra.
+	 * Xpande. Created by Gabriel Vila on 5/27/20.
+	 * @return
+	 */
+	private String generateInvoices() {
+
+		String message = null;
+
+		String sql = "";
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+
+		try{
+		    sql = " select z_stechloadinvfile_id " +
+					" from z_stechloadinvfile " +
+					" where z_stechloadinv_id =" + this.get_ID() +
+					" and isconfirmed ='Y' " +
+					" order by ad_orgtrx_id, c_bpartner_id, c_doctype_id, documentserie, documentno, datetrx ";
+
+			pstmt = DB.prepareStatement(sql, get_TrxName());
+			rs = pstmt.executeQuery();
+
+			int adOrgIDAux = -1, cBPartnerIDAux = -1, cDocTypeIDAux = -1;
+			String documentSerieAux = "", documentNoAux = "";
+			MInvoice invoice = null;
+
+			while(rs.next()){
+
+				MZStechLoadInvFile loadInvFile = new MZStechLoadInvFile(getCtx(), rs.getInt("z_stechloadinvfile_id"), get_TrxName());
+
+				// Corte por orgnizacio, socio de negocio, tipo de documento, serie y numero
+				if ((loadInvFile.getAD_OrgTrx_ID() != adOrgIDAux) || (loadInvFile.getC_BPartner_ID() != cBPartnerIDAux)
+					|| (loadInvFile.getC_DocTypeInvoice_ID() != cDocTypeIDAux) || (!loadInvFile.getDocumentSerie().equalsIgnoreCase(documentSerieAux))
+					|| (!loadInvFile.getDocumentNoRef().equalsIgnoreCase(documentNoAux))){
+
+					// Si tengo invoice ya cargada, la completo ahora.
+					if ((invoice != null) && (invoice.get_ID() > 0)){
+						if (!invoice.processIt(DocAction.ACTION_Complete)){
+							if (invoice.getProcessMsg() != null) message = invoice.getProcessMsg();
+							return "No se pudo completar Invoice en Venta Crédito Scanntech : " + message;
+						}
+						else{
+							invoice.saveEx();
+						}
+					}
+
+					// Genero nueva  invoice
+					invoice = new MInvoice(getCtx(), 0, get_TrxName());
+					invoice.setAD_Org_ID(loadInvFile.getAD_OrgTrx_ID());
+					invoice.setC_DocTypeTarget_ID(loadInvFile.getC_DocTypeInvoice_ID());
+					invoice.setC_DocType_ID(loadInvFile.getC_DocTypeInvoice_ID());
+					invoice.setIsSOTrx(false);
+					invoice.setC_BPartner_ID(loadInvFile.getC_BPartner_ID());
+					invoice.set_ValueOfColumn("DocumentSerie", loadInvFile.getDocumentSerie());
+					invoice.setDocumentNo(loadInvFile.getDocumentNoRef());
+					invoice.setDescription("Generado Automáticamente desde Carga Comprobantes Scanntech.");
+					invoice.setDateInvoiced(loadInvFile.getDateTrx());
+					invoice.setDateAcct(loadInvFile.getDateTrx());
+
+					MBPartner partner = (MBPartner) loadInvFile.getC_BPartner();
+					MBPartnerLocation[] partnerLocations = partner.getLocations(true);
+					if (partnerLocations.length <= 0){
+						return "Socio de Negocio no tiene Localización configurada: " + partner.getValue() + " - " + partner.getName();
+					}
+					MBPartnerLocation partnerLocation = partnerLocations[0];
+
+					invoice.setC_BPartner_Location_ID(partnerLocation.get_ID());
+					invoice.setC_Currency_ID(loadInvFile.getC_Currency_ID());
+					invoice.set_ValueOfColumn("SubDocBaseType", "RET");
+					if (partner.getPaymentRulePO() != null){
+						invoice.setPaymentRule(partner.getPaymentRulePO());
+					}
+					if (partner.getPO_PaymentTerm_ID() > 0){
+						invoice.setC_PaymentTerm_ID(partner.getPO_PaymentTerm_ID());
+					}
+
+					// Seteo lista de precios de compra del proveedor segun moneda
+					MZSocioListaPrecio socioListaPrecio = MZSocioListaPrecio.getByPartnerCurrency(getCtx(), partner.get_ID(), loadInvFile.getC_Currency_ID(), get_TrxName());
+					if ((socioListaPrecio == null) || (socioListaPrecio.get_ID() <= 0)){
+						MCurrency currency = (MCurrency) loadInvFile.getC_Currency();
+						return "No se pudo obtener Lista de Precios de Compra para este Socio de Negocio en Moneda : " + currency.getISO_Code();
+					}
+					invoice.setM_PriceList_ID(socioListaPrecio.getM_PriceList_ID());
+
+					// Seteo impuestos incluidos segun lista de precios
+					MPriceList priceList = (MPriceList)socioListaPrecio.getM_PriceList();
+					invoice.setIsTaxIncluded(priceList.isTaxIncluded());
+
+					invoice.saveEx();
+
+					adOrgIDAux = loadInvFile.getAD_OrgTrx_ID();
+					cBPartnerIDAux = loadInvFile.getC_BPartner_ID();
+					cDocTypeIDAux = loadInvFile.getC_DocTypeInvoice_ID();
+					documentSerieAux = loadInvFile.getDocumentSerie();
+					documentNoAux = loadInvFile.getDocumentNoRef();
+				}
+
+				// Genero linea de invoice
+				MInvoiceLine invLine = new MInvoiceLine(invoice);
+				invLine.setC_Invoice_ID(invoice.get_ID());
+				invLine.setM_Product_ID(loadInvFile.getM_Product_ID());
+				invLine.setC_UOM_ID(100);
+				invLine.setQtyEntered(Env.ONE);
+				invLine.setQtyInvoiced(Env.ONE);
+				invLine.setC_Tax_ID(loadInvFile.get_ID());
+
+				if (invoice.isTaxIncluded()){
+					invLine.setPriceActual(loadInvFile.getLineTotalAmt());
+					invLine.setPriceList(loadInvFile.getLineTotalAmt());
+					invLine.setPriceLimit(loadInvFile.getLineTotalAmt());
+					invLine.setPriceEntered(loadInvFile.getLineTotalAmt());
+					invLine.set_ValueOfColumn("PricePO", loadInvFile.getLineTotalAmt());
+					invLine.set_ValueOfColumn("PricePONoDto", loadInvFile.getLineTotalAmt());
+				}
+				else {
+					invLine.setPriceActual(loadInvFile.getLineNetAmt());
+					invLine.setPriceList(loadInvFile.getLineNetAmt());
+					invLine.setPriceLimit(loadInvFile.getLineNetAmt());
+					invLine.setPriceEntered(loadInvFile.getLineNetAmt());
+					invLine.set_ValueOfColumn("PricePO", loadInvFile.getLineNetAmt());
+					invLine.set_ValueOfColumn("PricePONoDto", loadInvFile.getLineNetAmt());
+				}
+				invLine.setLineNetAmt();
+				invLine.saveEx();
+			}
+
+			// Si tengo invoice ya cargada, la completo ahora.
+			if ((invoice != null) && (invoice.get_ID() > 0)){
+				if (!invoice.processIt(DocAction.ACTION_Complete)){
+					if (invoice.getProcessMsg() != null) message = invoice.getProcessMsg();
+					return "No se pudo completar Invoice en Venta Crédito Scanntech : " + message;
+				}
+				else{
+					invoice.saveEx();
+				}
+			}
+
+		}
+		catch (Exception e){
+		    throw new AdempiereException(e);
+		}
+		finally {
+		    DB.close(rs, pstmt);
+			rs = null; pstmt = null;
+		}
+
+		return message;
+	}
+
 }

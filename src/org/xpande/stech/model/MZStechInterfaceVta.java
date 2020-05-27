@@ -1167,7 +1167,6 @@ public class MZStechInterfaceVta extends X_Z_StechInterfaceVta {
 
                     stechVtaCtaCte.setIsExecuted(false);
                     stechVtaCtaCte.setErrorMsg("Error al completar Invoice : " + message);
-                    stechVtaCtaCte.saveEx();
                 }
                 else{
                     invoice.saveEx();
@@ -1176,8 +1175,8 @@ public class MZStechInterfaceVta extends X_Z_StechInterfaceVta {
                     stechVtaCtaCte.setC_Invoice_ID(invoice.get_ID());
                     stechVtaCtaCte.setC_BPartner_ID(invoice.getC_BPartner_ID());
                     stechVtaCtaCte.setC_BPartner_Location_ID(invoice.getC_BPartner_Location_ID());
-                    stechVtaCtaCte.saveEx();
                 }
+                stechVtaCtaCte.saveEx();
             }
         }
         catch (Exception e){
