@@ -712,7 +712,7 @@ public class MZStechLoadInv extends X_Z_StechLoadInv implements DocAction, DocOp
 						stechLoadInvFile.setErrorMsg("Debe indicar Fecha de Comprobante");
 					}
 					else{
-						Timestamp fecDoc = DateUtils.convertStringToTimestamp_MMddyyyy(stechLoadInvFile.getFechaCadena(), "/");
+						Timestamp fecDoc = DateUtils.convertStringToTimestamp_ddMMyyyy(stechLoadInvFile.getFechaCadena(), "/");
 						if (fecDoc == null){
 							stechLoadInvFile.setIsConfirmed(false);
 							stechLoadInvFile.setErrorMsg("Formato de Fecha de Emisión inválido : " + stechLoadInvFile.getFechaCadena());
@@ -832,8 +832,12 @@ public class MZStechLoadInv extends X_Z_StechLoadInv implements DocAction, DocOp
 			int adOrgIDAux = -1, cBPartnerIDAux = -1, cDocTypeIDAux = -1;
 			String documentSerieAux = "", documentNoAux = "";
 			MInvoice invoice = null;
+			int contador = 0;
 
 			while(rs.next()){
+
+				contador++;
+				System.out.println("MZStechLoadInv: Procesando lines " + contador);
 
 				MZStechLoadInvFile loadInvFile = new MZStechLoadInvFile(getCtx(), rs.getInt("z_stechloadinvfile_id"), get_TrxName());
 
@@ -933,7 +937,7 @@ public class MZStechLoadInv extends X_Z_StechLoadInv implements DocAction, DocOp
 				invLine.setC_UOM_ID(100);
 				invLine.setQtyEntered(Env.ONE);
 				invLine.setQtyInvoiced(Env.ONE);
-				invLine.setC_Tax_ID(loadInvFile.get_ID());
+				invLine.setC_Tax_ID(loadInvFile.getC_Tax_ID());
 
 				BigDecimal precioTotal = loadInvFile.getLineTotalAmt();
 				if (precioTotal.compareTo(Env.ZERO) < 0){
