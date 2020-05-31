@@ -569,8 +569,7 @@ public class MZStechLoadInv extends X_Z_StechLoadInv implements DocAction, DocOp
 	private void setDataFromFile() {
 
 		try{
-
-			MZComercialConfig comercialConfig = MZComercialConfig.getDefault(getCtx(), null);
+			MZScanntechConfig scanntechConfig = MZScanntechConfig.getDefault(getCtx(), null);
 
 			int contadorOK = 0;
 			int contadorError = 0;
@@ -636,11 +635,15 @@ public class MZStechLoadInv extends X_Z_StechLoadInv implements DocAction, DocOp
 						stechLoadInvFile.setErrorMsg("Debe indicar Tipo de Documento");
 					}
 					else{
-						if (stechLoadInvFile.getNomDocumento().trim().toUpperCase().equalsIgnoreCase("FACTURA")){
-							stechLoadInvFile.setC_DocTypeInvoice_ID(comercialConfig.getDefaultDocAPI_ID());
+						// Obtengo tipo de documento de ADempiere, segun nombre de documento de Scanntech
+						MZStechConfigLoadInv configLoadInv = MZStechConfigLoadInv.getByNomDoc(getCtx(), scanntechConfig.get_ID(),
+								stechLoadInvFile.getNomDocumento().trim(), null);
+						if ((configLoadInv == null) || (configLoadInv.get_ID() <= 0)){
+							stechLoadInvFile.setIsConfirmed(false);
+							stechLoadInvFile.setErrorMsg("Tipo de Documento no se encuentra en Configuración Scanntech.");
 						}
 						else {
-							stechLoadInvFile.setC_DocTypeInvoice_ID(comercialConfig.getDefaultDocAPC_ID());
+							stechLoadInvFile.setC_DocTypeInvoice_ID(configLoadInv.getC_DocType_ID());
 						}
 					}
 				}
@@ -920,6 +923,7 @@ public class MZStechLoadInv extends X_Z_StechLoadInv implements DocAction, DocOp
 						invoice.set_ValueOfColumn("AmtRounding", loadInvFile.getAmtRounding().negate());
 					}
 
+					invoice.set_ValueOfColumn("AmtAuxiliar", loadInvFile.getTotalAmt());
 					invoice.saveEx();
 
 					adOrgIDAux = loadInvFile.getAD_OrgTrx_ID();
