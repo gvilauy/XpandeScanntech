@@ -20,6 +20,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Timestamp;
@@ -759,6 +760,14 @@ public class MZStechLoadInv extends X_Z_StechLoadInv implements DocAction, DocOp
 						stechLoadInvFile.setErrorMsg("Debe indicar Total Lineas sin Impuesto");
 					}
 				}
+
+				// Redondeo a dos cifras decimales despues de la coma
+				stechLoadInvFile.setAmtRounding(stechLoadInvFile.getAmtRounding().setScale(2, RoundingMode.HALF_UP));
+				stechLoadInvFile.setAmtSubtotal(stechLoadInvFile.getAmtSubtotal().setScale(2, RoundingMode.HALF_UP));
+				stechLoadInvFile.setTotalAmt(stechLoadInvFile.getTotalAmt().setScale(2, RoundingMode.HALF_UP));
+				stechLoadInvFile.setTaxAmt(stechLoadInvFile.getTaxAmt().setScale(2, RoundingMode.HALF_UP));
+				stechLoadInvFile.setLineNetAmt(stechLoadInvFile.getLineNetAmt().setScale(2, RoundingMode.HALF_UP));
+				stechLoadInvFile.setLineTotalAmt(stechLoadInvFile.getLineTotalAmt().setScale(2, RoundingMode.HALF_UP));
 
 				if (stechLoadInvFile.isConfirmed()){
 					contadorOK++;
