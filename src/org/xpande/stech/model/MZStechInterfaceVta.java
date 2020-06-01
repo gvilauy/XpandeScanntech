@@ -1147,14 +1147,15 @@ public class MZStechInterfaceVta extends X_Z_StechInterfaceVta {
                 // Linea de Factura
                 MInvoiceLine line = new MInvoiceLine(invoice);
                 line.set_ValueOfColumn("AD_Client_ID", invoice.getAD_Client_ID());
+                line.set_ValueOfColumn("IsBySelection", true);
                 line.setAD_Org_ID(invoice.getAD_Org_ID());
                 line.setM_Product_ID(product.get_ID());
                 line.setC_UOM_ID(product.getC_UOM_ID());
                 line.setQtyEntered(Env.ONE);
                 line.setQtyInvoiced(Env.ONE);
-                line.setPriceEntered(invoice.getTotalLines());
-                line.setPriceActual(invoice.getTotalLines());
-                line.setLineNetAmt(invoice.getTotalLines());
+                line.setPriceEntered(amtTotal);
+                line.setPriceActual(amtTotal);
+                line.setLineNetAmt(amtTotal);
                 line.set_ValueOfColumn("AmtSubTotal", invoice.getTotalLines());
                 line.setC_Tax_ID(taxProduct.get_ID());
                 line.setTaxAmt();
