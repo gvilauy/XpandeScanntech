@@ -56,7 +56,7 @@ public interface I_Z_ScanntechConfig
 	/** Set Organization.
 	  * Organizational entity within client
 	  */
-	public void setAD_Org_ID(int AD_Org_ID);
+	public void setAD_Org_ID (int AD_Org_ID);
 
 	/** Get Organization.
 	  * Organizational entity within client
@@ -69,7 +69,7 @@ public interface I_Z_ScanntechConfig
 	/** Set ClavePos.
 	  * Clave de usuario de proveedor POS para interface de datos
 	  */
-	public void setClavePos(String ClavePos);
+	public void setClavePos (String ClavePos);
 
 	/** Get ClavePos.
 	  * Clave de usuario de proveedor POS para interface de datos
@@ -98,7 +98,7 @@ public interface I_Z_ScanntechConfig
 	/** Set DefaultDocPosARC_ID.
 	  * ID de documento para migración de notas de crédito de venta crédito desde POS
 	  */
-	public void setDefaultDocPosARC_ID(int DefaultDocPosARC_ID);
+	public void setDefaultDocPosARC_ID (int DefaultDocPosARC_ID);
 
 	/** Get DefaultDocPosARC_ID.
 	  * ID de documento para migración de notas de crédito de venta crédito desde POS
@@ -111,12 +111,25 @@ public interface I_Z_ScanntechConfig
 	/** Set DefaultDocPosARI_ID.
 	  * ID de documento para migración de facturas de venta crédito desde POS
 	  */
-	public void setDefaultDocPosARI_ID(int DefaultDocPosARI_ID);
+	public void setDefaultDocPosARI_ID (int DefaultDocPosARI_ID);
 
 	/** Get DefaultDocPosARI_ID.
 	  * ID de documento para migración de facturas de venta crédito desde POS
 	  */
 	public int getDefaultDocPosARI_ID();
+
+    /** Column name DefaultDocPosNDARI_ID */
+    public static final String COLUMNNAME_DefaultDocPosNDARI_ID = "DefaultDocPosNDARI_ID";
+
+	/** Set DefaultDocPosNDARI_ID.
+	  * ID de documento para migración de notas de débito de venta crédito desde POS
+	  */
+	public void setDefaultDocPosNDARI_ID (int DefaultDocPosNDARI_ID);
+
+	/** Get DefaultDocPosNDARI_ID.
+	  * ID de documento para migración de notas de débito de venta crédito desde POS
+	  */
+	public int getDefaultDocPosNDARI_ID();
 
     /** Column name EmpresaPos */
     public static final String COLUMNNAME_EmpresaPos = "EmpresaPos";
@@ -124,7 +137,7 @@ public interface I_Z_ScanntechConfig
 	/** Set EmpresaPos.
 	  * ID de empresa para interface POS
 	  */
-	public void setEmpresaPos(int EmpresaPos);
+	public void setEmpresaPos (int EmpresaPos);
 
 	/** Get EmpresaPos.
 	  * ID de empresa para interface POS
@@ -137,7 +150,7 @@ public interface I_Z_ScanntechConfig
 	/** Set Active.
 	  * The record is active in the system
 	  */
-	public void setIsActive(boolean IsActive);
+	public void setIsActive (boolean IsActive);
 
 	/** Get Active.
 	  * The record is active in the system
@@ -150,7 +163,7 @@ public interface I_Z_ScanntechConfig
 	/** Set MetodoPos.
 	  * Método de proveedor POS para interface de datos
 	  */
-	public void setMetodoPos(String MetodoPos);
+	public void setMetodoPos (String MetodoPos);
 
 	/** Get MetodoPos.
 	  * Método de proveedor POS para interface de datos
@@ -163,7 +176,7 @@ public interface I_Z_ScanntechConfig
 	/** Set ProdVtasCredPOS_ID.
 	  * Producto para Migración de Ventas Crédito desde POS
 	  */
-	public void setProdVtasCredPOS_ID(int ProdVtasCredPOS_ID);
+	public void setProdVtasCredPOS_ID (int ProdVtasCredPOS_ID);
 
 	/** Get ProdVtasCredPOS_ID.
 	  * Producto para Migración de Ventas Crédito desde POS
@@ -176,7 +189,7 @@ public interface I_Z_ScanntechConfig
 	/** Set Timeout.
 	  * Is Timeout (In milliseconds) for sending or receive data
 	  */
-	public void setTimeout(int Timeout);
+	public void setTimeout (int Timeout);
 
 	/** Get Timeout.
 	  * Is Timeout (In milliseconds) for sending or receive data
@@ -205,7 +218,7 @@ public interface I_Z_ScanntechConfig
 	/** Set URL.
 	  * Full URL address - e.g. http://www.adempiere.org
 	  */
-	public void setURL(String URL);
+	public void setURL (String URL);
 
 	/** Get URL.
 	  * Full URL address - e.g. http://www.adempiere.org
@@ -218,7 +231,7 @@ public interface I_Z_ScanntechConfig
 	/** Set UsuarioPos.
 	  * Usuario de proveedor POS para interface de datos
 	  */
-	public void setUsuarioPos(String UsuarioPos);
+	public void setUsuarioPos (String UsuarioPos);
 
 	/** Get UsuarioPos.
 	  * Usuario de proveedor POS para interface de datos
@@ -229,7 +242,7 @@ public interface I_Z_ScanntechConfig
     public static final String COLUMNNAME_Z_PosVendor_ID = "Z_PosVendor_ID";
 
 	/** Set Z_PosVendor ID	  */
-	public void setZ_PosVendor_ID(int Z_PosVendor_ID);
+	public void setZ_PosVendor_ID (int Z_PosVendor_ID);
 
 	/** Get Z_PosVendor ID	  */
 	public int getZ_PosVendor_ID();
@@ -238,7 +251,7 @@ public interface I_Z_ScanntechConfig
     public static final String COLUMNNAME_Z_ScanntechConfig_ID = "Z_ScanntechConfig_ID";
 
 	/** Set Z_ScanntechConfig ID	  */
-	public void setZ_ScanntechConfig_ID(int Z_ScanntechConfig_ID);
+	public void setZ_ScanntechConfig_ID (int Z_ScanntechConfig_ID);
 
 	/** Get Z_ScanntechConfig ID	  */
 	public int getZ_ScanntechConfig_ID();

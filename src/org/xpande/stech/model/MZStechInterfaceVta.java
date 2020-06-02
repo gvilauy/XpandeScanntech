@@ -1045,6 +1045,18 @@ public class MZStechInterfaceVta extends X_Z_StechInterfaceVta {
                         descCFE ="E-Factura Nota de Crédito";
                     }
                 }
+                // e-ticket nd o e-factura nd
+                else if ((tipoCFE.equalsIgnoreCase("103")) || (tipoCFE.equalsIgnoreCase("113"))){
+                    cDocTypeID = this.scanntechConfig.getDefaultDocPosNDARI_ID();
+
+                    if (tipoCFE.equalsIgnoreCase("103")){
+                        descCFE ="E-Ticket Nota de Débito";
+                    }
+                    else {
+                        descCFE ="E-Factura Nota de Débito";
+                    }
+                }
+
 
                 if (cDocTypeID <= 0){
                     stechVtaCtaCte.setIsExecuted(false);

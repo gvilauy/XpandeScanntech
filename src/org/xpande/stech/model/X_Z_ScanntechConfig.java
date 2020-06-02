@@ -30,7 +30,7 @@ public class X_Z_ScanntechConfig extends PO implements I_Z_ScanntechConfig, I_Pe
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20190205L;
+	private static final long serialVersionUID = 20200602L;
 
     /** Standard Constructor */
     public X_Z_ScanntechConfig (Properties ctx, int Z_ScanntechConfig_ID, String trxName)
@@ -132,6 +132,29 @@ public class X_Z_ScanntechConfig extends PO implements I_Z_ScanntechConfig, I_Pe
 	public int getDefaultDocPosARI_ID () 
 	{
 		Integer ii = (Integer)get_Value(COLUMNNAME_DefaultDocPosARI_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
+	/** Set DefaultDocPosNDARI_ID.
+		@param DefaultDocPosNDARI_ID 
+		ID de documento para migración de notas de débito de venta crédito desde POS
+	  */
+	public void setDefaultDocPosNDARI_ID (int DefaultDocPosNDARI_ID)
+	{
+		if (DefaultDocPosNDARI_ID < 1) 
+			set_Value (COLUMNNAME_DefaultDocPosNDARI_ID, null);
+		else 
+			set_Value (COLUMNNAME_DefaultDocPosNDARI_ID, Integer.valueOf(DefaultDocPosNDARI_ID));
+	}
+
+	/** Get DefaultDocPosNDARI_ID.
+		@return ID de documento para migración de notas de débito de venta crédito desde POS
+	  */
+	public int getDefaultDocPosNDARI_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_DefaultDocPosNDARI_ID);
 		if (ii == null)
 			 return 0;
 		return ii.intValue();
