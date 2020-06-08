@@ -93,6 +93,36 @@ public interface I_Z_StechVtaCtaCte
 
 	public I_C_BPartner_Location getC_BPartner_Location() throws RuntimeException;
 
+    /** Column name C_Currency_ID */
+    public static final String COLUMNNAME_C_Currency_ID = "C_Currency_ID";
+
+	/** Set Currency.
+	  * The Currency for this record
+	  */
+	public void setC_Currency_ID (int C_Currency_ID);
+
+	/** Get Currency.
+	  * The Currency for this record
+	  */
+	public int getC_Currency_ID();
+
+	public I_C_Currency getC_Currency() throws RuntimeException;
+
+    /** Column name C_DocType_ID */
+    public static final String COLUMNNAME_C_DocType_ID = "C_DocType_ID";
+
+	/** Set Document Type.
+	  * Document type or rules
+	  */
+	public void setC_DocType_ID (int C_DocType_ID);
+
+	/** Get Document Type.
+	  * Document type or rules
+	  */
+	public int getC_DocType_ID();
+
+	public I_C_DocType getC_DocType() throws RuntimeException;
+
     /** Column name C_Invoice_ID */
     public static final String COLUMNNAME_C_Invoice_ID = "C_Invoice_ID";
 
@@ -107,6 +137,19 @@ public interface I_Z_StechVtaCtaCte
 	public int getC_Invoice_ID();
 
 	public I_C_Invoice getC_Invoice() throws RuntimeException;
+
+    /** Column name CodigoCajeroPOS */
+    public static final String COLUMNNAME_CodigoCajeroPOS = "CodigoCajeroPOS";
+
+	/** Set CodigoCajeroPOS.
+	  * Codigo de cajero en POS
+	  */
+	public void setCodigoCajeroPOS (String CodigoCajeroPOS);
+
+	/** Get CodigoCajeroPOS.
+	  * Codigo de cajero en POS
+	  */
+	public String getCodigoCajeroPOS();
 
     /** Column name Created */
     public static final String COLUMNNAME_Created = "Created";
@@ -168,6 +211,15 @@ public interface I_Z_StechVtaCtaCte
 	/** Get IsExecuted	  */
 	public boolean isExecuted();
 
+    /** Column name SC_CodigoCaja */
+    public static final String COLUMNNAME_SC_CodigoCaja = "SC_CodigoCaja";
+
+	/** Set SC_CodigoCaja	  */
+	public void setSC_CodigoCaja (int SC_CodigoCaja);
+
+	/** Get SC_CodigoCaja	  */
+	public int getSC_CodigoCaja();
+
     /** Column name SC_Importe */
     public static final String COLUMNNAME_SC_Importe = "SC_Importe";
 
@@ -176,6 +228,15 @@ public interface I_Z_StechVtaCtaCte
 
 	/** Get SC_Importe	  */
 	public BigDecimal getSC_Importe();
+
+    /** Column name SC_NumeroMov */
+    public static final String COLUMNNAME_SC_NumeroMov = "SC_NumeroMov";
+
+	/** Set SC_NumeroMov	  */
+	public void setSC_NumeroMov (String SC_NumeroMov);
+
+	/** Get SC_NumeroMov	  */
+	public String getSC_NumeroMov();
 
     /** Column name SC_NumeroOperacion */
     public static final String COLUMNNAME_SC_NumeroOperacion = "SC_NumeroOperacion";

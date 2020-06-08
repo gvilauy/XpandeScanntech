@@ -33,7 +33,7 @@ public class X_Z_StechVtaCtaCte extends PO implements I_Z_StechVtaCtaCte, I_Pers
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20200501L;
+	private static final long serialVersionUID = 20200608L;
 
     /** Standard Constructor */
     public X_Z_StechVtaCtaCte (Properties ctx, int Z_StechVtaCtaCte_ID, String trxName)
@@ -134,6 +134,58 @@ public class X_Z_StechVtaCtaCte extends PO implements I_Z_StechVtaCtaCte, I_Pers
 		return ii.intValue();
 	}
 
+	public I_C_Currency getC_Currency() throws RuntimeException
+    {
+		return (I_C_Currency)MTable.get(getCtx(), I_C_Currency.Table_Name)
+			.getPO(getC_Currency_ID(), get_TrxName());	}
+
+	/** Set Currency.
+		@param C_Currency_ID 
+		The Currency for this record
+	  */
+	public void setC_Currency_ID (int C_Currency_ID)
+	{
+		if (C_Currency_ID < 1) 
+			set_Value (COLUMNNAME_C_Currency_ID, null);
+		else 
+			set_Value (COLUMNNAME_C_Currency_ID, Integer.valueOf(C_Currency_ID));
+	}
+
+	/** Get Currency.
+		@return The Currency for this record
+	  */
+	public int getC_Currency_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_C_Currency_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
+	public I_C_DocType getC_DocType() throws RuntimeException
+    {
+		return (I_C_DocType)MTable.get(getCtx(), I_C_DocType.Table_Name)
+			.getPO(getC_DocType_ID(), get_TrxName());	}
+
+	/** Set Document Type.
+		@param C_DocType_ID 
+		Document type or rules
+	  */
+	public void setC_DocType_ID (int C_DocType_ID)
+	{
+		throw new IllegalArgumentException ("C_DocType_ID is virtual column");	}
+
+	/** Get Document Type.
+		@return Document type or rules
+	  */
+	public int getC_DocType_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_C_DocType_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
 	public I_C_Invoice getC_Invoice() throws RuntimeException
     {
 		return (I_C_Invoice)MTable.get(getCtx(), I_C_Invoice.Table_Name)
@@ -160,6 +212,23 @@ public class X_Z_StechVtaCtaCte extends PO implements I_Z_StechVtaCtaCte, I_Pers
 		if (ii == null)
 			 return 0;
 		return ii.intValue();
+	}
+
+	/** Set CodigoCajeroPOS.
+		@param CodigoCajeroPOS 
+		Codigo de cajero en POS
+	  */
+	public void setCodigoCajeroPOS (String CodigoCajeroPOS)
+	{
+		set_Value (COLUMNNAME_CodigoCajeroPOS, CodigoCajeroPOS);
+	}
+
+	/** Get CodigoCajeroPOS.
+		@return Codigo de cajero en POS
+	  */
+	public String getCodigoCajeroPOS () 
+	{
+		return (String)get_Value(COLUMNNAME_CodigoCajeroPOS);
 	}
 
 	/** Set Transaction Date.
@@ -214,6 +283,23 @@ public class X_Z_StechVtaCtaCte extends PO implements I_Z_StechVtaCtaCte, I_Pers
 		return false;
 	}
 
+	/** Set SC_CodigoCaja.
+		@param SC_CodigoCaja SC_CodigoCaja	  */
+	public void setSC_CodigoCaja (int SC_CodigoCaja)
+	{
+		set_Value (COLUMNNAME_SC_CodigoCaja, Integer.valueOf(SC_CodigoCaja));
+	}
+
+	/** Get SC_CodigoCaja.
+		@return SC_CodigoCaja	  */
+	public int getSC_CodigoCaja () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_SC_CodigoCaja);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
 	/** Set SC_Importe.
 		@param SC_Importe SC_Importe	  */
 	public void setSC_Importe (BigDecimal SC_Importe)
@@ -229,6 +315,20 @@ public class X_Z_StechVtaCtaCte extends PO implements I_Z_StechVtaCtaCte, I_Pers
 		if (bd == null)
 			 return Env.ZERO;
 		return bd;
+	}
+
+	/** Set SC_NumeroMov.
+		@param SC_NumeroMov SC_NumeroMov	  */
+	public void setSC_NumeroMov (String SC_NumeroMov)
+	{
+		set_Value (COLUMNNAME_SC_NumeroMov, SC_NumeroMov);
+	}
+
+	/** Get SC_NumeroMov.
+		@return SC_NumeroMov	  */
+	public String getSC_NumeroMov () 
+	{
+		return (String)get_Value(COLUMNNAME_SC_NumeroMov);
 	}
 
 	/** Set SC_NumeroOperacion.

@@ -977,7 +977,8 @@ public class MZStechInterfaceVta extends X_Z_StechInterfaceVta {
                 return;
             }
 
-            sql = " select mov.sc_tipocfe, mov.sc_rucfactura, mov.sc_seriecfe, mov.sc_numerooperacion, mov.Z_Stech_TK_Mov_ID, " +
+            sql = " select mov.sc_tipocfe, mov.sc_rucfactura, mov.sc_seriecfe, mov.sc_numerooperacion, " +
+                    " mov.SC_CodigoMoneda, mov.SC_CodigoCaja, mov.Z_Stech_TK_Mov_ID, mov.sc_numeromov, " +
                     " sum(coalesce(a.sc_importe,0) + coalesce(a.sc_descuentoafam,0) + coalesce(a.sc_descuentoincfin,0)) as sc_importe " +
                     " from z_stech_tk_movpago a " +
                     " inner join z_stech_tk_mov mov on a.z_stech_tk_mov_id = mov.z_stech_tk_mov_id " +
@@ -986,13 +987,18 @@ public class MZStechInterfaceVta extends X_Z_StechInterfaceVta {
                     " and mov.sc_tipooperacion='VENTA' " +
                     " and mov.z_stechinterfacevta_id =" + this.get_ID() +
                     " and mp.ventacredito ='Y' " +
-                    " group by 1,2,3,4,5 " +
+                    " group by 1,2,3,4,5,6,7,8 " +
                     " order by 1,2,3,4 ";
 
             pstmt = DB.prepareStatement(sql, get_TrxName());
             rs = pstmt.executeQuery();
 
             while(rs.next()){
+
+                int cCurrencyID = 142;
+                if ((rs.getString("SC_CodigoMoneda") != null) && (!rs.getString("SC_CodigoMoneda").equalsIgnoreCase("858"))){
+                    cCurrencyID = 100;
+                }
 
                 MZStechVtaCtaCte stechVtaCtaCte = new MZStechVtaCtaCte(getCtx(), 0, get_TrxName());
                 stechVtaCtaCte.setZ_StechInterfaceVta_ID(this.get_ID());
@@ -1005,6 +1011,9 @@ public class MZStechInterfaceVta extends X_Z_StechInterfaceVta {
                 stechVtaCtaCte.setSC_SerieCfe(rs.getString("sc_seriecfe"));
                 stechVtaCtaCte.setSC_NumeroOperacion(rs.getString("sc_numerooperacion"));
                 stechVtaCtaCte.setSC_Importe(rs.getBigDecimal("sc_importe"));
+                stechVtaCtaCte.setSC_CodigoCaja(rs.getInt("SC_CodigoCaja"));
+                stechVtaCtaCte.setC_Currency_ID(cCurrencyID);
+                stechVtaCtaCte.setSC_NumeroMov(rs.getString("sc_numeromov"));
 
                 BigDecimal amtTotal = rs.getBigDecimal("sc_importe");
                 if (amtTotal == null) amtTotal = Env.ZERO;
@@ -1132,7 +1141,7 @@ public class MZStechInterfaceVta extends X_Z_StechInterfaceVta {
                 invoice.setDateAcct(fechaDoc);
                 invoice.setC_BPartner_ID(partner.get_ID());
                 invoice.setC_BPartner_Location_ID(partnerLocation.get_ID());
-                invoice.setC_Currency_ID(142);
+                invoice.setC_Currency_ID(cCurrencyID);
                 invoice.setPaymentRule(X_C_Invoice.PAYMENTRULE_OnCredit);
                 invoice.setC_PaymentTerm_ID(paymentTerm.get_ID());
                 invoice.setTotalLines(amtTotal);
@@ -1184,12 +1193,15 @@ public class MZStechInterfaceVta extends X_Z_StechInterfaceVta {
                 }
                 else{
                     invoice.saveEx();
-
                     stechVtaCtaCte.setIsExecuted(true);
-                    stechVtaCtaCte.setC_Invoice_ID(invoice.get_ID());
-                    stechVtaCtaCte.setC_BPartner_ID(invoice.getC_BPartner_ID());
-                    stechVtaCtaCte.setC_BPartner_Location_ID(invoice.getC_BPartner_Location_ID());
+
                 }
+                if (invoice.get_ID() > 0){
+                    stechVtaCtaCte.setC_Invoice_ID(invoice.get_ID());
+                }
+
+                stechVtaCtaCte.setC_BPartner_ID(invoice.getC_BPartner_ID());
+                stechVtaCtaCte.setC_BPartner_Location_ID(invoice.getC_BPartner_Location_ID());
                 stechVtaCtaCte.saveEx();
             }
         }
