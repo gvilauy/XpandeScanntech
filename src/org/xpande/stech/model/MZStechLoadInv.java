@@ -917,7 +917,8 @@ public class MZStechLoadInv extends X_Z_StechLoadInv implements DocAction, DocOp
 					MZSocioListaPrecio socioListaPrecio = MZSocioListaPrecio.getByPartnerCurrency(getCtx(), partner.get_ID(), loadInvFile.getC_Currency_ID(), get_TrxName());
 					if ((socioListaPrecio == null) || (socioListaPrecio.get_ID() <= 0)){
 						MCurrency currency = (MCurrency) loadInvFile.getC_Currency();
-						return "No se pudo obtener Lista de Precios de Compra para este Socio de Negocio en Moneda : " + currency.getISO_Code();
+						return "No se pudo obtener Lista de Precios de Compra para el Socio de Negocio " + partner.getName() +
+								" en Moneda : " + currency.getISO_Code();
 					}
 					invoice.setM_PriceList_ID(socioListaPrecio.getM_PriceList_ID());
 
