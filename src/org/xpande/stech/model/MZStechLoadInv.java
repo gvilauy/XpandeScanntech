@@ -926,12 +926,16 @@ public class MZStechLoadInv extends X_Z_StechLoadInv implements DocAction, DocOp
 					MPriceList priceList = (MPriceList)socioListaPrecio.getM_PriceList();
 					invoice.setIsTaxIncluded(priceList.isTaxIncluded());
 
+					/*
 					if (loadInvFile.getAmtRounding().compareTo(Env.ZERO) >= 0){
 						invoice.set_ValueOfColumn("AmtRounding", loadInvFile.getAmtRounding());
 					}
 					else{
 						invoice.set_ValueOfColumn("AmtRounding", loadInvFile.getAmtRounding().negate());
 					}
+					*/
+
+					invoice.set_ValueOfColumn("AmtRounding", loadInvFile.getAmtRounding());
 
 					invoice.set_ValueOfColumn("AmtAuxiliar", loadInvFile.getTotalAmt());
 					invoice.saveEx();
