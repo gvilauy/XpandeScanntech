@@ -189,6 +189,19 @@ public interface I_Z_StechVtaCtaCte
 	/** Get Error Msg	  */
 	public String getErrorMsg();
 
+    /** Column name EsVentaEmpresa */
+    public static final String COLUMNNAME_EsVentaEmpresa = "EsVentaEmpresa";
+
+	/** Set EsVentaEmpresa.
+	  * Si es una venta a empresas o no
+	  */
+	public void setEsVentaEmpresa (boolean EsVentaEmpresa);
+
+	/** Get EsVentaEmpresa.
+	  * Si es una venta a empresas o no
+	  */
+	public boolean isEsVentaEmpresa();
+
     /** Column name IsActive */
     public static final String COLUMNNAME_IsActive = "IsActive";
 

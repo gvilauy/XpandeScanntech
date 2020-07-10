@@ -33,7 +33,7 @@ public class X_Z_StechVtaCtaCte extends PO implements I_Z_StechVtaCtaCte, I_Pers
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20200608L;
+	private static final long serialVersionUID = 20200710L;
 
     /** Standard Constructor */
     public X_Z_StechVtaCtaCte (Properties ctx, int Z_StechVtaCtaCte_ID, String trxName)
@@ -42,6 +42,8 @@ public class X_Z_StechVtaCtaCte extends PO implements I_Z_StechVtaCtaCte, I_Pers
       /** if (Z_StechVtaCtaCte_ID == 0)
         {
 			setDateTrx (new Timestamp( System.currentTimeMillis() ));
+			setEsVentaEmpresa (false);
+// N
 			setIsExecuted (false);
 // N
 			setZ_StechInterfaceVta_ID (0);
@@ -260,6 +262,30 @@ public class X_Z_StechVtaCtaCte extends PO implements I_Z_StechVtaCtaCte, I_Pers
 	public String getErrorMsg () 
 	{
 		return (String)get_Value(COLUMNNAME_ErrorMsg);
+	}
+
+	/** Set EsVentaEmpresa.
+		@param EsVentaEmpresa 
+		Si es una venta a empresas o no
+	  */
+	public void setEsVentaEmpresa (boolean EsVentaEmpresa)
+	{
+		set_Value (COLUMNNAME_EsVentaEmpresa, Boolean.valueOf(EsVentaEmpresa));
+	}
+
+	/** Get EsVentaEmpresa.
+		@return Si es una venta a empresas o no
+	  */
+	public boolean isEsVentaEmpresa () 
+	{
+		Object oo = get_Value(COLUMNNAME_EsVentaEmpresa);
+		if (oo != null) 
+		{
+			 if (oo instanceof Boolean) 
+				 return ((Boolean)oo).booleanValue(); 
+			return "Y".equals(oo);
+		}
+		return false;
 	}
 
 	/** Set IsExecuted.
