@@ -457,6 +457,9 @@ public class MZStechLoadInv extends X_Z_StechLoadInv implements DocAction, DocOp
 			// Valida lineas de archivo y trae información asociada.
 			this.setDataFromFile();
 
+			// Valido totales calculados contra totales documentados
+			this.controlTotalesDocs();
+
 		}
 		catch (Exception e){
 			throw new AdempiereException(e);
@@ -935,9 +938,16 @@ public class MZStechLoadInv extends X_Z_StechLoadInv implements DocAction, DocOp
 					}
 					*/
 
-					invoice.set_ValueOfColumn("AmtRounding", loadInvFile.getAmtRounding());
+					// Para notas de crédito, doy vuelta el signo del redondeo
+					BigDecimal amtRounding = loadInvFile.getAmtRounding();
+					MDocType docType = (MDocType) invoice.getC_DocTypeTarget();
+					if (docType.getDocBaseType().equalsIgnoreCase("APC")){
+						amtRounding = amtRounding.negate();
+					}
 
-					invoice.set_ValueOfColumn("AmtAuxiliar", loadInvFile.getTotalAmt());
+					invoice.set_ValueOfColumn("AmtRounding", amtRounding);
+
+					//invoice.set_ValueOfColumn("AmtAuxiliar", loadInvFile.getTotalAmt());
 					invoice.saveEx();
 
 					adOrgIDAux = loadInvFile.getAD_OrgTrx_ID();
@@ -1022,6 +1032,67 @@ public class MZStechLoadInv extends X_Z_StechLoadInv implements DocAction, DocOp
 		}
 
 		return message;
+	}
+
+	/***
+	 * Controla los totales calculados contra los totales de documentos que vienen en la interface.
+	 * Xpande. Created by Gabriel Vila on 7/13/20.
+	 */
+	private void controlTotalesDocs(){
+
+		String sql = "";
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+
+		try{
+			sql = " select ad_orgtrx_id, c_bpartner_id, c_doctypeinvoice_id, documentserie, documentnoref, totalamt, amtrounding, " +
+					" sum(linenetamt + taxamt) as montocontrol " +
+					" from z_stechloadinvfile " +
+					" where z_stechloadinv_id =" + this.get_ID() +
+					" and isconfirmed ='Y' " +
+					" group by ad_orgtrx_id, c_bpartner_id, c_doctypeinvoice_id, documentserie, documentnoref, totalamt, amtrounding ";
+
+			pstmt = DB.prepareStatement(sql, get_TrxName());
+			rs = pstmt.executeQuery();
+
+			while(rs.next()){
+
+				// Validación de valores recibidos:
+				// Se tiene que cumplir lo siguiente: LineNetAmt + TaxAmt + AmtRounding = TotalAmt
+				BigDecimal totalCalculado = rs.getBigDecimal("montocontrol");
+				BigDecimal totalDocumento = rs.getBigDecimal("totalamt");
+				BigDecimal amtRounding = rs.getBigDecimal("amtrounding");
+
+				if (totalCalculado == null) totalCalculado = Env.ZERO;
+				if (totalDocumento == null) totalDocumento = Env.ZERO;
+				if (amtRounding == null) amtRounding = Env.ZERO;
+
+				totalCalculado = totalCalculado.add((amtRounding));
+
+				if (totalCalculado.compareTo(totalDocumento) != 0){
+
+					String message = "Diferencia de Valores: Total Calculado =" + totalCalculado +
+							" - Total Ingresado =" + totalDocumento +
+							" - Diferencia =" + totalCalculado.subtract(totalDocumento);
+
+					String action = " update z_stechloadinvfile set isconfirmed ='N', errormsg ='" + message + "' " +
+							" where ad_orgtrx_id =" + rs.getInt("ad_orgtrx_id") +
+							" and c_bpartner_id =" + rs.getInt("c_bpartner_id") +
+							" and c_doctypeinvoice_id =" + rs.getInt("c_doctypeinvoice_id") +
+							" and documentserie ='" + rs.getString("documentserie") + "' " +
+							" and documentnoref ='" + rs.getString("documentnoref") + "' ";
+					DB.executeUpdateEx(action, get_TrxName());
+				}
+			}
+		}
+		catch (Exception e){
+		    throw new AdempiereException(e);
+		}
+		finally {
+		    DB.close(rs, pstmt);
+			rs = null; pstmt = null;
+		}
+
 	}
 
 }
