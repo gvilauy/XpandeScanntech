@@ -150,6 +150,19 @@ public interface I_Z_ScanntechConfigTax
 
 	public I_M_Product getM_Product() throws RuntimeException;
 
+    /** Column name NomImpuestoPOS */
+    public static final String COLUMNNAME_NomImpuestoPOS = "NomImpuestoPOS";
+
+	/** Set NomImpuestoPOS.
+	  * Nombre de impuesto en POS
+	  */
+	public void setNomImpuestoPOS (String NomImpuestoPOS);
+
+	/** Get NomImpuestoPOS.
+	  * Nombre de impuesto en POS
+	  */
+	public String getNomImpuestoPOS();
+
     /** Column name SC_CodigoIVA */
     public static final String COLUMNNAME_SC_CodigoIVA = "SC_CodigoIVA";
 

@@ -32,7 +32,7 @@ public class X_Z_ScanntechConfigTax extends PO implements I_Z_ScanntechConfigTax
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20200525L;
+	private static final long serialVersionUID = 20200716L;
 
     /** Standard Constructor */
     public X_Z_ScanntechConfigTax (Properties ctx, int Z_ScanntechConfigTax_ID, String trxName)
@@ -184,6 +184,23 @@ public class X_Z_ScanntechConfigTax extends PO implements I_Z_ScanntechConfigTax
 		if (ii == null)
 			 return 0;
 		return ii.intValue();
+	}
+
+	/** Set NomImpuestoPOS.
+		@param NomImpuestoPOS 
+		Nombre de impuesto en POS
+	  */
+	public void setNomImpuestoPOS (String NomImpuestoPOS)
+	{
+		set_Value (COLUMNNAME_NomImpuestoPOS, NomImpuestoPOS);
+	}
+
+	/** Get NomImpuestoPOS.
+		@return Nombre de impuesto en POS
+	  */
+	public String getNomImpuestoPOS () 
+	{
+		return (String)get_Value(COLUMNNAME_NomImpuestoPOS);
 	}
 
 	/** Set SC_CodigoIVA.

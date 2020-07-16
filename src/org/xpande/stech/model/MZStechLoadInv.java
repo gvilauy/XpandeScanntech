@@ -615,7 +615,18 @@ public class MZStechLoadInv extends X_Z_StechLoadInv implements DocAction, DocOp
 
 				// Obtengo impuesto según tasa ingresada
 				if (stechLoadInvFile.isConfirmed()){
-					MZScanntechConfigTax configTax = MZScanntechConfigTax.getByRateAplicaInterface(getCtx(), stechLoadInvFile.getSC_CodigoIVA(), true, null);
+
+					MZScanntechConfigTax configTax = null;
+
+					// Por nombre de impuesto POS
+					if ((stechLoadInvFile.getNomImpuestoPOS() != null) && (!stechLoadInvFile.getNomImpuestoPOS().trim().equalsIgnoreCase(""))){
+						configTax = MZScanntechConfigTax.getByImpuAplicaInterface(getCtx(), stechLoadInvFile.getNomImpuestoPOS(), true, null);
+					}
+					// Si no obtuve por nombre de impuesto, lo busco por tasa.
+					if ((configTax == null) || (configTax.get_ID() <= 0)){
+						configTax = MZScanntechConfigTax.getByRateAplicaInterface(getCtx(), stechLoadInvFile.getSC_CodigoIVA(), true, null);
+					}
+
 					if ((configTax == null) || (configTax.get_ID() <= 0)){
 						stechLoadInvFile.setIsConfirmed(false);
 						stechLoadInvFile.setErrorMsg("No se encuentra Tasa de Impuesto en configuración scanntech.");
@@ -1045,6 +1056,9 @@ public class MZStechLoadInv extends X_Z_StechLoadInv implements DocAction, DocOp
 		ResultSet rs = null;
 
 		try{
+			BigDecimal bordeInferior = new BigDecimal(-0.1);
+			BigDecimal bordeSuperior = new BigDecimal(0.1);
+
 			sql = " select ad_orgtrx_id, c_bpartner_id, c_doctypeinvoice_id, documentserie, documentnoref, totalamt, amtrounding, " +
 					" sum(linenetamt + taxamt) as montocontrol " +
 					" from z_stechloadinvfile " +
@@ -1071,17 +1085,22 @@ public class MZStechLoadInv extends X_Z_StechLoadInv implements DocAction, DocOp
 
 				if (totalCalculado.compareTo(totalDocumento) != 0){
 
-					String message = "Diferencia de Valores: Total Calculado =" + totalCalculado +
-							" - Total Ingresado =" + totalDocumento +
-							" - Diferencia =" + totalCalculado.subtract(totalDocumento);
+					BigDecimal diferencia = totalCalculado.subtract(totalDocumento);
 
-					String action = " update z_stechloadinvfile set isconfirmed ='N', errormsg ='" + message + "' " +
-							" where ad_orgtrx_id =" + rs.getInt("ad_orgtrx_id") +
-							" and c_bpartner_id =" + rs.getInt("c_bpartner_id") +
-							" and c_doctypeinvoice_id =" + rs.getInt("c_doctypeinvoice_id") +
-							" and documentserie ='" + rs.getString("documentserie") + "' " +
-							" and documentnoref ='" + rs.getString("documentnoref") + "' ";
-					DB.executeUpdateEx(action, get_TrxName());
+					// Validacion de bordes de redondeo
+					if ((diferencia.compareTo(bordeInferior) < 0) || (diferencia.compareTo(bordeSuperior) > 0)){
+						String message = "Diferencia de Valores: Total Calculado =" + totalCalculado +
+								" - Total Ingresado =" + totalDocumento +
+								" - Diferencia =" + totalCalculado.subtract(totalDocumento);
+
+						String action = " update z_stechloadinvfile set isconfirmed ='N', errormsg ='" + message + "' " +
+								" where ad_orgtrx_id =" + rs.getInt("ad_orgtrx_id") +
+								" and c_bpartner_id =" + rs.getInt("c_bpartner_id") +
+								" and c_doctypeinvoice_id =" + rs.getInt("c_doctypeinvoice_id") +
+								" and documentserie ='" + rs.getString("documentserie") + "' " +
+								" and documentnoref ='" + rs.getString("documentnoref") + "' ";
+						DB.executeUpdateEx(action, get_TrxName());
+					}
 				}
 			}
 		}

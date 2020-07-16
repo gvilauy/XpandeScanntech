@@ -67,4 +67,22 @@ public class MZScanntechConfigTax extends X_Z_ScanntechConfigTax {
         return model;
     }
 
+    /***
+     * Obtiene y retorna modelo según Nombre del Impuesto POS y si aplica o no en interface de carga de comprobantes.
+     * Xpande. Created by Gabriel Vila on 7/16/20.
+     * @param ctx
+     * @param cTaxID
+     * @param trxName
+     * @return
+     */
+    public static MZScanntechConfigTax getByImpuAplicaInterface(Properties ctx, String nombreImpuPOS, boolean aplicaInterface, String trxName){
+
+        String whereClause = X_Z_ScanntechConfigTax.COLUMNNAME_NomImpuestoPOS + " ='" + nombreImpuPOS + "'" +
+                " AND " + X_Z_ScanntechConfigTax.COLUMNNAME_AplicaInterface + " ='" + ((aplicaInterface) ? "Y" : "N") + "'";
+
+        MZScanntechConfigTax model = new Query(ctx, I_Z_ScanntechConfigTax.Table_Name, whereClause, trxName).setOnlyActiveRecords(true).first();
+
+        return model;
+    }
+
 }

@@ -33,7 +33,7 @@ public class X_Z_StechLoadInvFile extends PO implements I_Z_StechLoadInvFile, I_
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20200525L;
+	private static final long serialVersionUID = 20200716L;
 
     /** Standard Constructor */
     public X_Z_StechLoadInvFile (Properties ctx, int Z_StechLoadInvFile_ID, String trxName)
@@ -541,6 +541,23 @@ public class X_Z_StechLoadInvFile extends PO implements I_Z_StechLoadInvFile, I_
 	public String getNomDocumento () 
 	{
 		return (String)get_Value(COLUMNNAME_NomDocumento);
+	}
+
+	/** Set NomImpuestoPOS.
+		@param NomImpuestoPOS 
+		Nombre de impuesto en POS
+	  */
+	public void setNomImpuestoPOS (String NomImpuestoPOS)
+	{
+		set_Value (COLUMNNAME_NomImpuestoPOS, NomImpuestoPOS);
+	}
+
+	/** Get NomImpuestoPOS.
+		@return Nombre de impuesto en POS
+	  */
+	public String getNomImpuestoPOS () 
+	{
+		return (String)get_Value(COLUMNNAME_NomImpuestoPOS);
 	}
 
 	/** Set NomLocal.
