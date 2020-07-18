@@ -987,8 +987,7 @@ public class MZStechInterfaceVta extends X_Z_StechInterfaceVta {
                     " and mov.sc_tipooperacion='VENTA' " +
                     " and mov.z_stechinterfacevta_id =" + this.get_ID() +
                     " and mp.ventacredito ='Y' " +
-                    " group by 1,2,3,4,5,6,7,8 " +
-                    " order by 1,2,3,4 ";
+                    " group by 1,2,3,4,5,6,7,8 ";
 
             pstmt = DB.prepareStatement(sql, get_TrxName());
             rs = pstmt.executeQuery();
@@ -1238,8 +1237,7 @@ public class MZStechInterfaceVta extends X_Z_StechInterfaceVta {
                     " where mov.ad_org_id =" + this.getAD_Org_ID() +
                     " and mov.sc_tipooperacion='VENTA' " +
                     " and mov.z_stechinterfacevta_id =" + this.get_ID() +
-                    " and mov.sc_tipocfe in (111, 112, 113) " +
-                    " order by 1,2,3,4 ";
+                    " and mov.sc_tipocfe in (111, 112, 113) ";
 
             pstmt = DB.prepareStatement(sql, get_TrxName());
             rs = pstmt.executeQuery();
