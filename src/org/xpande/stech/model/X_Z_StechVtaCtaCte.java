@@ -33,7 +33,7 @@ public class X_Z_StechVtaCtaCte extends PO implements I_Z_StechVtaCtaCte, I_Pers
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20200710L;
+	private static final long serialVersionUID = 20200723L;
 
     /** Standard Constructor */
     public X_Z_StechVtaCtaCte (Properties ctx, int Z_StechVtaCtaCte_ID, String trxName)
@@ -183,6 +183,34 @@ public class X_Z_StechVtaCtaCte extends PO implements I_Z_StechVtaCtaCte, I_Pers
 	public int getC_DocType_ID () 
 	{
 		Integer ii = (Integer)get_Value(COLUMNNAME_C_DocType_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
+	}
+
+	public I_C_DocType getC_DocTypeTarget() throws RuntimeException
+    {
+		return (I_C_DocType)MTable.get(getCtx(), I_C_DocType.Table_Name)
+			.getPO(getC_DocTypeTarget_ID(), get_TrxName());	}
+
+	/** Set Target Document Type.
+		@param C_DocTypeTarget_ID 
+		Target document type for conversing documents
+	  */
+	public void setC_DocTypeTarget_ID (int C_DocTypeTarget_ID)
+	{
+		if (C_DocTypeTarget_ID < 1) 
+			set_Value (COLUMNNAME_C_DocTypeTarget_ID, null);
+		else 
+			set_Value (COLUMNNAME_C_DocTypeTarget_ID, Integer.valueOf(C_DocTypeTarget_ID));
+	}
+
+	/** Get Target Document Type.
+		@return Target document type for conversing documents
+	  */
+	public int getC_DocTypeTarget_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_C_DocTypeTarget_ID);
 		if (ii == null)
 			 return 0;
 		return ii.intValue();

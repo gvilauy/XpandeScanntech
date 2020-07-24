@@ -201,6 +201,9 @@ public class MZStechInterfaceVta extends X_Z_StechInterfaceVta {
             // Proceso ventas con credito de la casa
             this.setVentasCredito();
 
+            // Proceso ventas con RUT (no se hace invoice, es solo para formularios de DGI)
+            this.setVentasComprobantes();
+
             // Tiempo final de proceso
             this.setEndDate(new Timestamp(System.currentTimeMillis()));
             this.saveEx();
@@ -1066,7 +1069,6 @@ public class MZStechInterfaceVta extends X_Z_StechInterfaceVta {
                     }
                 }
 
-
                 if (cDocTypeID <= 0){
                     stechVtaCtaCte.setIsExecuted(false);
                     stechVtaCtaCte.setErrorMsg("No se pudo obtener tipo de documento a considerar desde configuración scanntech");
@@ -1232,8 +1234,10 @@ public class MZStechInterfaceVta extends X_Z_StechInterfaceVta {
 
             sql = " select mov.sc_tipocfe, mov.sc_rucfactura, mov.sc_seriecfe, mov.sc_numerooperacion, " +
                     " mov.SC_CodigoMoneda, mov.SC_CodigoCaja, mov.Z_Stech_TK_Mov_ID, mov.sc_numeromov, " +
-                    " mov.sc_total as sc_importe " +
+                    " mov.sc_total as sc_importe, sdgi.c_doctype_id " +
                     " from z_stech_tk_mov mov " +
+                    " left outer join z_cfe_configdocdgi dgi on mov.sc_tipocfe = dgi.codigodgi " +
+                    " left outer join z_cfe_configdocsend sdgi on (dgi.z_cfe_configdocdgi_id = sdgi.z_cfe_configdocdgi_id and sdgi.ad_orgtrx_id = mov.ad_org_id) " +
                     " where mov.ad_org_id =" + this.getAD_Org_ID() +
                     " and mov.sc_tipooperacion='VENTA' " +
                     " and mov.z_stechinterfacevta_id =" + this.get_ID() +
@@ -1265,6 +1269,10 @@ public class MZStechInterfaceVta extends X_Z_StechInterfaceVta {
                 stechVtaCtaCte.setSC_NumeroMov(rs.getString("sc_numeromov"));
                 stechVtaCtaCte.setIsExecuted(true);
                 stechVtaCtaCte.setEsVentaEmpresa(true);
+
+                if (rs.getInt("c_doctype_id") > 0){
+                    stechVtaCtaCte.setC_DocTypeTarget_ID(rs.getInt("c_doctype_id"));
+                }
 
                 BigDecimal amtTotal = rs.getBigDecimal("sc_importe");
                 if (amtTotal == null) amtTotal = Env.ZERO;
