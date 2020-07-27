@@ -1236,7 +1236,7 @@ public class MZStechInterfaceVta extends X_Z_StechInterfaceVta {
                     " mov.SC_CodigoMoneda, mov.SC_CodigoCaja, mov.Z_Stech_TK_Mov_ID, mov.sc_numeromov, " +
                     " mov.sc_total as sc_importe, sdgi.c_doctype_id " +
                     " from z_stech_tk_mov mov " +
-                    " left outer join z_cfe_configdocdgi dgi on mov.sc_tipocfe = dgi.codigodgi " +
+                    " left outer join z_cfe_configdocdgi dgi on cast(mov.sc_tipocfe as character varying(20)) = dgi.codigodgi " +
                     " left outer join z_cfe_configdocsend sdgi on (dgi.z_cfe_configdocdgi_id = sdgi.z_cfe_configdocdgi_id and sdgi.ad_orgtrx_id = mov.ad_org_id) " +
                     " where mov.ad_org_id =" + this.getAD_Org_ID() +
                     " and mov.sc_tipooperacion='VENTA' " +
