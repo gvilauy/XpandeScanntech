@@ -30,6 +30,7 @@ import java.nio.charset.Charset;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 import java.util.Scanner;
@@ -104,7 +105,11 @@ public class MZStechInterfaceVta extends X_Z_StechInterfaceVta {
             Timestamp fechaConsultaAuxDesde = new Timestamp(fechaConsulta.getTime());
             Timestamp fechaConsultaAuxHasta = new Timestamp(fechaConsulta.getTime());
             Timestamp fechaDesde = DateUtils.getTSManualHour(fechaConsultaAuxDesde, 0, 0, 0, 0);
-            Timestamp fechaHasta = DateUtils.getTSManualHour(fechaConsultaAuxHasta, 23, 59, 59, 0);
+            Timestamp fechaHastaAux = DateUtils.getTSManualHour(fechaConsultaAuxHasta, 23, 59, 59, 0);
+
+            Date dateFechaAux = new Date(fechaHastaAux.getTime());
+            dateFechaAux =  DateUtils.addDays(dateFechaAux, 1);
+            Timestamp fechaHasta = new Timestamp(dateFechaAux.getTime());
 
             String fechaAux = fechaConsulta.toString();
             String fechaConsultaSTR = fechaAux.substring(0, 10);
