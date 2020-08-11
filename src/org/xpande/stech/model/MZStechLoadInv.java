@@ -930,24 +930,36 @@ public class MZStechLoadInv extends X_Z_StechLoadInv implements DocAction, DocOp
 					// Seteo lista de precios de compra del proveedor segun moneda
 					MZSocioListaPrecio socioListaPrecio = MZSocioListaPrecio.getByPartnerCurrency(getCtx(), partner.get_ID(), loadInvFile.getC_Currency_ID(), get_TrxName());
 					if ((socioListaPrecio == null) || (socioListaPrecio.get_ID() <= 0)){
+
+						// No existe lista para este socio de negocio y moneda de compra. La creo y seteo al socio de negocio.
 						MCurrency currency = (MCurrency) loadInvFile.getC_Currency();
-						return "No se pudo obtener Lista de Precios de Compra para el Socio de Negocio " + partner.getName() +
-								" en Moneda : " + currency.getISO_Code();
+						MPriceList pl = new MPriceList(getCtx(), 0, get_TrxName());
+						pl.setName("LISTA " + partner.getName().toUpperCase() + " " + currency.getISO_Code());
+						pl.setC_Currency_ID(loadInvFile.getC_Currency_ID());
+						pl.setIsSOPriceList(false);
+						pl.setIsTaxIncluded(true);
+						pl.setIsNetPrice(false);
+						pl.setPricePrecision(currency.getStdPrecision());
+						pl.setAD_Org_ID(0);
+						pl.saveEx();
+
+						MPriceListVersion plv = new MPriceListVersion(pl);
+						plv.setName("VIGENTE " + partner.getName().toUpperCase() + " " + currency.getISO_Code());
+						plv.setM_DiscountSchema_ID(1000000);
+						plv.saveEx();
+
+						socioListaPrecio =  new MZSocioListaPrecio(getCtx(), 0, get_TrxName());
+						socioListaPrecio.setC_BPartner_ID(partner.get_ID());
+						socioListaPrecio.setC_Currency_ID(loadInvFile.getC_Currency_ID());
+						socioListaPrecio.setM_PriceList_ID(pl.get_ID());
+						socioListaPrecio.saveEx();
 					}
+
 					invoice.setM_PriceList_ID(socioListaPrecio.getM_PriceList_ID());
 
 					// Seteo impuestos incluidos segun lista de precios
 					MPriceList priceList = (MPriceList)socioListaPrecio.getM_PriceList();
 					invoice.setIsTaxIncluded(priceList.isTaxIncluded());
-
-					/*
-					if (loadInvFile.getAmtRounding().compareTo(Env.ZERO) >= 0){
-						invoice.set_ValueOfColumn("AmtRounding", loadInvFile.getAmtRounding());
-					}
-					else{
-						invoice.set_ValueOfColumn("AmtRounding", loadInvFile.getAmtRounding().negate());
-					}
-					*/
 
 					// Para notas de crédito, doy vuelta el signo del redondeo
 					BigDecimal amtRounding = loadInvFile.getAmtRounding();
