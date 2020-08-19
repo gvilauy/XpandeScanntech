@@ -699,8 +699,9 @@ public class MZStechLoadInv extends X_Z_StechLoadInv implements DocAction, DocOp
 
 				// Valido que no existe un comprobante con ese socio de negocio, tipo de documento, serie y numero.
 				if (stechLoadInvFile.isConfirmed()){
-					MInvoice invoice = ComercialUtils.getInvoiceByDocPartner(getCtx(), stechLoadInvFile.getC_DocTypeInvoice_ID(),
-							stechLoadInvFile.getDocumentSerie(), stechLoadInvFile.getDocumentNoRef(), stechLoadInvFile.getC_BPartner_ID(), get_TrxName());
+					MInvoice invoice = ComercialUtils.getInvoiceByDocPartner(getCtx(), stechLoadInvFile.getAD_OrgTrx_ID(),
+							stechLoadInvFile.getC_DocTypeInvoice_ID(), stechLoadInvFile.getDocumentSerie(),
+							stechLoadInvFile.getDocumentNoRef(), stechLoadInvFile.getC_BPartner_ID(), get_TrxName());
 					if ((invoice != null) && (invoice.get_ID() > 0)){
 						stechLoadInvFile.setIsConfirmed(false);
 						stechLoadInvFile.setErrorMsg("Ya existe un comprobante en el sistema para ese Socio de Negocio - Documento");
