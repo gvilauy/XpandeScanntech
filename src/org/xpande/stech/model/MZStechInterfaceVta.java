@@ -1153,7 +1153,6 @@ public class MZStechInterfaceVta extends X_Z_StechInterfaceVta {
                 invoice.setC_PaymentTerm_ID(paymentTerm.get_ID());
                 invoice.setTotalLines(amtTotal);
                 invoice.setGrandTotal(amtTotal);
-                invoice.set_ValueOfColumn("AmtAuxiliar", amtTotal);
 
                 MPriceList priceList = PriceListUtils.getPriceListByOrg(getCtx(), invoice.getAD_Client_ID(), invoice.getAD_Org_ID(),
                         invoice.getC_Currency_ID(), true, null, null);
