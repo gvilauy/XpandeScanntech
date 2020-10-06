@@ -1137,7 +1137,8 @@ public class MZStechInterfaceVta extends X_Z_StechInterfaceVta {
                 invoice.setC_DocTypeTarget_ID(cDocTypeID);
                 invoice.setC_DocType_ID(cDocTypeID);
                 invoice.setDocumentNo(numeroComprobante);
-                invoice.setDescription("Generado desde POS. Datos CFE : " + descCFE + " " + numeroComprobante);
+                invoice.setDescription("Generado desde POS. Datos CFE : " + descCFE + " " + numeroComprobante +
+                        " - Ticket: " + rs.getString("sc_numeromov"));
 
                 if (docType.getDocBaseType().equalsIgnoreCase(Doc.DOCTYPE_ARCredit)){
                     invoice.set_ValueOfColumn("ReferenciaCFE", "Referencia Comprobante POS");
@@ -1151,8 +1152,6 @@ public class MZStechInterfaceVta extends X_Z_StechInterfaceVta {
                 invoice.setC_Currency_ID(cCurrencyID);
                 invoice.setPaymentRule(X_C_Invoice.PAYMENTRULE_OnCredit);
                 invoice.setC_PaymentTerm_ID(paymentTerm.get_ID());
-                invoice.setTotalLines(amtTotal);
-                invoice.setGrandTotal(amtTotal);
 
                 MPriceList priceList = PriceListUtils.getPriceListByOrg(getCtx(), invoice.getAD_Client_ID(), invoice.getAD_Org_ID(),
                         invoice.getC_Currency_ID(), true, null, null);
@@ -1165,10 +1164,12 @@ public class MZStechInterfaceVta extends X_Z_StechInterfaceVta {
 
                 invoice.setM_PriceList_ID(priceList.get_ID());
                 invoice.setIsTaxIncluded(priceList.isTaxIncluded());
-                invoice.set_ValueOfColumn("AmtSubtotal", amtTotal);
                 invoice.set_ValueOfColumn("DocBaseType", docType.getDocBaseType());
                 invoice.set_ValueOfColumn("EstadoAprobacion", "APROBADO");
                 invoice.set_ValueOfColumn("TipoFormaPago", "CREDITO");
+                invoice.set_ValueOfColumn("AmtSubtotal", amtTotal);
+                invoice.setTotalLines(amtTotal);
+                invoice.setGrandTotal(amtTotal);
                 invoice.saveEx();
 
                 // Linea de Factura
@@ -1183,10 +1184,10 @@ public class MZStechInterfaceVta extends X_Z_StechInterfaceVta {
                 line.setPriceEntered(amtTotal);
                 line.setPriceActual(amtTotal);
                 line.setLineNetAmt(amtTotal);
-                line.set_ValueOfColumn("AmtSubTotal", invoice.getTotalLines());
                 line.setC_Tax_ID(taxProduct.get_ID());
                 line.setTaxAmt();
                 line.setLineNetAmt();
+                line.set_ValueOfColumn("AmtSubTotal", invoice.getTotalLines());
                 line.saveEx();
 
                 if (!invoice.processIt(DocAction.ACTION_Complete)){

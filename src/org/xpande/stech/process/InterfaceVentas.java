@@ -2,6 +2,7 @@ package org.xpande.stech.process;
 
 import org.compiere.process.ProcessInfoParameter;
 import org.compiere.process.SvrProcess;
+import org.compiere.util.DB;
 import org.compiere.util.TimeUtil;
 import org.xpande.stech.model.MZScanntechConfig;
 import org.xpande.stech.model.MZScanntechConfigOrg;
@@ -61,6 +62,15 @@ public class InterfaceVentas extends SvrProcess {
         }
 
         for (MZScanntechConfigOrg configOrg: orgList){
+
+            // Evito interfaces duplicados por organización y fecha
+            String sql = " select z_stechinterfacevta_id from z_stechinterfacevta " +
+                            " where ad_org_id =" + configOrg.getAD_OrgTrx_ID() +
+                            " and datetrx ='" + this.fechaConsulta + "'";
+            int zStechInterfaceVtaIDAux = DB.getSQLValueEx(get_TrxName(), sql);
+            if (zStechInterfaceVtaIDAux > 0){
+                continue;
+            }
 
             MZStechInterfaceVta interfaceVta = new MZStechInterfaceVta(getCtx(), 0, get_TrxName());
             interfaceVta.set_ValueOfColumn("AD_Client_ID", scanntechConfig.getAD_Client_ID());
