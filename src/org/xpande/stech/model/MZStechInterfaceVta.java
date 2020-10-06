@@ -136,6 +136,8 @@ public class MZStechInterfaceVta extends X_Z_StechInterfaceVta {
             // Obtengo información para cada CAJA de esta organización
             for(MZScanntechConfigCaja configCaja: configCajaList){
 
+                System.out.println("----- Organizacion : " + configOrg.getAD_OrgTrx_ID() + " - Caja : " + configCaja.getCodigoPOS());
+
                 int pageSize = 0, pageOffSet = 0;
 
                 serviceText ="locales/" + configOrg.getCodigoLocalPos() + "/cajas/" + configCaja.getCodigoPOS() +
@@ -144,7 +146,6 @@ public class MZStechInterfaceVta extends X_Z_StechInterfaceVta {
                         "&fechaEnvioHasta=" + fechaHastaSTR +
                         "&pageOffset=" + pageOffSet +
                         "&pageSize=" + cantRowsVentaPagina;
-
 
                 JSONArray jsonArrayMov = this.executeJsonGET(serviceText, configOrg);
 
@@ -178,7 +179,6 @@ public class MZStechInterfaceVta extends X_Z_StechInterfaceVta {
                             "&pageOffset=" + pageOffSet +
                             "&pageSize=" + cantRowsVentaPagina;
 
-
                     jsonArrayMov = this.executeJsonGET(serviceText, configOrg);
 
                     if (jsonArrayMov == null){
@@ -204,10 +204,20 @@ public class MZStechInterfaceVta extends X_Z_StechInterfaceVta {
             this.setContadorLineas(cantMovProcesados);
 
             // Proceso ventas con credito de la casa
+            System.out.println("-----Inteface Scanntech : setVentasCredito");
             this.setVentasCredito();
 
             // Proceso ventas con RUT (no se hace invoice, es solo para formularios de DGI)
+            System.out.println("-----Inteface Scanntech : setVentasComprobante");
             this.setVentasComprobantes();
+
+            // Paso info a tablas finales
+            System.out.println("-----Inteface Scanntech : setInfoTablasFinales");
+            this.setInfoTablasFinales();
+
+            // Elimino datos de tablas temporales
+            System.out.println("-----Inteface Scanntech : deleteTablasTemporales");
+            this.deleteTablasTemporales();
 
             // Tiempo final de proceso
             this.setEndDate(new Timestamp(System.currentTimeMillis()));
@@ -219,6 +229,125 @@ public class MZStechInterfaceVta extends X_Z_StechInterfaceVta {
         }
 
         return message;
+    }
+
+    private void deleteTablasTemporales() {
+
+        String action = "";
+
+        try{
+
+            action = " delete from z_stech_tmp_movpago where z_stechinterfacevta_id =" + this.get_ID();
+            DB.executeUpdateEx(action, get_TrxName());
+
+            action = " delete from z_stech_tmp_movdetdtos where z_stechinterfacevta_id =" + this.get_ID();
+            DB.executeUpdateEx(action, get_TrxName());
+
+            action = " delete from z_stech_tmp_movdet where z_stechinterfacevta_id =" + this.get_ID();
+            DB.executeUpdateEx(action, get_TrxName());
+
+            action = " delete from z_stech_tmp_mov where z_stechinterfacevta_id =" + this.get_ID();
+            DB.executeUpdateEx(action, get_TrxName());
+
+        }
+        catch (Exception e){
+            throw new AdempiereException(e);
+        }
+
+    }
+
+    private void setInfoTablasFinales() {
+
+        String action = "";
+
+        try{
+
+            // Inserto en tabla de movimientos
+            action = " INSERT INTO z_stech_tk_mov(" +
+                        " ad_client_id, ad_org_id, created, createdby, isactive, sc_numeromov, " +
+                        " updated, updatedby, uuid, z_stech_tk_mov_id, sc_codigoempresa, " +
+                        " sc_codigolocal, sc_codigocaja, sc_fechaoperacion, sc_tipooperacion, " +
+                        " sc_tipocfe, sc_seriecfe, sc_numerooperacion, sc_codigoseguridadcfe, " +
+                        " sc_descuentototal, sc_cantidaditems, sc_codigomoneda, sc_total, " +
+                        " sc_redondeo, sc_cotizacioncompra, sc_cotizacionventa, sc_cuponcancelado, " +
+                        " sc_cuponanulada, z_stechinterfacevta_id, jsonbody, datetrx, sc_nombrefactura, " +
+                        " sc_rucfactura, sc_direccionfactura) " +
+                    " SELECT ad_client_id, ad_org_id, created, createdby, isactive, sc_numeromov, " +
+                        " updated, updatedby, uuid, z_stech_tmp_mov_id, sc_codigoempresa, " +
+                        " sc_codigolocal, sc_codigocaja, sc_fechaoperacion, sc_tipooperacion, " +
+                        " sc_tipocfe, sc_seriecfe, sc_numerooperacion, sc_codigoseguridadcfe, " +
+                        " sc_descuentototal, sc_cantidaditems, sc_codigomoneda, sc_total, " +
+                        " sc_redondeo, sc_cotizacioncompra, sc_cotizacionventa, sc_cuponcancelado, " +
+                        " sc_cuponanulada, z_stechinterfacevta_id, jsonbody, datetrx, sc_nombrefactura, " +
+                        " sc_rucfactura, sc_direccionfactura " +
+                    " FROM z_stech_tmp_mov " +
+                    " WHERE z_stechinterfacevta_id =" + this.get_ID();
+            DB.executeUpdateEx(action, get_TrxName());
+
+            // Inserto en tabla de detalles
+            action = " INSERT INTO z_stech_tk_movdet(" +
+                        " ad_client_id, ad_org_id, created, createdby, isactive, sc_cantidad, " +
+                        " sc_codigoarticulo, sc_codigoarticulopadre, sc_codigobarras, sc_codigocategoria, " +
+                        " sc_codigoservicio, sc_codigotipodetalle, sc_descripcionarticulo, " +
+                        " sc_descuento, sc_fechaservicio, sc_importe, sc_importeunitario, " +
+                        " sc_medidaventa, sc_montoiva, sc_numeroservicio, sc_porcentajeiva, " +
+                        " updated, updatedby, uuid, z_stech_tk_movdet_id, z_stech_tk_mov_id, " +
+                        " z_stechinterfacevta_id, jsonbody, m_product_id, z_productoupc_id, " +
+                        " datetrx, sc_codigoiva) " +
+                    " SELECT ad_client_id, ad_org_id, created, createdby, isactive, sc_cantidad, " +
+                        " sc_codigoarticulo, sc_codigoarticulopadre, sc_codigobarras, sc_codigocategoria, " +
+                        " sc_codigoservicio, sc_codigotipodetalle, sc_descripcionarticulo, " +
+                        " sc_descuento, sc_fechaservicio, sc_importe, sc_importeunitario, " +
+                        " sc_medidaventa, sc_montoiva, sc_numeroservicio, sc_porcentajeiva, " +
+                        " updated, updatedby, uuid, z_stech_tmp_movdet_id, z_stech_tmp_mov_id, " +
+                        " z_stechinterfacevta_id, jsonbody, m_product_id, z_productoupc_id, " +
+                        " datetrx, sc_codigoiva " +
+                    " FROM z_stech_tmp_movdet " +
+                    " WHERE z_stechinterfacevta_id =" + this.get_ID();
+            DB.executeUpdateEx(action, get_TrxName());
+
+            // Inserto en tabla de descuentos
+            action = "INSERT INTO z_stech_tk_movdetdtos( " +
+                        " ad_client_id, ad_org_id, created, createdby, isactive, sc_iddescuento, " +
+                        " sc_idpromocion, sc_importedescuento, sc_tipodescuento, updated, " +
+                        " updatedby, uuid, z_stech_tk_movdetdtos_id, z_stech_tk_movdet_id, " +
+                        " z_stech_tk_mov_id, z_stechinterfacevta_id, jsonbody, datetrx) " +
+                    " SELECT ad_client_id, ad_org_id, created, createdby, isactive, sc_iddescuento, " +
+                        " sc_idpromocion, sc_importedescuento, sc_tipodescuento, updated, " +
+                        " updatedby, uuid, z_stech_tmp_movdetdtos_id, z_stech_tmp_movdet_id, " +
+                        " z_stech_tmp_mov_id, z_stechinterfacevta_id, jsonbody, datetrx " +
+                    " FROM z_stech_tmp_movdetdtos " +
+                    " WHERE z_stechinterfacevta_id =" + this.get_ID();
+            DB.executeUpdateEx(action, get_TrxName());
+
+            // Inserto en tabla de pagos
+            action = "INSERT INTO z_stech_tk_movpago( " +
+                        " ad_client_id, ad_org_id, created, createdby, isactive, sc_cambio, " +
+                        " sc_codigocliente, sc_codigocredito, sc_codigomoneda, sc_codigoplanpagos, " +
+                        " sc_codigotipopago, sc_comerciocredito, sc_cotizacioncompra, sc_cotizacionventa, " +
+                        " sc_documentocliente, sc_fechavencimiento, sc_importe, sc_importepago, " +
+                        " sc_numeroautorizacion, sc_numerocuotaspago, sc_numerodocumentopago, " +
+                        " sc_numerotarjeta, sc_terminalcredito, updated, updatedby, uuid, " +
+                        " z_stech_tk_mov_id, z_stech_tk_movpago_id, z_stechinterfacevta_id, " +
+                        " jsonbody, datetrx, z_stechmediopago_id, z_stechcreditos_id, sc_codigovale, " +
+                        " sc_descuentoafam, sc_descuentoincfin) " +
+                    " SELECT ad_client_id, ad_org_id, created, createdby, isactive, sc_cambio, " +
+                        " sc_codigocliente, sc_codigocredito, sc_codigomoneda, sc_codigoplanpagos, " +
+                        " sc_codigotipopago, sc_comerciocredito, sc_cotizacioncompra, sc_cotizacionventa, " +
+                        " sc_documentocliente, sc_fechavencimiento, sc_importe, sc_importepago, " +
+                        " sc_numeroautorizacion, sc_numerocuotaspago, sc_numerodocumentopago, " +
+                        " sc_numerotarjeta, sc_terminalcredito, updated, updatedby, uuid, " +
+                        " z_stech_tmp_mov_id, z_stech_tmp_movpago_id, z_stechinterfacevta_id, " +
+                        " jsonbody, datetrx, z_stechmediopago_id, z_stechcreditos_id, sc_codigovale, " +
+                        " sc_descuentoafam, sc_descuentoincfin " +
+                    " FROM z_stech_tmp_movpago " +
+                    " WHERE z_stechinterfacevta_id =" + this.get_ID();
+            DB.executeUpdateEx(action, get_TrxName());
+
+        }
+        catch (Exception e){
+            throw new AdempiereException(e);
+        }
     }
 
     /***
@@ -240,20 +369,20 @@ public class MZStechInterfaceVta extends X_Z_StechInterfaceVta {
             // Recorro y guardo movimientos obtenidos
             for (int i = 0; i < pageSize; i++){
 
-                System.out.println("Procesando Movimiento " + (i + 1) + " de " + pageSize);
+                System.out.println(configOrg.getAD_OrgTrx_ID() + " - Procesando Movimiento " + (i + 1) + " de " + pageSize);
 
                 JSONObject jsonMovimiento = jsonArrayMov.getJSONObject(i);
 
                 // Controlo que no procese nuevamente un movimiento con este mismo numero, en cuyo caso me salteo este movimiento.
                 if (!jsonMovimiento.get("numeroMov").equals(JSONObject.NULL)){
                     String numeroMov = jsonMovimiento.get("numeroMov").toString().trim();
-                    int idMov = MZStechTKMov.getIDByNumeroMov(getCtx(), numeroMov, get_TrxName());
+                    int idMov = MZStechTMPMov.getIDByNumeroMov(getCtx(), numeroMov, get_TrxName());
                     if (idMov > 0){
                         continue;
                     }
                 }
 
-                MZStechTKMov tkMov = this.setJsonMovimiento(configOrg, configCaja, jsonMovimiento);
+                MZStechTMPMov tkMov = this.setJsonMovimiento(configOrg, configCaja, jsonMovimiento);
 
                 // Recorro y guardo detalles de este movimiento
                 JSONArray jsonArrayDetalles = jsonMovimiento.getJSONArray("detalles");
@@ -262,7 +391,7 @@ public class MZStechInterfaceVta extends X_Z_StechInterfaceVta {
 
                         JSONObject jsonDetalle = jsonArrayDetalles.getJSONObject(j);
 
-                        MZStechTKMovDet tkMovDet = this.setJsonDetalleMov(tkMov, jsonDetalle);
+                        MZStechTMPMovDet tkMovDet = this.setJsonDetalleMov(tkMov, jsonDetalle);
 
                         // Recorro y guardo descuentos de este detalle de movimiento
                         JSONArray jsonArrayDetDtos = jsonDetalle.getJSONArray("descuentos");
@@ -303,72 +432,21 @@ public class MZStechInterfaceVta extends X_Z_StechInterfaceVta {
         return message;
     }
 
-
-    /***
-     * En scanntech hay medios de pago del tipo VALE que dentro del mismo nro. de movimiento se asocian a otro medio de pago.
-     * Aquí se copian los datos del medio de pago asociado, al registro del VALE.
-     * Xpande. Created by Gabriel Vila on 6/3/19.
-      * @param tkMov
-     */
-    private void setInfoVales(MZStechTKMov tkMov) {
-
-        String sql = "";
-
-        try{
-
-            String codigoMedioPagoVale = "12";
-            String codigoMedioPagoEfectivo ="9";
-
-            List<MZStechTKMovPago> tkMovPagoList = tkMov.getMediosPagoByCodigo(codigoMedioPagoVale);
-            for (MZStechTKMovPago tkMovPago: tkMovPagoList){
-
-                // Obtengo ID del medio de pago asociado al VALE en el mismo movimiento.
-                sql = " select max(z_stech_tk_movpago_id) as id from z_stech_tk_movpago where z_stech_tk_mov_id =" + tkMov.get_ID() +
-                        " and (sc_codigotipopago <> '" + codigoMedioPagoVale + "' and sc_codigotipopago <> '" + codigoMedioPagoEfectivo + "')";
-                int ID_MovPagoAsociado = DB.getSQLValueEx(get_TrxName(), sql);
-                if (ID_MovPagoAsociado > 0){
-                    MZStechTKMovPago tkMovPagoAsociado = new MZStechTKMovPago(getCtx(), ID_MovPagoAsociado, get_TrxName());
-                    if ((tkMovPagoAsociado != null) && (tkMovPagoAsociado.get_ID() > 0)){
-                        // Copio info del medio de paso asociado en el VALE
-                        tkMovPago.setSC_CodigoPlanPagos(tkMovPagoAsociado.getSC_CodigoPlanPagos());
-                        tkMovPago.setSC_NumeroTarjeta(tkMovPagoAsociado.getSC_NumeroTarjeta());
-                        tkMovPago.setSC_NumeroAutorizacion(tkMovPagoAsociado.getSC_NumeroAutorizacion());
-                        tkMovPago.setSC_FechaVencimiento(tkMovPagoAsociado.getSC_FechaVencimiento());
-                        tkMovPago.setSC_CodigoCredito(tkMovPagoAsociado.getSC_CodigoCredito());
-                        if (tkMovPagoAsociado.getZ_StechCreditos_ID() > 0){
-                            tkMovPago.setZ_StechCreditos_ID(tkMovPagoAsociado.getZ_StechCreditos_ID());
-                        }
-                        tkMovPago.setSC_NumeroDocumentoPago(tkMovPagoAsociado.getSC_NumeroDocumentoPago());
-                        tkMovPago.setSC_NumeroCuotasPago(tkMovPagoAsociado.getSC_NumeroCuotasPago());
-                        tkMovPago.setSC_TerminalCredito(tkMovPagoAsociado.getSC_TerminalCredito());
-                        tkMovPago.setSC_ComercioCredito(tkMovPagoAsociado.getSC_ComercioCredito());
-                        tkMovPago.saveEx();
-                    }
-                }
-            }
-
-        }
-        catch (Exception e){
-            throw new AdempiereException(e);
-        }
-    }
-
-
     /***
      * Guarda información de medio de pago de un movimiento de interface de venta.
      * Xpande. Created by Gabriel Vila on 2/12/19.
      * @param tkMov
      * @param jsonMedioPago
      */
-    private void setJsonMedioPagoMov(MZStechTKMov tkMov, JSONObject jsonMedioPago) {
+    private void setJsonMedioPagoMov(MZStechTMPMov tkMov, JSONObject jsonMedioPago) {
 
-        MZStechTKMovPago tkMovPago = null;
+        MZStechTMPMovPago tkMovPago = null;
         String sql = "";
 
         try{
 
-            tkMovPago = new MZStechTKMovPago(getCtx(), 0, get_TrxName());
-            tkMovPago.setZ_Stech_TK_Mov_ID(tkMov.get_ID());
+            tkMovPago = new MZStechTMPMovPago(getCtx(), 0, get_TrxName());
+            tkMovPago.setZ_Stech_TMP_Mov_ID(tkMov.get_ID());
             tkMovPago.set_ValueOfColumn("AD_Client_ID", tkMov.getAD_Client_ID());
             tkMovPago.setAD_Org_ID(tkMov.getAD_Org_ID());
             tkMovPago.setZ_StechInterfaceVta_ID(tkMov.getZ_StechInterfaceVta_ID());
@@ -519,17 +597,17 @@ public class MZStechInterfaceVta extends X_Z_StechInterfaceVta {
      * @param tkMovDet
      * @param jsonDetDto
      */
-    private void setJsonDetalleDto(MZStechTKMovDet tkMovDet, JSONObject jsonDetDto) {
+    private void setJsonDetalleDto(MZStechTMPMovDet tkMovDet, JSONObject jsonDetDto) {
 
-        MZStechTKMovDetDtos tkMovDetDtos = null;
+        MZStechTMPMovDetDtos tkMovDetDtos = null;
 
         try{
 
-            tkMovDetDtos = new MZStechTKMovDetDtos(getCtx(), 0, get_TrxName());
-            tkMovDetDtos.setZ_Stech_TK_Mov_ID(tkMovDet.getZ_Stech_TK_Mov_ID());
+            tkMovDetDtos = new MZStechTMPMovDetDtos(getCtx(), 0, get_TrxName());
+            tkMovDetDtos.setZ_Stech_TMP_Mov_ID(tkMovDet.getZ_Stech_TMP_Mov_ID());
             tkMovDetDtos.set_ValueOfColumn("AD_Client_ID", tkMovDet.getAD_Client_ID());
             tkMovDetDtos.setAD_Org_ID(tkMovDet.getAD_Org_ID());
-            tkMovDetDtos.setZ_Stech_TK_MovDet_ID(tkMovDet.get_ID());
+            tkMovDetDtos.setZ_Stech_TMP_MovDet_ID(tkMovDet.get_ID());
             tkMovDetDtos.setZ_StechInterfaceVta_ID(tkMovDet.getZ_StechInterfaceVta_ID());
             tkMovDetDtos.setJSonBody(jsonDetDto.toString());
             tkMovDetDtos.setDateTrx(tkMovDet.getDateTrx());
@@ -569,13 +647,13 @@ public class MZStechInterfaceVta extends X_Z_StechInterfaceVta {
      * @param jsonMovimiento
      * @return
      */
-    private MZStechTKMov setJsonMovimiento(MZScanntechConfigOrg configOrg, MZScanntechConfigCaja configCaja, JSONObject jsonMovimiento) {
+    private MZStechTMPMov setJsonMovimiento(MZScanntechConfigOrg configOrg, MZScanntechConfigCaja configCaja, JSONObject jsonMovimiento) {
 
-        MZStechTKMov tkMov = null;
+        MZStechTMPMov tkMov = null;
 
         try{
 
-            tkMov = new MZStechTKMov(getCtx(), 0, get_TrxName());
+            tkMov = new MZStechTMPMov(getCtx(), 0, get_TrxName());
             tkMov.set_ValueOfColumn("AD_Client_ID", this.getAD_Client_ID());
             tkMov.setAD_Org_ID(configOrg.getAD_OrgTrx_ID());
             tkMov.setZ_StechInterfaceVta_ID(this.get_ID());
@@ -716,14 +794,14 @@ public class MZStechInterfaceVta extends X_Z_StechInterfaceVta {
      * @param jsonDetalle
      * @return
      */
-    private MZStechTKMovDet setJsonDetalleMov(MZStechTKMov tkMov, JSONObject jsonDetalle) {
+    private MZStechTMPMovDet setJsonDetalleMov(MZStechTMPMov tkMov, JSONObject jsonDetalle) {
 
-        MZStechTKMovDet tkMovDet = null;
+        MZStechTMPMovDet tkMovDet = null;
 
         try{
 
-            tkMovDet = new MZStechTKMovDet(getCtx(), 0, get_TrxName());
-            tkMovDet.setZ_Stech_TK_Mov_ID(tkMov.get_ID());
+            tkMovDet = new MZStechTMPMovDet(getCtx(), 0, get_TrxName());
+            tkMovDet.setZ_Stech_TMP_Mov_ID(tkMov.get_ID());
             tkMovDet.set_ValueOfColumn("AD_Client_ID", tkMov.getAD_Client_ID());
             tkMovDet.setAD_Org_ID(tkMov.getAD_Org_ID());
             tkMovDet.setZ_StechInterfaceVta_ID(tkMov.getZ_StechInterfaceVta_ID());
