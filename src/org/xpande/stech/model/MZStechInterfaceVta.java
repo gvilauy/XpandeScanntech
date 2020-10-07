@@ -122,7 +122,8 @@ public class MZStechInterfaceVta extends X_Z_StechInterfaceVta {
 
             String serviceText = "";
 
-            // Recorro cajas de esta organización para obtener movimientos de cada una de ellas.
+
+            // Recorros cajas de esta organización para obtener movimientos de cada una de ellas.
             List<MZScanntechConfigCaja> configCajaList = configOrg.getCajas();
 
             if (configCajaList.size() <= 0){
