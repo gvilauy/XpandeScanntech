@@ -203,6 +203,10 @@ public class MZStechInterfaceVta extends X_Z_StechInterfaceVta {
             // Guardo totales
             this.setContadorLineas(cantMovProcesados);
 
+            // Paso info a tablas finales
+            System.out.println("-----Inteface Scanntech : setInfoTablasFinales");
+            this.setInfoTablasFinales();
+
             // Proceso ventas con credito de la casa
             System.out.println("-----Inteface Scanntech : setVentasCredito");
             this.setVentasCredito();
@@ -210,10 +214,6 @@ public class MZStechInterfaceVta extends X_Z_StechInterfaceVta {
             // Proceso ventas con RUT (no se hace invoice, es solo para formularios de DGI)
             System.out.println("-----Inteface Scanntech : setVentasComprobante");
             this.setVentasComprobantes();
-
-            // Paso info a tablas finales
-            System.out.println("-----Inteface Scanntech : setInfoTablasFinales");
-            this.setInfoTablasFinales();
 
             // Elimino datos de tablas temporales
             System.out.println("-----Inteface Scanntech : deleteTablasTemporales");
@@ -1064,10 +1064,10 @@ public class MZStechInterfaceVta extends X_Z_StechInterfaceVta {
             }
 
             sql = " select mov.sc_tipocfe, mov.sc_rucfactura, mov.sc_seriecfe, mov.sc_numerooperacion, " +
-                    " mov.SC_CodigoMoneda, mov.SC_CodigoCaja, mov.Z_Stech_TK_Mov_ID, mov.sc_numeromov, " +
+                    " mov.SC_CodigoMoneda, mov.SC_CodigoCaja, mov.Z_Stech_TMP_Mov_ID, mov.sc_numeromov, " +
                     " sum(coalesce(a.sc_importe,0) + coalesce(a.sc_descuentoafam,0) + coalesce(a.sc_descuentoincfin,0)) as sc_importe " +
-                    " from z_stech_tk_movpago a " +
-                    " inner join z_stech_tk_mov mov on a.z_stech_tk_mov_id = mov.z_stech_tk_mov_id " +
+                    " from z_stech_tmp_movpago a " +
+                    " inner join z_stech_tmp_mov mov on a.z_stech_tmp_mov_id = mov.z_stech_tmp_mov_id " +
                     " inner join z_stechcreditos mp on a.z_stechcreditos_id = mp.z_stechcreditos_id " +
                     " where mov.ad_org_id =" + this.getAD_Org_ID() +
                     " and mov.sc_tipooperacion='VENTA' " +
@@ -1087,7 +1087,7 @@ public class MZStechInterfaceVta extends X_Z_StechInterfaceVta {
 
                 MZStechVtaCtaCte stechVtaCtaCte = new MZStechVtaCtaCte(getCtx(), 0, get_TrxName());
                 stechVtaCtaCte.setZ_StechInterfaceVta_ID(this.get_ID());
-                stechVtaCtaCte.setZ_Stech_TK_Mov_ID(rs.getInt("Z_Stech_TK_Mov_ID"));
+                stechVtaCtaCte.setZ_Stech_TK_Mov_ID(rs.getInt("Z_Stech_TMP_Mov_ID"));
                 stechVtaCtaCte.setAD_Org_ID(this.getAD_Org_ID());
                 stechVtaCtaCte.set_ValueOfColumn("AD_Client_ID", this.scanntechConfig.getAD_Client_ID());
                 stechVtaCtaCte.setDateTrx(this.getDateTrx());
@@ -1316,9 +1316,9 @@ public class MZStechInterfaceVta extends X_Z_StechInterfaceVta {
             sql = "";
 
             sql = " select mov.sc_tipocfe, mov.sc_rucfactura, mov.sc_seriecfe, mov.sc_numerooperacion, " +
-                    " mov.SC_CodigoMoneda, mov.SC_CodigoCaja, mov.Z_Stech_TK_Mov_ID, mov.sc_numeromov, " +
+                    " mov.SC_CodigoMoneda, mov.SC_CodigoCaja, mov.Z_Stech_TMP_Mov_ID, mov.sc_numeromov, " +
                     " mov.sc_total as sc_importe, sdgi.c_doctype_id " +
-                    " from z_stech_tk_mov mov " +
+                    " from z_stech_tmp_mov mov " +
                     " left outer join z_cfe_configdocdgi dgi on cast(mov.sc_tipocfe as character varying(20)) = dgi.codigodgi " +
                     " left outer join z_cfe_configdocsend sdgi on (dgi.z_cfe_configdocdgi_id = sdgi.z_cfe_configdocdgi_id and sdgi.ad_orgtrx_id = mov.ad_org_id) " +
                     " where mov.ad_org_id =" + this.getAD_Org_ID() +
@@ -1338,7 +1338,7 @@ public class MZStechInterfaceVta extends X_Z_StechInterfaceVta {
 
                 MZStechVtaCtaCte stechVtaCtaCte = new MZStechVtaCtaCte(getCtx(), 0, get_TrxName());
                 stechVtaCtaCte.setZ_StechInterfaceVta_ID(this.get_ID());
-                stechVtaCtaCte.setZ_Stech_TK_Mov_ID(rs.getInt("Z_Stech_TK_Mov_ID"));
+                stechVtaCtaCte.setZ_Stech_TK_Mov_ID(rs.getInt("Z_Stech_TMP_Mov_ID"));
                 stechVtaCtaCte.setAD_Org_ID(this.getAD_Org_ID());
                 stechVtaCtaCte.set_ValueOfColumn("AD_Client_ID", this.scanntechConfig.getAD_Client_ID());
                 stechVtaCtaCte.setDateTrx(this.getDateTrx());
