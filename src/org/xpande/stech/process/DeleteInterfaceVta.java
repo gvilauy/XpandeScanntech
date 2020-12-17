@@ -144,6 +144,10 @@ public class DeleteInterfaceVta extends SvrProcess {
             action = " alter table z_stechinterfacevta enable trigger all ";
             DB.executeUpdateEx(action, get_TrxName());
 
+            action = " delete from z_bi_invprodday where ad_org_id =" + this.adOrgID +
+                    " and datetrx ='" + this.fechaConsulta + "' ";
+            DB.executeUpdateEx(action, get_TrxName());
+
         }
         catch (Exception e){
             throw new AdempiereException(e);
