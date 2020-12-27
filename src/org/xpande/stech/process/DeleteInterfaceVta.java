@@ -145,7 +145,7 @@ public class DeleteInterfaceVta extends SvrProcess {
             DB.executeUpdateEx(action, get_TrxName());
 
             action = " delete from z_bi_invprodday where ad_org_id =" + this.adOrgID +
-                    " and datetrx ='" + this.fechaConsulta + "' ";
+                    " and dateinvoiced ='" + this.fechaConsulta + "' ";
             DB.executeUpdateEx(action, get_TrxName());
 
         }
