@@ -1471,6 +1471,7 @@ public class MZStechInterfaceVta extends X_Z_StechInterfaceVta {
 
                 stechVtaCtaCte.setC_BPartner_ID(invoice.getC_BPartner_ID());
                 stechVtaCtaCte.setC_BPartner_Location_ID(invoice.getC_BPartner_Location_ID());
+                stechVtaCtaCte.setC_BP_Group_ID(partner.getC_BP_Group_ID());
                 stechVtaCtaCte.saveEx();
             }
         }
@@ -1632,6 +1633,7 @@ public class MZStechInterfaceVta extends X_Z_StechInterfaceVta {
 
                 stechVtaCtaCte.setC_BPartner_ID(partner.get_ID());
                 stechVtaCtaCte.setC_BPartner_Location_ID(partnerLocation.get_ID());
+                stechVtaCtaCte.setC_BP_Group_ID(partner.getC_BP_Group_ID());
                 stechVtaCtaCte.saveEx();
             }
         }
