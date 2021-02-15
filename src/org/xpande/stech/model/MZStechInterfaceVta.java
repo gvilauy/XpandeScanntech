@@ -404,16 +404,7 @@ public class MZStechInterfaceVta extends X_Z_StechInterfaceVta {
             DB.close(rs, pstmt);
             rs = null; pstmt = null;
         }
-
-        try{
-
-
-        }
-        catch (Exception e){
-            throw new AdempiereException(e);
-        }
     }
-
 
     private void deleteTablasTemporales() {
 
